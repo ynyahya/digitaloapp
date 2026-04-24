@@ -1,9 +1,11 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
+  const demoPassword = await bcrypt.hash("digitalo123", 10);
 
   // 1. Create a Category
   const category = await prisma.category.upsert({
@@ -16,14 +18,15 @@ async function main() {
     },
   });
 
-  // 2. Create a User (Creator)
+  // 2. Create a User (Creator) — demo login: alex@digitalo.app / digitalo123
   const user = await prisma.user.upsert({
     where: { email: "alex@digitalo.app" },
-    update: {},
+    update: { passwordHash: demoPassword },
     create: {
       email: "alex@digitalo.app",
       name: "Alex Morgan",
       role: "CREATOR",
+      passwordHash: demoPassword,
       image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&auto=format&fit=crop",
     },
   });
@@ -81,11 +84,12 @@ async function main() {
   for (const customerData of customers) {
     const customer = await prisma.user.upsert({
       where: { email: customerData.email },
-      update: {},
+      update: { passwordHash: demoPassword },
       create: {
         email: customerData.email,
         name: customerData.name,
         role: "BUYER",
+        passwordHash: demoPassword,
       },
     });
 

@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardStats, getRecentSales, getRevenueSeries } from "@/lib/queries/dashboard";
 import { LineChart } from "@/components/dashboard/line-chart";
-import { db } from "@/lib/db";
+import { requireCreator } from "@/lib/auth/session";
 
 export const metadata = {
   title: "Dashboard",
@@ -12,7 +12,7 @@ export const metadata = {
 
 export default async function DashboardPage() {
   // For the final SaaS, this would come from session
-  const creator = await db.creator.findFirst();
+  const creator = await requireCreator();
   if (!creator) return <div>No creator found. Please seed the database.</div>;
 
   const [stats, sales, series] = await Promise.all([

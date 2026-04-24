@@ -5,11 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { db } from "@/lib/db";
+import { requireCreator } from "@/lib/auth/session";
 import { getProducts } from "@/lib/queries/dashboard";
 
 export default async function ProductsPage() {
-  const creator = await db.creator.findFirst();
+  const creator = await requireCreator();
   if (!creator) return <div>No creator found.</div>;
 
   const products = await getProducts(creator.id);

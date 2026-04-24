@@ -2,7 +2,7 @@ import { Calendar, Download, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart } from "@/components/dashboard/line-chart";
-import { db } from "@/lib/db";
+import { requireCreator } from "@/lib/auth/session";
 import { getAnalyticsSummary } from "@/lib/queries/dashboard";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 export default async function AnalyticsPage() {
-  const creator = await db.creator.findFirst();
+  const creator = await requireCreator();
   if (!creator) {
     return (
       <div className="rounded-2xl border border-line bg-paper p-8 text-[14px] text-ink-muted">
