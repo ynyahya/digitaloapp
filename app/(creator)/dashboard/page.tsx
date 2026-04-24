@@ -42,12 +42,66 @@ export default async function DashboardOverview() {
   const customers = creator.metrics?.customers ?? 0;
   const productsSold = creator.metrics?.productsSold ?? 0;
 
-  const recentOrders = await db.order.findMany({
-    where: { items: { some: { product: { creatorId: creator.id } } } },
-    orderBy: { createdAt: "desc" },
-    take: 8,
-    include: { items: { include: { product: true } } },
-  });
+  // Real 30-day-over-30-day deltas — we used to hardcode "+24.5%" etc. which
+  // actively misled creators looking at their dashboard. Now the KPI cards
+  // show the honest number (including down or flat), or no delta at all when
+  // there's no comparable period to measure against.
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  const since30d = new Date(now - 30 * DAY_MS);
+  const sincePrev30d = new Date(now - 60 * DAY_MS);
+
+  const [revCurr, revPrev, paidCurr, paidPrev, recentOrders] = await Promise.all([
+    db.order.aggregate({
+      where: {
+        status: "PAID",
+        createdAt: { gte: since30d },
+        items: { some: { product: { creatorId: creator.id } } },
+      },
+      _sum: { totalCents: true },
+      _count: true,
+    }),
+    db.order.aggregate({
+      where: {
+        status: "PAID",
+        createdAt: { gte: sincePrev30d, lt: since30d },
+        items: { some: { product: { creatorId: creator.id } } },
+      },
+      _sum: { totalCents: true },
+      _count: true,
+    }),
+    db.order.findMany({
+      where: {
+        status: "PAID",
+        createdAt: { gte: since30d },
+        items: { some: { product: { creatorId: creator.id } } },
+      },
+      select: { email: true, userId: true },
+    }),
+    db.order.findMany({
+      where: {
+        status: "PAID",
+        createdAt: { gte: sincePrev30d, lt: since30d },
+        items: { some: { product: { creatorId: creator.id } } },
+      },
+      select: { email: true, userId: true },
+    }),
+    db.order.findMany({
+      where: { items: { some: { product: { creatorId: creator.id } } } },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+      include: { items: { include: { product: true } } },
+    }),
+  ]);
+
+  const revenueDelta = deltaPct(
+    revCurr._sum.totalCents ?? 0,
+    revPrev._sum.totalCents ?? 0,
+  );
+  const soldDelta = deltaPct(revCurr._count ?? 0, revPrev._count ?? 0);
+  const uniq = (rows: Array<{ email: string; userId: string | null }>) =>
+    new Set(rows.map((r) => r.userId ?? r.email)).size;
+  const customersDelta = deltaPct(uniq(paidCurr), uniq(paidPrev));
 
   return (
     <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-5 py-10 md:px-8 md:py-12">
@@ -74,22 +128,24 @@ export default async function DashboardOverview() {
         <KpiCard
           label="Total revenue"
           value={formatCurrency(totalRevenueCents)}
-          delta="+24.5%"
+          delta={revenueDelta}
           icon={DollarSign}
         />
         <KpiCard
           label="Customers"
           value={formatCompactNumber(customers)}
-          delta="+12.8%"
+          delta={customersDelta}
           icon={Users}
         />
         <KpiCard
           label="Products sold"
           value={formatCompactNumber(productsSold)}
-          delta="+18.2%"
+          delta={soldDelta}
           icon={ShoppingBag}
         />
-        <KpiCard label="Store visits" value="42.1k" delta="+6.4%" icon={Eye} />
+        {/* Store-visit analytics aren't wired up yet — rather than hardcode
+            a fake number, we show a clear "coming soon" placeholder. */}
+        <KpiCard label="Store visits" value="—" delta={null} icon={Eye} comingSoon />
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1.6fr_1fr]">
@@ -212,16 +268,32 @@ export default async function DashboardOverview() {
   );
 }
 
+// Format a signed percentage delta, or return null if there's no prior-period
+// baseline to compare against (so the KPI card can hide the line entirely
+// instead of showing misleading numbers).
+function deltaPct(curr: number, prev: number): string | null {
+  if (prev <= 0) {
+    if (curr > 0) return "New";
+    return null;
+  }
+  const pct = ((curr - prev) / prev) * 100;
+  const rounded = Math.round(pct * 10) / 10;
+  const sign = rounded > 0 ? "+" : "";
+  return `${sign}${rounded.toFixed(1)}%`;
+}
+
 function KpiCard({
   label,
   value,
   delta,
   icon: Icon,
+  comingSoon,
 }: {
   label: string;
   value: string;
-  delta: string;
+  delta: string | null;
   icon: React.ComponentType<{ className?: string }>;
+  comingSoon?: boolean;
 }) {
   return (
     <div className="rounded-2xl border border-line bg-paper p-5">
@@ -231,7 +303,15 @@ function KpiCard({
       </div>
       <p className="mt-3 text-[26px] font-semibold tracking-tight">{value}</p>
       <p className="mt-1 text-[11.5px] font-medium text-ink-muted">
-        <span className="text-ink">{delta}</span> vs. last period
+        {comingSoon ? (
+          <span className="text-ink-subtle">Analytics coming soon</span>
+        ) : delta ? (
+          <>
+            <span className="text-ink">{delta}</span> vs. prior 30 days
+          </>
+        ) : (
+          <span className="text-ink-subtle">No data for prior period</span>
+        )}
       </p>
     </div>
   );
