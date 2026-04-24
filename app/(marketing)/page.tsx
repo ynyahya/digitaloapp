@@ -1,5 +1,8 @@
 import { Hero } from "@/components/marketing/hero";
+import { StatsStrip } from "@/components/marketing/stats-strip";
 import { FeaturedProductsSection } from "@/components/marketing/featured-products-section";
+import { UseCases } from "@/components/marketing/use-cases";
+import { WhyDigitalo } from "@/components/marketing/why-digitalo";
 import { ForCreatorsSection } from "@/components/marketing/for-creators-section";
 import { BundleBanner } from "@/components/marketing/bundle-banner";
 import { CreatorShowcase } from "@/components/marketing/creator-showcase";
@@ -21,8 +24,11 @@ export default async function LandingPage() {
   return (
     <>
       <Hero />
+      <StatsStrip />
       <FeaturedProductsSection products={products} />
+      <UseCases />
       <ForCreatorsSection />
+      <WhyDigitalo />
       <BundleBanner />
       <CreatorShowcase creators={creators} />
       <Testimonials />

@@ -23,15 +23,15 @@ export function Hero() {
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-1.5 text-[12px] font-medium text-ink-muted">
               <Sparkles className="h-3.5 w-3.5" />
-              The premium marketplace for digital creators
+              The operating system for digital creators
             </span>
             <h1 className="mt-6 text-balance text-[44px] font-semibold leading-[1.02] tracking-[-0.02em] text-ink md:text-[64px]">
-              Sell and Discover
-              <br /> Premium Digital Products
+              Create, sell, and scale
+              <br /> digital products.
             </h1>
-            <p className="mt-5 max-w-[520px] text-pretty text-[16px] leading-relaxed text-ink-muted md:text-[17px]">
-              Templates, SaaS boilerplates, UI kits, ebooks, plugins and creator assets —
-              beautifully curated.
+            <p className="mt-5 max-w-[540px] text-pretty text-[16px] leading-relaxed text-ink-muted md:text-[17px]">
+              Launch storefronts, sell products, manage clients, and grow with one
+              intelligent commerce platform built for the creator economy.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Button size="lg" asChild>
