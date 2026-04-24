@@ -45,56 +45,92 @@ export function PreviewMode() {
   return (
     <div className="fixed inset-0 top-16 bg-paper-sunken z-40 flex overflow-hidden">
       {/* Device Sidebar / Control Panel */}
-      <div className="w-[380px] bg-paper border-r border-line p-8 overflow-y-auto hidden lg:block">
-        <div className="space-y-10">
-          <div className="space-y-4">
-             <h2 className="text-[18px] font-bold text-ink">Preview Inspector</h2>
-             <p className="text-[13px] text-ink-muted leading-relaxed">Review the live buyer journey across all devices before publishing.</p>
+      <aside className="w-[320px] bg-paper border-r border-line overflow-y-auto custom-scrollbar hidden lg:flex flex-col">
+        <div className="px-7 py-7 border-b border-line">
+          <div className="h-9 w-9 rounded-xl bg-paper-muted border border-line flex items-center justify-center mb-4">
+            <Monitor className="h-4 w-4 text-ink" />
           </div>
+          <h2 className="text-[16px] font-bold text-ink tracking-tight">Preview Inspector</h2>
+          <p className="text-[12.5px] text-ink-muted leading-relaxed mt-1">
+            Review the live buyer journey across every viewport before you publish.
+          </p>
+        </div>
 
-          <div className="space-y-4">
-            <label className="text-[11px] font-bold text-ink-subtle uppercase tracking-widest">Device Viewport</label>
-            <div className="flex items-center gap-1 p-1 bg-paper-muted rounded-xl border border-line">
-              {(["desktop", "tablet", "mobile"] as const).map((d) => (
+        <div className="px-7 py-6 space-y-7 flex-1">
+          <div className="space-y-3">
+            <label className="text-[10.5px] font-bold text-ink-subtle uppercase tracking-[0.2em]">
+              Device Viewport
+            </label>
+            <div className="grid grid-cols-3 gap-1 p-1 bg-paper-muted rounded-xl border border-line">
+              {(
+                [
+                  { key: "desktop", icon: Monitor, label: "Desktop" },
+                  { key: "tablet", icon: Tablet, label: "Tablet" },
+                  { key: "mobile", icon: Smartphone, label: "Mobile" },
+                ] as const
+              ).map(({ key, icon: DIcon, label }) => (
                 <button
-                  key={d}
-                  onClick={() => setDevice(d)}
+                  key={key}
+                  onClick={() => setDevice(key)}
                   className={cn(
-                    "flex-1 flex items-center justify-center py-2 rounded-lg transition-all",
-                    device === d ? "bg-paper text-ink shadow-soft border border-line" : "text-ink-muted hover:text-ink"
+                    "flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg transition-all",
+                    device === key
+                      ? "bg-paper text-ink shadow-soft border border-line"
+                      : "text-ink-muted hover:text-ink"
                   )}
                 >
-                  {d === "desktop" && <Monitor className="h-4 w-4" />}
-                  {d === "tablet" && <Tablet className="h-4 w-4" />}
-                  {d === "mobile" && <Smartphone className="h-4 w-4" />}
+                  <DIcon className="h-4 w-4" />
+                  <span className="text-[10px] font-bold">{label}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="space-y-6 pt-6 border-t border-line">
-            <h3 className="text-[13px] font-bold text-ink">Conversion Insights</h3>
-            <div className="space-y-4">
-              <ScoreItem icon={ShieldCheck} label="Trust Signals" score={trustScore} color={trustScore === 100 ? "text-emerald-500" : "text-amber-500"} />
-              <ScoreItem icon={Search} label="SEO Readiness" score={seoScore} color={seoScore === 100 ? "text-emerald-500" : "text-amber-500"} />
+          <div className="space-y-4">
+            <label className="text-[10.5px] font-bold text-ink-subtle uppercase tracking-[0.2em]">
+              Conversion Insights
+            </label>
+            <div className="space-y-3">
+              <ScoreItem
+                icon={ShieldCheck}
+                label="Trust Signals"
+                score={trustScore}
+              />
+              <ScoreItem
+                icon={Search}
+                label="SEO Readiness"
+                score={seoScore}
+              />
             </div>
           </div>
 
-          <div className="p-5 rounded-2xl bg-paper-soft border border-line space-y-3">
-             <div className="flex items-center gap-2">
-                <Globe className="h-4 w-4 text-ink-subtle" />
-                <span className="text-[12px] font-bold text-ink">Staging URL</span>
-             </div>
-             <p className="text-[11px] text-ink-muted truncate">digitalo.app/p/{product.customSlug || product.slug}/preview</p>
-             <Button variant="outline" className="w-full h-8 rounded-lg text-[11px] font-bold border-line bg-paper" asChild>
-                <a href={`/p/${product.slug}`} target="_blank" rel="noreferrer">
-                  Open in new tab
-                  <ExternalLink className="ml-2 h-3 w-3" />
-                </a>
-             </Button>
+          <div className="p-4 rounded-2xl bg-paper-soft border border-line space-y-3">
+            <div className="flex items-center gap-2">
+              <Globe className="h-3.5 w-3.5 text-ink-subtle" />
+              <span className="text-[11px] font-bold text-ink uppercase tracking-[0.15em]">
+                Staging URL
+              </span>
+            </div>
+            <p className="text-[11.5px] text-ink-muted truncate font-mono">
+              digitalo.app/p/{product.customSlug || product.slug}/preview
+            </p>
+            <Button
+              variant="outline"
+              className="w-full h-8 rounded-lg text-[11px] font-bold border-line bg-paper"
+              asChild
+            >
+              <a
+                href={`/p/${product.slug}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open in new tab
+                <ExternalLink className="ml-2 h-3 w-3" />
+              </a>
+            </Button>
           </div>
         </div>
-      </div>
+      </aside>
 
       {/* Preview Canvas */}
       <div className="flex-1 overflow-hidden relative flex items-center justify-center p-8">
@@ -214,16 +250,44 @@ export function PreviewMode() {
   );
 }
 
-function ScoreItem({ icon: Icon, label, score, color }: any) {
+function ScoreItem({
+  icon: Icon,
+  label,
+  score,
+}: {
+  icon: any;
+  label: string;
+  score: number;
+}) {
+  const tone =
+    score >= 100
+      ? "text-emerald-600"
+      : score >= 50
+      ? "text-amber-600"
+      : "text-red-500";
+  const barTone =
+    score >= 100
+      ? "bg-emerald-500"
+      : score >= 50
+      ? "bg-amber-500"
+      : "bg-red-500";
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="h-8 w-8 rounded-lg bg-paper-muted flex items-center justify-center">
-          <Icon className="h-4 w-4 text-ink-subtle" />
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <Icon className="h-3.5 w-3.5 text-ink-subtle" />
+          <span className="text-[12.5px] font-bold text-ink">{label}</span>
         </div>
-        <span className="text-[13px] font-medium text-ink">{label}</span>
+        <span className={cn("text-[12.5px] font-bold tabular-nums", tone)}>
+          {score}%
+        </span>
       </div>
-      <span className={cn("text-[14px] font-bold", color)}>{score}%</span>
+      <div className="h-1.5 rounded-full bg-paper-muted overflow-hidden">
+        <div
+          className={cn("h-full rounded-full transition-all", barTone)}
+          style={{ width: `${score}%` }}
+        />
+      </div>
     </div>
   );
 }
