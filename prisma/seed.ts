@@ -569,6 +569,12 @@ async function main() {
   console.log("\u00b7 Resetting database \u2026");
   await db.$transaction([
     db.review.deleteMany(),
+    db.agentRun.deleteMany(),
+    db.agentWorkflow.deleteMany(),
+    db.apiKey.deleteMany(),
+    db.commission.deleteMany(),
+    db.referral.deleteMany(),
+    db.affiliateLink.deleteMany(),
     db.collectionItem.deleteMany(),
     db.collection.deleteMany(),
     db.bundleItem.deleteMany(),
@@ -729,6 +735,166 @@ async function main() {
       } catch {
         // unique constraint — skip duplicate
       }
+    }
+  }
+
+  console.log("\u00b7 Seeding affiliate demo data for alex-morgan \u2026");
+  const alex = await db.creator.findUnique({ where: { handle: "alex-morgan" } });
+  if (alex) {
+    const alexUser = await db.user.findUnique({ where: { email: "alex-morgan@digitalo.app" } });
+
+    const twitterLink = await db.affiliateLink.upsert({
+      where: { code: "ALEXTWT" },
+      update: {},
+      create: {
+        creatorId: alex.id,
+        code: "ALEXTWT",
+        label: "Twitter bio",
+        clicks: 2412,
+      },
+    });
+    const ytLink = await db.affiliateLink.upsert({
+      where: { code: "ALEXYT" },
+      update: {},
+      create: {
+        creatorId: alex.id,
+        code: "ALEXYT",
+        label: "YouTube description",
+        clicks: 861,
+      },
+    });
+    await db.affiliateLink.upsert({
+      where: { code: "ALEXNEWS" },
+      update: {},
+      create: {
+        creatorId: alex.id,
+        code: "ALEXNEWS",
+        label: "Newsletter footer",
+        clicks: 184,
+      },
+    });
+
+    // A handful of paid orders attributed to the Twitter link, with two of
+    // them already paid out so the "Recent payouts" section has content.
+    const alexOrders = await db.order.findMany({
+      where: {
+        status: "PAID",
+        items: { some: { product: { creatorId: alex.id } } },
+      },
+      take: 4,
+      orderBy: { createdAt: "desc" },
+    });
+    for (let i = 0; i < alexOrders.length; i += 1) {
+      const order = alexOrders[i];
+      const referral = await db.referral.upsert({
+        where: { orderId: order.id },
+        update: {},
+        create: { linkId: twitterLink.id, orderId: order.id },
+      });
+      const amount = Math.round(order.totalCents * 0.15);
+      const paid = i < 2; // the two oldest of the four have been paid out
+      await db.commission.upsert({
+        where: { referralId: referral.id },
+        update: {},
+        create: {
+          referralId: referral.id,
+          amountCents: amount,
+          rateBps: 1500,
+          status: paid ? "PAID" : "PENDING",
+          paidAt: paid ? new Date(Date.now() - (i + 1) * 7 * 24 * 60 * 60 * 1000) : null,
+        },
+      });
+    }
+
+    // One YouTube referral in the pending queue so both links show revenue.
+    const ytOrder = alexOrders[alexOrders.length - 1];
+    if (ytOrder) {
+      const ytRef = await db.referral.upsert({
+        where: { orderId: ytOrder.id },
+        update: { linkId: ytLink.id },
+        create: { linkId: ytLink.id, orderId: ytOrder.id },
+      });
+      // No-op if commission already exists from the Twitter loop above.
+      try {
+        await db.commission.create({
+          data: {
+            referralId: ytRef.id,
+            amountCents: Math.round(ytOrder.totalCents * 0.15),
+            rateBps: 1500,
+            status: "PENDING",
+          },
+        });
+      } catch {
+        /* already upserted above */
+      }
+    }
+
+    if (alexUser) {
+      console.log("\u00b7 Seeding agent + API key demo for alex-morgan \u2026");
+      await db.agentWorkflow.upsert({
+        where: { userId_slug: { userId: alexUser.id, slug: "pricing-bot" } },
+        update: {},
+        create: {
+          userId: alexUser.id,
+          slug: "pricing-bot",
+          name: "Pricing Bot",
+          description:
+            "Raise prices when demand says so, gently and only when the math works.",
+          template: "pricing-bot",
+          config: JSON.stringify({ minConfidence: 0.7, maxRaisePct: 15 }),
+          enabled: true,
+        },
+      });
+      const pricingBot = await db.agentWorkflow.findUnique({
+        where: { userId_slug: { userId: alexUser.id, slug: "pricing-bot" } },
+      });
+      if (pricingBot) {
+        const existingRuns = await db.agentRun.count({
+          where: { workflowId: pricingBot.id },
+        });
+        if (existingRuns === 0) {
+          const now = Date.now();
+          await db.agentRun.createMany({
+            data: [
+              {
+                workflowId: pricingBot.id,
+                status: "SUCCEEDED",
+                summary: "Reviewed 8 products · 2 raise suggestions queued",
+                durationMs: 3418,
+                createdAt: new Date(now - 1 * 24 * 60 * 60 * 1000),
+              },
+              {
+                workflowId: pricingBot.id,
+                status: "SUCCEEDED",
+                summary: "Reviewed 8 products · no changes",
+                durationMs: 2911,
+                createdAt: new Date(now - 2 * 24 * 60 * 60 * 1000),
+              },
+              {
+                workflowId: pricingBot.id,
+                status: "SUCCEEDED",
+                summary: "Reviewed 7 products · 1 lower suggestion",
+                durationMs: 3102,
+                createdAt: new Date(now - 3 * 24 * 60 * 60 * 1000),
+              },
+            ],
+          });
+        }
+      }
+
+      // Demo API key — hash without cleartext so we can't leak a working token
+      // from the seed. The prefix makes the row look real in the UI.
+      await db.apiKey.upsert({
+        where: { hashed: "seed-demo-alex-laptop-hash" },
+        update: {},
+        create: {
+          userId: alexUser.id,
+          name: "Laptop (demo)",
+          prefix: "sk_live_demo",
+          hashed: "seed-demo-alex-laptop-hash",
+          scopes: "read",
+        },
+      });
     }
   }
 

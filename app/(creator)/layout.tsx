@@ -2,13 +2,18 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import {
   BarChart3,
+  Bot,
   Box,
+  Code2,
   CreditCard,
+  KeyRound,
   LayoutDashboard,
   LifeBuoy,
   Settings,
   ShoppingBag,
+  Sparkles,
   Users,
+  Workflow,
 } from "lucide-react";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -16,13 +21,23 @@ import { Logo } from "@/components/shared/logo";
 import { UserMenu } from "@/components/shared/user-menu";
 import { cn } from "@/lib/utils";
 
-const NAV = [
+const NAV: Array<{
+  href: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  group?: string;
+}> = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
   { href: "/dashboard/products", label: "Products", icon: Box },
   { href: "/dashboard/orders", label: "Orders", icon: ShoppingBag },
   { href: "/dashboard/customers", label: "Customers", icon: Users },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3 },
   { href: "/dashboard/payouts", label: "Payouts", icon: CreditCard },
+  { href: "/dashboard/copilot", label: "AI Copilot", icon: Sparkles, group: "Intelligence" },
+  { href: "/dashboard/agents", label: "Agents", icon: Bot, group: "Intelligence" },
+  { href: "/dashboard/affiliate", label: "Affiliate", icon: Workflow, group: "Growth" },
+  { href: "/dashboard/api-keys", label: "API keys", icon: KeyRound, group: "Developer" },
+  { href: "/developers", label: "API docs", icon: Code2, group: "Developer" },
 ];
 
 const BOTTOM_NAV = [
@@ -59,9 +74,20 @@ export default async function CreatorLayout({
           <Logo subtitle="Creator" />
         </div>
         <nav className="mt-8 flex flex-1 flex-col gap-0.5">
-          {NAV.map((n) => (
-            <SidebarLink key={n.href} {...n} />
-          ))}
+          {NAV.map((n, i) => {
+            const prevGroup = i > 0 ? NAV[i - 1].group : undefined;
+            const showLabel = n.group && n.group !== prevGroup;
+            return (
+              <div key={n.href}>
+                {showLabel && (
+                  <p className="mt-4 px-2.5 pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
+                    {n.group}
+                  </p>
+                )}
+                <SidebarLink href={n.href} label={n.label} icon={n.icon} />
+              </div>
+            );
+          })}
           <div className="mt-auto flex flex-col gap-0.5 pt-4">
             {BOTTOM_NAV.map((n) => (
               <SidebarLink key={n.href} {...n} />
