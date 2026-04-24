@@ -115,14 +115,23 @@ model Product {
   status         String    @default("DRAFT") // DRAFT | PUBLISHED | ARCHIVED
   priceCents     Int
   compareAtCents Int?
-  currency       String    @default("USD")
-  bestSeller     Boolean   @default(false)
-  instantDelivery Boolean  @default(true)
-  lifetimeUpdates Boolean  @default(true)
-  included       String? // JSON-encoded: { icon, title, description }[]
-  highlights     String? // JSON-encoded: { eyebrow, title, body, imageUrl }[] (Apple-style panels)
-  faq            String? // JSON-encoded: { q, a }[]
-  comparison     String? // JSON-encoded: { tiers:[{name,priceCents,popular?}], features:[{label, values:[]}] }
+  currency        String    @default("USD")
+  pricingModel    String    @default("ONE_TIME") // ONE_TIME | SUBSCRIPTION | PWYW | FREE
+  bestSeller      Boolean   @default(false)
+  instantDelivery Boolean   @default(true)
+  lifetimeUpdates Boolean   @default(true)
+  included        String? // JSON-encoded: { icon, title, description }[]
+  highlights      String? // JSON-encoded: { eyebrow, title, body, imageUrl }[] (Apple-style panels)
+  faq             String? // JSON-encoded: { q, a }[]
+  comparison      String? // JSON-encoded: { tiers:[{name,priceCents,popular?}], features:[{label, values:[]}] }
+  metaTitle       String?
+  metaDescription String?
+  ogImageUrl      String?
+  customSlug      String?
+  refundPolicy    String    @default("30_DAY") // 30_DAY | 14_DAY | NO_REFUND | CUSTOM
+  blockOrder      String? // JSON-encoded: string[] — ordered list of block IDs for studio
+  bonuses         String? // JSON-encoded: { title, description, type, value }[]
+  discountCodes   String? // JSON-encoded: { code, type, amount, expiresAt, usageLimit, usedCount }[]
   categoryId     String?
   category       Category? @relation(fields: [categoryId], references: [id])
   tags           ProductOnTag[]

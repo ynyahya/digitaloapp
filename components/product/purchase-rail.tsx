@@ -18,6 +18,7 @@ export function PurchaseRail({
   product,
   licenses,
   bundleCta,
+  onCheckout,
 }: {
   product: {
     slug: string;
@@ -29,6 +30,7 @@ export function PurchaseRail({
   };
   licenses: LicenseOption[];
   bundleCta?: { title: string; priceCents: number; slug: string };
+  onCheckout?: (licenseId: string) => void;
 }) {
   const [selectedId, setSelectedId] = useState(licenses[0]?.id ?? "");
   const selected = licenses.find((l) => l.id === selectedId);
@@ -92,12 +94,18 @@ export function PurchaseRail({
         </div>
 
         <div className="mt-6 flex flex-col gap-2">
-          <Button size="lg" className="w-full" asChild>
-            <Link href={`/checkout?product=${product.slug}&license=${selectedId}`}>
+          {onCheckout ? (
+            <Button size="lg" className="w-full" onClick={() => onCheckout(selectedId)}>
               Buy Now — {formatCurrency(priceCents)}
-            </Link>
-          </Button>
-          <Button size="lg" variant="secondary" className="w-full">
+            </Button>
+          ) : (
+            <Button size="lg" className="w-full" asChild>
+              <Link href={`/checkout?product=${product.slug}&license=${selectedId}`}>
+                Buy Now — {formatCurrency(priceCents)}
+              </Link>
+            </Button>
+          )}
+          <Button size="lg" variant="secondary" className="w-full" onClick={() => onCheckout?.(selectedId)}>
             <ShoppingCart className="h-4 w-4" /> Add to Cart
           </Button>
           <button

@@ -9,10 +9,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { label: "Products", href: "/products" },
-  { label: "Categories", href: "/categories" },
+  { label: "Marketplace", href: "/products" },
   { label: "Creators", href: "/creators" },
-  { label: "Bundles", href: "/bundles" },
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Pricing", href: "/pricing" },
 ];
 
@@ -76,7 +75,7 @@ export function Navbar({
             <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex">
               <Link href="/login">Login</Link>
             </Button>
-            <Button size="sm" asChild>
+            <Button size="sm" asChild className="rounded-full">
               <Link href="/register">Start Selling</Link>
             </Button>
           </div>

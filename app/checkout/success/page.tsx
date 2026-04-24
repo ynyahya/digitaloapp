@@ -1,65 +1,126 @@
 import Link from "next/link";
-import { Check, Download, Mail } from "lucide-react";
+import { 
+  CheckCircle2, 
+  Download, 
+  ArrowRight, 
+  LayoutDashboard, 
+  FileText, 
+  MessageSquare,
+  Globe,
+  Plus
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { MonoMockup } from "@/components/shared/mono-mockup";
+import { Card, CardContent } from "@/components/ui/card";
+import { Logo } from "@/components/shared/logo";
+import { cn } from "@/lib/utils";
 
-export default function CheckoutSuccess() {
+export default function CheckoutSuccessPage() {
   return (
-    <div className="mx-auto flex w-full max-w-[760px] flex-col items-center gap-10 px-5 py-20 md:px-8">
-      <span className="inline-flex h-14 w-14 items-center justify-center rounded-full bg-ink text-paper">
-        <Check className="h-6 w-6" />
-      </span>
-      <div className="text-center">
-        <h1 className="text-balance text-[32px] font-semibold leading-tight tracking-tight md:text-[40px]">
-          Thank you for your purchase
-        </h1>
-        <p className="mt-3 max-w-lg text-pretty text-[15px] leading-relaxed text-ink-muted">
-          Your digital products are ready to download. We&apos;ve emailed your receipt and access
-          links — check your inbox.
-        </p>
-      </div>
-
-      <div className="w-full rounded-3xl border border-line bg-paper p-6 shadow-soft md:p-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
-          Your downloads
-        </p>
-        <div className="mt-5 flex items-center gap-4 rounded-2xl border border-line bg-paper-soft p-4">
-          <MonoMockup label="SaaS Starter Kit" ratio="aspect-square" className="w-20 shrink-0" />
-          <div className="flex flex-1 flex-col">
-            <p className="text-[14px] font-semibold">SaaS Starter Kit</p>
-            <p className="mt-0.5 text-[12px] text-ink-muted">Personal License · v1.4.0 · 184 MB</p>
-          </div>
-          <Button size="sm">
-            <Download className="h-3.5 w-3.5" /> Download
-          </Button>
-        </div>
-
-        <div className="mt-6 grid grid-cols-2 gap-3 text-[12.5px] text-ink-muted">
-          <div className="rounded-xl border border-line bg-paper p-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
-              Order ID
-            </p>
-            <p className="mt-1 font-mono text-[12px] text-ink">DG-8F4K-0021</p>
-          </div>
-          <div className="rounded-xl border border-line bg-paper p-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-subtle">
-              Total
-            </p>
-            <p className="mt-1 text-[14px] font-semibold text-ink">$49.00</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-center gap-3">
-        <Button asChild>
-          <Link href="/">Continue shopping</Link>
-        </Button>
-        <Button variant="secondary" asChild>
-          <Link href="/account/orders">
-            <Mail className="h-4 w-4" /> View receipt
+    <div className="min-h-screen bg-paper font-sans text-ink flex flex-col">
+      {/* Header */}
+      <header className="border-b border-line bg-paper px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Logo noLink />
           </Link>
-        </Button>
-      </div>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" className="rounded-xl text-[13px]" asChild>
+              <Link href="/dashboard">Go to Dashboard</Link>
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+        <div className="max-w-3xl w-full space-y-12">
+          {/* Success Hero */}
+          <div className="space-y-6">
+            <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-50 text-emerald-600 mx-auto shadow-soft">
+              <CheckCircle2 className="h-10 w-10" />
+            </div>
+            <div className="space-y-2">
+              <h1 className="text-[40px] font-bold tracking-tight">Your product is ready.</h1>
+              <p className="text-[16px] text-ink-muted max-w-[500px] mx-auto">
+                Thank you for your purchase! We&apos;ve sent a receipt and access details to <strong>alex@example.com</strong>.
+              </p>
+            </div>
+          </div>
+
+          {/* Action Cards */}
+          <div className="grid gap-6 md:grid-cols-2">
+             <ActionCard 
+                title="Download Files" 
+                description="Get your SaaS Starter Kit (ZIP, 142MB)" 
+                icon={Download} 
+                primary
+             />
+             <ActionCard 
+                title="View License" 
+                description="Personal Use License (ID: #DIG-7241)" 
+                icon={FileText} 
+             />
+             <ActionCard 
+                title="Documentation" 
+                description="Read the setup guide and API docs" 
+                icon={Globe} 
+             />
+             <ActionCard 
+                title="Join Community" 
+                description="Connect with other builders on Discord" 
+                icon={MessageSquare} 
+             />
+          </div>
+
+          {/* Upsell / Next Step */}
+          <Card className="rounded-3xl border-line bg-paper-soft p-8 shadow-soft">
+             <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-left">
+                <div className="space-y-2">
+                   <h3 className="text-[20px] font-bold">Start your first project</h3>
+                   <p className="text-[14px] text-ink-muted">
+                     Head to your dashboard to manage your downloads and start building your marketplace.
+                   </p>
+                </div>
+                <Button className="h-12 px-8 rounded-2xl bg-ink text-paper font-bold shadow-float group" asChild>
+                   <Link href="/dashboard">
+                      Go to Dashboard
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                   </Link>
+                </Button>
+             </div>
+          </Card>
+
+          <p className="text-[13px] text-ink-muted">
+            Order ID: <strong>#ORD-7241</strong> · Need help? <Link href="/support" className="font-semibold text-ink underline underline-offset-4">Contact Support</Link>
+          </p>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-line py-8 px-6 text-center text-[12px] text-ink-subtle">
+        © 2026 Digitalo. Built for creators by creators.
+      </footer>
     </div>
+  );
+}
+
+function ActionCard({ title, description, icon: Icon, primary }: any) {
+  return (
+    <Card className={cn(
+      "rounded-3xl border-line transition-all hover:shadow-card cursor-pointer group text-left p-6",
+      primary ? "bg-ink text-paper" : "bg-paper hover:border-ink/20"
+    )}>
+       <div className="flex items-start gap-4">
+          <div className={cn(
+            "h-12 w-12 rounded-2xl flex items-center justify-center transition-colors",
+            primary ? "bg-paper text-ink" : "bg-paper-muted text-ink group-hover:bg-ink group-hover:text-paper"
+          )}>
+            <Icon className="h-6 w-6" />
+          </div>
+          <div className="space-y-0.5">
+             <h3 className="text-[16px] font-bold">{title}</h3>
+             <p className={cn("text-[13px]", primary ? "opacity-70" : "text-ink-muted")}>{description}</p>
+          </div>
+       </div>
+    </Card>
   );
 }

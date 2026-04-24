@@ -11,6 +11,7 @@ export function HeroShowcase({
   product,
   creator,
   viewersNow = 124,
+  onCheckout,
 }: {
   product: {
     title: string;
@@ -20,9 +21,11 @@ export function HeroShowcase({
     ratingCount: number;
     salesCount: number;
     bestSeller: boolean;
+    coverImage?: string | null;
   };
   creator: CreatorMini;
   viewersNow?: number;
+  onCheckout?: () => void;
 }) {
   return (
     <section className="relative overflow-hidden border-b border-line bg-paper">
@@ -74,18 +77,28 @@ export function HeroShowcase({
             </span>
           </div>
 
-          <div className="mt-10 grid grid-cols-2 gap-6">
-            <MiniStat label="Rating" value={`${product.ratingAvg.toFixed(1)} / 5`} icon={Star} />
-            <MiniStat
-              label="Customers"
-              value={`${formatCompactNumber(product.salesCount)}+`}
-              icon={ShoppingBag}
-            />
+          <div className="mt-8 flex items-center gap-3">
+             <button className="h-12 px-6 rounded-xl border border-line bg-paper hover:bg-paper-muted font-bold text-[14px] transition-colors shadow-soft">
+                Live Preview
+             </button>
+             <button 
+                onClick={onCheckout}
+                className="h-12 px-8 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-[14px] shadow-card transition-colors flex items-center gap-2"
+             >
+                Add to cart — ${(product.priceCents / 100).toFixed(2)}
+             </button>
           </div>
+
         </div>
 
-        <div className="relative">
-          <MonoMockup label={product.title} ratio="aspect-[5/4]" className="shadow-float" />
+        <div className="relative flex items-center justify-center">
+          {product.coverImage ? (
+             <div className="w-full aspect-[5/4] rounded-[32px] overflow-hidden border border-line shadow-card relative">
+                <img src={product.coverImage} alt={product.title} className="w-full h-full object-cover" />
+             </div>
+          ) : (
+             <MonoMockup label={product.title} ratio="aspect-[5/4]" className="shadow-float w-full" />
+          )}
           <div className="absolute -bottom-6 left-6 hidden rounded-2xl border border-line bg-paper px-4 py-3 shadow-card md:flex md:items-center md:gap-3">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-ink text-[11px] font-semibold text-paper">
               JD

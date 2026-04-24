@@ -23,17 +23,15 @@ export function Logo({
   className,
   showMark = true,
   subtitle,
+  noLink = false,
 }: {
   className?: string;
   showMark?: boolean;
   subtitle?: string;
+  noLink?: boolean;
 }) {
-  return (
-    <Link
-      href="/"
-      className={cn("group inline-flex items-center gap-2.5", className)}
-      aria-label="Digitalo home"
-    >
+  const content = (
+    <>
       {showMark && <LogoMark />}
       <span className="flex flex-col leading-none">
         <span className="font-sans text-[17px] font-semibold tracking-tight text-ink">
@@ -45,6 +43,24 @@ export function Logo({
           </span>
         )}
       </span>
+    </>
+  );
+
+  if (noLink) {
+    return (
+      <div className={cn("inline-flex items-center gap-2.5", className)}>
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <Link
+      href="/"
+      className={cn("group inline-flex items-center gap-2.5", className)}
+      aria-label="Digitalo home"
+    >
+      {content}
     </Link>
   );
 }
