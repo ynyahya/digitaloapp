@@ -1,7 +1,8 @@
 import { ArrowUpRight, TrendingUp, Users, ShoppingCart, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getDashboardStats, getRecentSales } from "@/lib/queries/dashboard";
+import { getDashboardStats, getRecentSales, getRevenueSeries } from "@/lib/queries/dashboard";
+import { LineChart } from "@/components/dashboard/line-chart";
 import { db } from "@/lib/db";
 
 export const metadata = {
@@ -14,8 +15,11 @@ export default async function DashboardPage() {
   const creator = await db.creator.findFirst();
   if (!creator) return <div>No creator found. Please seed the database.</div>;
 
-  const stats = await getDashboardStats(creator.id);
-  const sales = await getRecentSales(creator.id);
+  const [stats, sales, series] = await Promise.all([
+    getDashboardStats(creator.id),
+    getRecentSales(creator.id),
+    getRevenueSeries(creator.id, 7),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -77,14 +81,8 @@ export default async function DashboardPage() {
               <span className="px-2">90D</span>
             </div>
           </CardHeader>
-          <CardContent className="h-[320px] p-6 flex items-center justify-center text-ink-subtle italic">
-            {/* Chart Placeholder */}
-            <div className="w-full h-full bg-grid-lines rounded-xl border border-line/50 flex flex-col items-center justify-center gap-4">
-              <div className="text-[13px] font-medium not-italic text-ink-muted">Revenue Chart Visual</div>
-              <svg viewBox="0 0 800 200" className="w-[90%] text-ink opacity-20">
-                <path d="M0 150 C 100 140 150 80 200 90 S 300 160 400 130 S 550 20 650 50 S 750 80 800 40" fill="none" stroke="currentColor" strokeWidth="4" />
-              </svg>
-            </div>
+          <CardContent className="p-6">
+            <LineChart data={series} height={280} />
           </CardContent>
         </Card>
 
@@ -121,7 +119,17 @@ export default async function DashboardPage() {
   );
 }
 
-function StatCard({ title, value, delta, icon: Icon }: any) {
+function StatCard({
+  title,
+  value,
+  delta,
+  icon: Icon,
+}: {
+  title: string;
+  value: string;
+  delta: string;
+  icon: React.ComponentType<{ className?: string }>;
+}) {
   return (
     <Card className="rounded-2xl border-line shadow-soft transition-all hover:shadow-card">
       <CardContent className="p-6">
