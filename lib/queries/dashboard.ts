@@ -177,6 +177,7 @@ export async function getAnalyticsSummary(creatorId: string, days = 30) {
   const orders = await db.order.findMany({
     where: {
       createdAt: { gte: previousSince },
+      status: "PAID",
       items: {
         some: { product: { creatorId } },
       },
@@ -309,6 +310,7 @@ export async function getRevenueSeries(creatorId: string, days = 7) {
   const orders = await db.order.findMany({
     where: {
       createdAt: { gte: since },
+      status: "PAID",
       items: { some: { product: { creatorId } } },
     },
     include: {
