@@ -1,0 +1,225 @@
+Design a premium Affiliate & Growth Operating System dashboard for a creator marketplace, combining PartnerStack, Stripe, Linear and Vercel aesthetics.
+
+Style:
+- Ultra clean monochrome black-white interface
+- Premium growth SaaS dashboard
+- Minimal luxury partner portal
+- High whitespace
+- Sharp typography (Geist / Inter)
+- Elegant analytics cards
+- Futuristic growth operating system aesthetic
+- Pixel-perfect Figma quality
+
+Goal:
+A full affiliate, referral and growth command center.
+
+Layout:
+Left Sidebar:
+- Overview
+- Affiliates
+- Campaigns
+- Referrals
+- Commissions
+- Payouts
+- Assets
+- Leaderboards
+- Analytics
+- AI Growth
+- Settings
+
+Top bar:
+- Search
+- Invite Partner
+- Create Campaign
+- Notifications
+- Profile
+
+-----------------------------------
+1. Growth OS Hero
+Headline:
+Turn creators and partners into your growth engine.
+
+Hero metrics:
+- Referral Revenue
+- Active Affiliates
+- Conversion Rate
+- CAC Saved
+- Commission Paid
+- Viral Coefficient
+
+Premium stat cards.
+
+-----------------------------------
+2. Affiliate Command Dashboard
+Main overview panels:
+- Referral revenue graph
+- Commission growth
+- Partner-driven sales
+- Top campaigns performance
+
+PartnerStack-grade analytics.
+
+-----------------------------------
+3. Affiliate Partner Directory
+Beautiful partner cards:
+- Top affiliates
+- Creator ambassadors
+- Performance scores
+- Partner tiers
+- Recruitment status
+
+Elite / Pro / Starter partner badges.
+
+-----------------------------------
+4. Campaign Builder Studio
+Create referral campaigns:
+- Product launches
+- Bundle promos
+- Seasonal campaigns
+- Ambassador programs
+
+Visual campaign builder.
+
+-----------------------------------
+5. Referral Funnel Analytics
+Track:
+Clicks → Leads → Purchases → Revenue
+
+Beautiful conversion funnel.
+
+-----------------------------------
+6. Commission Center
+Manage:
+- Commission structures
+- Recurring commissions
+- Tiered rewards
+- Bonus incentives
+
+Stripe-like payouts interface.
+
+-----------------------------------
+7. Affiliate Portal Preview
+Partner-facing portal mockup:
+- Unique links
+- Earnings dashboard
+- Promo assets
+- Tracking analytics
+
+Minimal partner workspace.
+
+-----------------------------------
+8. Growth Assets Library
+Partner resources:
+- Swipe copy
+- Banners
+- Product media
+- Launch kits
+- Email templates
+- Social assets
+
+Elegant asset manager UI.
+
+-----------------------------------
+9. Leaderboard / Gamification
+Top affiliate leaderboard:
+- Revenue generated
+- Conversions
+- Rewards earned
+
+Premium ranking cards.
+
+-----------------------------------
+10. Viral Growth Engine
+Referral loop visualization:
+Buy → Refer → Earn → Invite → Scale
+
+Growth flywheel diagram.
+
+-----------------------------------
+11. AI Growth Copilot
+AI suggestions:
+- Recruit these affiliates
+- Increase commission here
+- Optimize campaign copy
+- Growth opportunities detected
+
+AI growth strategist panel.
+
+-----------------------------------
+12. Affiliate Recruitment CRM
+Manage partner pipeline:
+- Prospects
+- Outreach
+- Applications
+- Approved partners
+
+Linear-style growth CRM.
+
+-----------------------------------
+13. Payout Operations
+Partner payouts center:
+- Pending commissions
+- Paid earnings
+- Payout scheduling
+- Tax docs
+
+Premium fintech payouts UI.
+
+-----------------------------------
+14. Marketplace Growth Intelligence
+Insights:
+- Viral coefficient tracking
+- Channel ROI
+- Referral attribution
+- Marketplace flywheel health
+
+Advanced growth dashboard.
+
+-----------------------------------
+15. Command Palette (⌘K)
+Quick actions:
+Invite Partner
+Launch Campaign
+Adjust Commission
+Run Growth Report
+Ask AI for Opportunities
+
+Linear-style command modal.
+
+-----------------------------------
+16. Executive Growth Briefing
+Today:
+Referral revenue up 22%
+3 high-value affiliates recruited
+Campaign ROI exceeding target
+
+Founder growth briefing panel.
+
+-----------------------------------
+Optional Advanced Modules
+- Multi-sided marketplace flywheel map
+- Ambassador tier progression
+- Referral fraud detection
+- Growth simulation engine
+- Autonomous growth agents
+
+-----------------------------------
+Visual References:
+PartnerStack
+Stripe
+Linear
+FirstPromoter
+Vercel
+HubSpot
+
+Mood:
+Growth operating system
+Marketplace flywheel engine
+Luxury SaaS partner platform
+Startup unicorn growth machine
+Dribbble award-winning partner dashboard
+
+Output:
+Full Affiliate / Growth OS dashboard
+Desktop premium partner operating system UI
+Extremely detailed growth platform mockup

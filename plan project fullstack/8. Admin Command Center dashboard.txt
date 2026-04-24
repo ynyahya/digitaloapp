@@ -1,0 +1,245 @@
+Design a world-class Marketplace Admin Command Center dashboard, combining Stripe internal tooling, Linear precision, Palantir mission control aesthetics and Vercel minimalism.
+
+Style:
+- Ultra clean monochrome black-white interface
+- Premium enterprise control center
+- Futuristic operations dashboard
+- High whitespace
+- Sharp typography (Geist / Inter)
+- Luxury internal tooling aesthetic
+- Dense but elegant information design
+- Minimal but powerful data visualization
+- Pixel-perfect Figma quality
+
+Goal:
+Central operating system for running an entire creator marketplace platform.
+
+Layout:
+Left Command Sidebar:
+- Platform Overview
+- Creators
+- Products
+- Orders
+- GMV Analytics
+- Payouts
+- Fraud
+- Support
+- Moderation
+- Growth
+- AI Insights
+- System Health
+
+Top Command Bar:
+- Global search
+- Command palette
+- Alerts center
+- System health status
+- Admin profile
+
+-----------------------------------
+1. Mission Control Hero
+Large command center overview.
+
+Headline:
+Run the creator economy from one control center.
+
+Mission-critical metrics:
+- Gross Marketplace Volume (GMV)
+- Platform Revenue
+- Active Creators
+- Orders Today
+- MRR
+- Dispute Rate
+- Payout Volume
+
+Premium executive metrics cards.
+
+-----------------------------------
+2. Marketplace Live Command Board
+Dark command center dashboard.
+
+Real-time widgets:
+- Live transactions feed
+- Sales velocity
+- Active buyers
+- Marketplace traffic
+- Real-time purchase map
+- Creator activity stream
+
+Palantir mission-control feel.
+
+-----------------------------------
+3. GMV Intelligence Dashboard
+Large analytics section:
+- GMV trend graph
+- Revenue breakdown
+- Category performance
+- Creator cohort performance
+- Growth forecasting
+
+Headline:
+See the marketplace engine.
+
+-----------------------------------
+4. Creator Health Control Panel
+Monitor creator ecosystem:
+- Top creators
+- At-risk creators
+- New creator approvals
+- Creator growth trends
+- Creator quality score
+
+Table + intelligence cards.
+
+-----------------------------------
+5. Payout Operations Center
+Stripe-style payouts dashboard:
+- Pending payouts
+- Failed payouts
+- Settlement health
+- Creator balances
+- Payout queues
+
+Financial operations control.
+
+-----------------------------------
+6. Fraud & Risk Center
+Premium risk monitoring panel:
+- Fraud detection alerts
+- Chargeback monitoring
+- Suspicious activity feed
+- Risk scoring engine
+- Trust & safety queue
+
+Dark risk command module.
+
+-----------------------------------
+7. Marketplace Moderation Center
+Moderation queue:
+- Product approvals
+- Reported products
+- IP violations
+- Compliance flags
+- Creator review workflows
+
+Internal ops tooling aesthetic.
+
+-----------------------------------
+8. Support Command Center
+Unified support dashboard:
+- Open tickets
+- Response SLA
+- Creator support issues
+- Refund queue
+- Escalation board
+
+Linear-style ticket ops.
+
+-----------------------------------
+9. Growth Command Dashboard
+Growth levers:
+- Acquisition channels
+- Retention cohorts
+- Referral growth
+- Marketplace liquidity metrics
+- Supply / demand balance
+
+Marketplace growth engine.
+
+-----------------------------------
+10. AI Platform Insights
+AI-generated admin intelligence:
+
+Alerts:
+- GMV anomaly detected
+- Fraud spike risk
+- Creator churn risk
+- Growth opportunity identified
+
+AI strategy feed.
+
+-----------------------------------
+11. Creator Ranking Engine
+Leaderboard system:
+Top creators by:
+- Revenue
+- Growth
+- Retention
+- Product quality
+
+Beautiful ranking dashboard.
+
+-----------------------------------
+12. System Health Monitoring
+Infrastructure status board:
+- Payments uptime
+- Delivery uptime
+- API health
+- Queue health
+- Incident monitoring
+
+Vercel internal ops feel.
+
+-----------------------------------
+13. Marketplace Liquidity Map
+Visual supply-demand intelligence:
+- Hot product categories
+- Underserved niches
+- Demand spikes
+- Creator supply gaps
+
+Very “marketplace brain”.
+
+-----------------------------------
+14. Command Palette (⌘K)
+Actions:
+Approve creator
+Issue refund
+Investigate fraud
+Trigger payout review
+Run GMV report
+Ask AI insight
+
+Linear-style modal.
+
+-----------------------------------
+15. Executive Briefing Panel
+Daily operator briefing:
+
+Today:
+GMV up 14%
+Refund rate stable
+3 fraud anomalies flagged
+Subscription growth strong
+
+Looks like CEO control center.
+
+-----------------------------------
+16. Optional Advanced Modules
+- Marketplace simulation engine
+- Scenario forecasting
+- Creator economy map
+- Risk heatmaps
+- Autonomous ops agents
+
+-----------------------------------
+Visual References:
+Stripe internal dashboards
+Palantir
+Linear
+Vercel
+Datadog
+Snowflake
+
+Mood:
+Marketplace mission control
+Creator economy operating system
+Luxury enterprise admin software
+Unicorn startup internal tool
+Dribbble award-winning control center
+
+Output:
+Full Marketplace Admin Command Center dashboard
+desktop enterprise control panel mockup
+extremely detailed
+premium marketplace operating system UI

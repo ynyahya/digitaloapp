@@ -1,0 +1,246 @@
+Design a world-class Creator Product Studio dashboard, combining Notion flexibility, Shopify product management, Vercel minimalism and Linear precision.
+
+Style:
+- Ultra clean monochrome black-white aesthetic
+- Premium SaaS internal tool design
+- Minimal luxury admin interface
+- High whitespace
+- Sharp typography (Geist / Inter)
+- Soft borders, rounded 2xl cards
+- Modular editor layout
+- Product-led design system
+- Pixel-perfect Figma quality
+- Futuristic but simple
+
+Goal:
+An operating system where creators build, launch and manage digital products.
+
+Layout:
+Left Sidebar Navigation:
+- Dashboard
+- Products
+- Product Studio
+- Bundles
+- Orders
+- Customers
+- Analytics
+- Automations
+- Content
+- Settings
+
+Top Bar:
+- Global search
+- Command palette button
+- Publish button
+- Preview button
+- AI assistant shortcut
+- Notifications
+- Profile menu
+
+-----------------------------------
+1. Product Studio Main Editor
+Split-screen creator workspace.
+
+Left:
+Product configuration editor
+
+Right:
+Live product preview
+
+Headline:
+Build and launch digital products beautifully.
+
+-----------------------------------
+2. Product Creation Builder
+Editable modules:
+- Product Name
+- Description
+- Category
+- Pricing
+- Product Cover
+- Media Gallery
+- Digital Assets Upload
+- Tags
+- Product Status
+
+Drag-and-drop modular builder.
+
+Notion-style editable blocks.
+
+-----------------------------------
+3. Digital Assets Manager
+Beautiful file asset manager:
+- Upload zip assets
+- Source code files
+- Templates
+- Documentation
+- Bonus resources
+
+Grid / file explorer hybrid UI.
+
+Include:
+Versioning
+Asset organization
+Release management
+
+-----------------------------------
+4. Pricing & Licensing Builder
+Premium pricing cards editor:
+
+Create pricing options:
+- Personal License
+- Commercial License
+- Agency License
+
+Options:
+One-time
+Subscription
+Pay what you want
+Bundle pricing
+
+Upsells:
+Order bumps
+Bundle offers
+Cross-sells
+
+-----------------------------------
+5. Product Bundle Builder
+Visual bundle constructor:
+Drag products into bundles
+Bundle pricing logic
+Upsell previews
+
+Show bundle card previews.
+
+-----------------------------------
+6. Product Page Live Preview
+Right-side live preview:
+- Product landing page preview
+- Mobile preview
+- Storefront preview
+- Checkout preview
+
+Apple-style product presentation preview.
+
+-----------------------------------
+7. Product Content Modules
+Add modular sections:
+- Features blocks
+- FAQ builder
+- Testimonials
+- Product roadmap
+- Changelog
+- What's included cards
+
+Section builder like page composer.
+
+-----------------------------------
+8. SEO + Launch Settings
+Launch configuration panel:
+- SEO metadata
+- Product URL slug
+- Open graph preview
+- Launch date scheduler
+- Waitlist mode
+- Product visibility
+
+Minimal premium settings UI.
+
+-----------------------------------
+9. Digital Delivery Automation
+Automation builder:
+- Instant delivery flow
+- License key generation
+- Customer emails
+- Download access rules
+- Post-purchase sequences
+
+Visual automation workflow canvas.
+
+-----------------------------------
+10. Analytics Panel Inside Studio
+Mini analytics widgets:
+- Conversion rate
+- Preview clicks
+- Product visits
+- Revenue forecast
+
+Embedded product intelligence.
+
+-----------------------------------
+11. AI Product Assistant Panel
+Right slide-out AI copilot:
+
+AI can help:
+- Generate product descriptions
+- Suggest pricing
+- Improve sales copy
+- Bundle recommendations
+- Launch checklist
+- Optimize conversions
+
+Cursor / Linear AI style assistant.
+
+-----------------------------------
+12. Product Versioning / Changelog
+Developer-style release center:
+v1.0
+v1.1
+v2 roadmap
+
+Release notes editor.
+
+Very Vercel-style.
+
+-----------------------------------
+13. Creator Launch Checklist
+Launch readiness panel:
+✔ Assets uploaded
+✔ Pricing configured
+✔ Delivery configured
+✔ SEO ready
+✔ Checkout tested
+
+Publish readiness score.
+
+-----------------------------------
+14. Command Palette (⌘K)
+Built-in command menu:
+Create Product
+Generate Copy
+Preview Storefront
+Publish Product
+Run AI Insight
+
+Linear-style command palette modal.
+
+-----------------------------------
+15. Optional Advanced Modules
+- Membership product builder
+- Course builder
+- License generator
+- Affiliate setup
+- Subscription product setup
+- Product A/B testing
+
+-----------------------------------
+Visual References:
+Notion
+Shopify Admin
+Vercel Dashboard
+Linear
+Stripe Dashboard
+Framer CMS
+
+Mood:
+Creator Operating System
+Luxury internal SaaS tool
+Startup unicorn control panel
+Dribbble award-winning product builder
+Premium creator infrastructure
+
+Output:
+Full Creator Product Studio dashboard
+desktop app UI mockup
+extremely detailed
+premium creator CMS operating system

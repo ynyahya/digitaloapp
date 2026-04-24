@@ -1,0 +1,119 @@
+Design a world-class digital marketplace SaaS landing page combining Gumroad simplicity, Vercel minimalism, and Stripe premium polish.
+
+Style:
+- Ultra clean monochrome interface (black, white, soft gray)
+- Premium startup aesthetic
+- Minimal but luxurious
+- Huge whitespace
+- Sharp typography (Geist / Inter)
+- Editorial layout
+- Modern product-led SaaS design
+- Subtle gradients only in grayscale
+- Apple-level polish
+- Futuristic but simple
+
+Hero:
+Headline:
+Sell and Discover Premium Digital Products
+
+Subheadline:
+Templates, SaaS boilerplates, UI kits, ebooks, plugins and creator assets — beautifully curated.
+
+Buttons:
+- Start Selling
+- Explore Marketplace
+
+Hero visual:
+- Floating product marketplace dashboard
+- Elegant product cards
+- Revenue analytics mini widgets
+- Download assets previews
+- Monochrome 3D elements
+- Abstract premium product mockups
+
+Top navigation:
+Logo minimalist wordmark
+Products
+Categories
+Creators
+Bundles
+Pricing
+Login
+Start Selling (dark button)
+
+Social proof strip:
+Trusted by creators shipping products on:
+indie hackers style logos
+10k+ creators
+$5M+ digital sales
+
+Sections:
+
+1. Featured Marketplace Products
+Minimal product card grid:
+- Notion templates
+- SaaS starter kits
+- Framer templates
+- AI prompt packs
+- Design systems
+
+Each card:
+cover preview
+title
+price
+sales count
+creator avatar
+rating
+clean hover effect
+
+2. For Creators Section
+Split layout:
+Sell digital products instantly
+Zero-code storefronts
+Automated delivery
+Subscriptions
+Licensing
+
+3. Marketplace Analytics Section
+Dark dashboard style block
+Revenue charts
+Sales stats
+Conversion metrics
+
+4. Bundle Deals Section
+Premium monochrome promo banner
+
+5. Creator Showcase
+Featured creators profile cards
+
+6. Testimonials
+Minimal founder quotes
+
+7. Pricing
+Simple modern pricing cards
+
+8. Final CTA
+Launch your digital store today
+
+Footer:
+Minimal SaaS footer
+Products
+Resources
+Developers
+Company
+
+Visual references:
+vercel.com
+stripe.com
+gumroad.com
+linear.app
+framer.com
+
+Mood:
+Luxury indie hacker marketplace
+Minimal startup launch aesthetic
+Product Hunt featured vibe
+Dribbble award-winning landing page
+SaaS meets marketplace
+Extremely polished Figma web mockup
+Pixel-perfect desktop UI

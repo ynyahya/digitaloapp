@@ -1,0 +1,252 @@
+Design a world-class Developer API Portal and Platform Documentation experience combining Stripe Docs, Vercel, Supabase and Linear aesthetics.
+
+Style:
+- Ultra clean monochrome black-white interface
+- Premium developer platform aesthetic
+- Minimal luxury documentation design
+- Sharp typography (Geist / Inter)
+- Editorial + technical layout
+- Beautiful code-focused UI
+- Soft borders, terminal-inspired surfaces
+- Pixel-perfect Figma quality
+- Futuristic but simple
+
+Goal:
+A premium developer ecosystem portal for the creator marketplace platform.
+
+Product Positioning:
+Not just documentation —
+an API platform developers can build on.
+
+-----------------------------------
+Global Layout
+Three-panel layout:
+
+Left:
+Documentation navigation
+
+Center:
+Documentation content
+
+Right:
+API examples / live playground
+
+Sticky developer command bar on top.
+
+-----------------------------------
+1. Developer Platform Hero
+Large landing hero:
+
+Headline:
+Build on the Creator Commerce API.
+
+Subheadline:
+Payments, products, creators, subscriptions and marketplace infrastructure through one API.
+
+CTAs:
+- Start Building
+- Read Docs
+- View API Reference
+
+Hero visuals:
+- Elegant API architecture diagram
+- Floating code snippets
+- Monochrome developer graphics
+
+-----------------------------------
+2. Quickstart Section
+Beautiful quickstart blocks:
+- Authentication
+- Create product
+- Process checkout
+- Manage subscriptions
+- Webhooks
+
+Interactive getting-started cards.
+
+-----------------------------------
+3. API Reference Explorer
+Stripe-style API reference:
+
+Endpoints:
+- Products API
+- Orders API
+- Creator API
+- Payout API
+- Subscription API
+- Affiliate API
+- Marketplace API
+
+Beautiful endpoint explorer.
+
+-----------------------------------
+4. Interactive API Playground
+Live request builder:
+- Test endpoints
+- Generate responses
+- API console
+- Example payloads
+
+Like Stripe / Supabase playground.
+
+-----------------------------------
+5. Code Examples Tabs
+Language switcher:
+- JavaScript
+- TypeScript
+- Python
+- Go
+- Curl
+
+Elegant code panels.
+
+-----------------------------------
+6. SDK Showcase
+Official SDK section:
+- React SDK
+- Next.js SDK
+- Node SDK
+- Webhooks SDK
+
+Premium developer package cards.
+
+-----------------------------------
+7. Webhooks Event Center
+Webhook events explorer:
+product.purchased
+creator.paid
+subscription.renewed
+
+Event inspector UI.
+
+-----------------------------------
+8. Architecture / System Design
+Apple-style visual storytelling section:
+How the platform works:
+Creator → Product → Checkout → Delivery → Payout
+
+Beautiful systems diagram.
+
+-----------------------------------
+9. Developer Dashboard Preview
+Embedded developer console:
+- API keys
+- Usage metrics
+- Rate limits
+- Logs
+- Sandbox environments
+
+Vercel-style developer dashboard.
+
+-----------------------------------
+10. API Analytics / Usage
+Developer metrics:
+- Requests today
+- Error rates
+- Webhook delivery health
+- API performance
+
+Infrastructure observability feel.
+
+-----------------------------------
+11. Changelog / Release Notes
+Developer changelog center:
+- API versions
+- Releases
+- Deprecations
+- Upcoming changes
+
+Very Stripe/Vercel.
+
+-----------------------------------
+12. Tutorials / Guides
+Developer guide library:
+- Build marketplace app
+- Create checkout flow
+- Integrate payouts
+- Build creator storefront
+
+Beautiful docs cards.
+
+-----------------------------------
+13. Components / UI Kit
+Developer design system:
+- Checkout components
+- Embeddable widgets
+- Creator storefront blocks
+- React components
+
+Like Vercel UI components.
+
+-----------------------------------
+14. Command Palette (⌘K)
+Developer command search:
+Search docs
+Run example
+Generate API key
+Open playground
+View changelog
+
+Linear-style command palette.
+
+-----------------------------------
+15. Status + Infrastructure
+Status center:
+- API uptime
+- Webhook uptime
+- Incident feed
+- System health
+
+Like status.vercel.
+
+-----------------------------------
+16. Community / Developer Ecosystem
+Community section:
+- Discord
+- GitHub
+- Templates
+- Open source examples
+- Developer showcases
+
+-----------------------------------
+17. AI Developer Assistant
+Built-in AI coding assistant:
+Ask:
+- Generate integration code
+- Explain endpoint
+- Debug webhook
+- Scaffold example app
+
+Cursor-style AI assistant panel.
+
+-----------------------------------
+18. Optional Advanced Modules
+- GraphQL explorer
+- API simulation sandbox
+- Embedded command terminal
+- OAuth app builder
+- Partner developer marketplace
+
+-----------------------------------
+Visual References:
+stripe docs
+vercel docs
+supabase
+planetscale
+linear
+raycast
+
+Mood:
+Developer platform company
+Infrastructure startup
+Luxury API ecosystem
+Dribbble award-winning dev portal
+Unicorn startup platform docs
+
+Output:
+Full developer API portal
+documentation homepage
+API reference explorer
+developer console
+interactive playground
+extremely detailed premium developer platform UI

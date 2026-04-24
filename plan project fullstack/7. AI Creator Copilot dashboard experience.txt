@@ -1,0 +1,240 @@
+Design a premium AI Creator Copilot dashboard experience integrated into a creator operating system, combining Cursor AI, Linear AI, Vercel AI and Stripe intelligence.
+
+Style:
+- Ultra clean monochrome black-white interface
+- Futuristic minimal AI operating system aesthetic
+- Premium SaaS intelligence dashboard
+- High whitespace
+- Sharp typography (Geist / Inter)
+- Soft glass panels
+- Luxury AI assistant UI
+- Product-led internal tool design
+- Pixel-perfect Figma quality
+
+Goal:
+An AI copilot helping creators grow products, revenue and audience.
+
+Layout:
+Main dashboard with embedded AI assistant + side copilot panel.
+
+Sidebar:
+- Overview
+- Products
+- Analytics
+- Automations
+- AI Copilot
+- Campaigns
+- Audience
+- Settings
+
+Top bar:
+- AI search command
+- Ask AI prompt box
+- Notifications
+- Command palette
+- Profile
+
+-----------------------------------
+1. AI Copilot Hero
+Large intelligence control center.
+
+Headline:
+Your AI copilot for building a creator business.
+
+Subheadline:
+Get product, pricing, growth and revenue insights powered by AI.
+
+Floating intelligence widgets:
+- Revenue forecast
+- Growth score
+- Product opportunities
+- Launch recommendations
+
+-----------------------------------
+2. Conversational AI Side Panel
+Cursor-style AI chat panel:
+
+Ask AI:
+- How can I improve conversions?
+- Suggest pricing for this bundle
+- Analyze why sales dropped
+- Generate launch campaign
+
+Beautiful chat assistant UI with cards.
+
+-----------------------------------
+3. AI Revenue Intelligence
+Dark premium analytics block:
+- Revenue forecasting graph
+- Predicted MRR growth
+- Sales anomaly detection
+- Opportunity score
+
+Headline:
+AI sees growth before you do.
+
+-----------------------------------
+4. AI Product Optimization
+Recommendation cards:
+
+Suggestions:
+- Raise price by 15%
+- Bundle these two products
+- Improve checkout conversion
+- Add upsell offer
+- Improve product page copy
+
+Like AI business consultant.
+
+-----------------------------------
+5. AI Launch Assistant
+Launch planning panel:
+- Launch checklist
+- AI launch copy generator
+- Product Hunt launch plan
+- Email campaign drafts
+- Launch timeline
+
+Looks like startup launch control room.
+
+-----------------------------------
+6. AI Sales Copilot
+Sales assistant widgets:
+- High-intent customers detected
+- Upsell opportunities
+- Repeat buyer prediction
+- Cart recovery suggestions
+
+Premium CRM + AI hybrid.
+
+-----------------------------------
+7. AI Marketing Generator
+Content generation studio:
+Generate:
+- Product descriptions
+- Landing copy
+- Launch threads
+- X posts
+- Email sequences
+- Ads copy
+
+Beautiful prompt composer interface.
+
+-----------------------------------
+8. Audience Intelligence
+AI audience insights dashboard:
+- Segment analysis
+- Customer personas
+- Retention risks
+- Churn prediction
+- Best buyers analysis
+
+Stripe-like intelligence visuals.
+
+-----------------------------------
+9. AI Automation Builder
+Prompt-driven automations:
+
+When:
+Customer buys bundle
+
+Then:
+Send onboarding email
+Offer upsell
+Invite to community
+
+Visual workflow builder.
+
+-----------------------------------
+10. AI Growth Opportunities Feed
+Opportunity board:
+High priority suggestions:
++ Add subscription tier
++ Launch creator membership
++ Bundle top sellers
+
+Scored by impact.
+
+Looks like AI strategy dashboard.
+
+-----------------------------------
+11. Product Performance AI Analysis
+Each product gets AI insights:
+- Traffic high / conversion low
+- Improve pricing
+- Optimize product thumbnail
+- Add social proof
+
+Product intelligence cards.
+
+-----------------------------------
+12. Command Palette AI (⌘K)
+Linear-style command center:
+Generate Launch Plan
+Analyze Sales Drop
+Create Bundle Offer
+Forecast Revenue
+Optimize Product Page
+
+Minimal modal overlay.
+
+-----------------------------------
+13. AI Agent Widgets
+Specialized agents:
+
+Pricing Agent
+Growth Agent
+Launch Agent
+Support Agent
+Affiliate Agent
+
+Multi-agent dashboard cards.
+
+-----------------------------------
+14. Daily AI Briefing
+Morning intelligence digest panel:
+
+Today:
+Revenue up 12%
+Bundle opportunity detected
+2 products underperforming
+Launch email ready
+
+Looks like executive briefing.
+
+-----------------------------------
+15. AI Co-builder Workspace
+Split-screen collaborative workspace:
+Creator editing product
+AI suggesting improvements live
+
+Cursor copilot feel.
+
+-----------------------------------
+16. Optional Futuristic Modules
+- Voice AI assistant widget
+- Predictive GMV model
+- AI launch simulation
+- Autonomous marketing agent
+- AI business autopilot
+
+-----------------------------------
+Visual References:
+Cursor
+Linear AI
+Vercel AI
+Stripe
+Notion AI
+Raycast AI
+
+Mood:
+Founder intelligence operating system
+AI business copilot
+Luxury SaaS AI control center
+Startup unicorn future product
+Dribbble award-winning AI dashboard
+
+Output:
+Full AI Creator Copilot dashboard
+Desktop premium AI operating system UI
+Extremely detailed futuristic creator intelligence platform
