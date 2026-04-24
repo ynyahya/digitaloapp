@@ -45,7 +45,10 @@ export async function POST(req: Request) {
   const session = await auth();
   const customerEmail = parsed.data.email ?? session?.user?.email ?? undefined;
 
-  const origin = req.headers.get("origin") ?? process.env.AUTH_URL ?? "http://localhost:3000";
+  // Use a trusted server-side origin. The Origin header is user-controllable, so
+  // reading it here would let a caller point Stripe's success/cancel redirects at
+  // an attacker-controlled domain. AUTH_URL is set by the operator at deploy time.
+  const origin = process.env.AUTH_URL ?? "http://localhost:3000";
 
   const checkout = await stripe.checkout.sessions.create({
     mode: "payment",
