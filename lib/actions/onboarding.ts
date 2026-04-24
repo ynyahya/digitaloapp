@@ -9,7 +9,7 @@ const handleSchema = z
   .string()
   .min(3, "Handle must be at least 3 characters")
   .max(24, "Handle must be 24 characters or less")
-  .regex(/^[a-z0-9-]+$/i, "Lowercase letters, numbers, and hyphens only");
+  .regex(/^[a-z0-9-]+$/, "Lowercase letters, numbers, and hyphens only");
 
 const creatorSchema = z.object({
   displayName: z.string().min(2, "Display name must be at least 2 characters"),
@@ -60,9 +60,9 @@ export async function createCreatorAction(
     },
   });
 
-  // Promote to CREATOR role if currently BUYER.
-  await db.user.update({
-    where: { id: user.id },
+  // Promote to CREATOR role only if currently BUYER (don't downgrade ADMINs).
+  await db.user.updateMany({
+    where: { id: user.id, role: "BUYER" },
     data: { role: "CREATOR" },
   });
 
