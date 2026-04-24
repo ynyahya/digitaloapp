@@ -21,7 +21,7 @@ import { LaunchShareKit } from "./launch-share-kit";
 export function LaunchCenter() {
   const { product, setField } = useStudio();
   const [isPublishing, setIsPublishing] = useState(false);
-  const [showShareKit, setShowShareKit] = useState(product.status === "PUBLISHED");
+  const [showShareKit, setShowShareKit] = useState(false);
 
   const checks = [
     { label: "Product title and tagline", done: !!product.title && !!product.tagline },
@@ -210,26 +210,38 @@ export function LaunchCenter() {
                 </p>
               </div>
             </div>
-            <Button
-              onClick={handlePublish}
-              disabled={isPublishing || score < 50}
-              className={cn(
-                "h-12 px-7 rounded-xl font-bold shadow-float group transition-all",
-                product.status === "PUBLISHED"
-                  ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                  : "bg-ink text-paper hover:opacity-90",
-                (isPublishing || score < 50) && "opacity-60 cursor-not-allowed"
+            <div className="flex items-center gap-4">
+              {product.status === "PUBLISHED" && (
+                <button
+                  type="button"
+                  onClick={() => setShowShareKit(true)}
+                  className="inline-flex items-center gap-1.5 text-[12px] font-bold text-ink hover:gap-2 transition-all"
+                >
+                  View share kit
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
               )}
-            >
-              {isPublishing
-                ? "Publishing…"
-                : product.status === "PUBLISHED"
-                ? "Re-publish Updates"
-                : "Deploy to Production"}
-              {!isPublishing && (
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              )}
-            </Button>
+              <Button
+                onClick={handlePublish}
+                disabled={isPublishing || score < 50}
+                className={cn(
+                  "h-12 px-7 rounded-xl font-bold shadow-float group transition-all",
+                  product.status === "PUBLISHED"
+                    ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                    : "bg-ink text-paper hover:opacity-90",
+                  (isPublishing || score < 50) && "opacity-60 cursor-not-allowed"
+                )}
+              >
+                {isPublishing
+                  ? "Publishing…"
+                  : product.status === "PUBLISHED"
+                  ? "Re-publish Updates"
+                  : "Deploy to Production"}
+                {!isPublishing && (
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                )}
+              </Button>
+            </div>
           </div>
         </section>
       </div>
