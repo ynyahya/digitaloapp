@@ -164,7 +164,7 @@ export function PricingPageClient() {
 
       <TrustStrip />
 
-      <RoiCalculator />
+      <RoiCalculator yearly={yearly} />
 
       <section className="border-t border-line bg-paper-soft/40 py-14 md:py-20">
         <Container size="wide">
@@ -337,17 +337,19 @@ function TrustStrip() {
   );
 }
 
-function RoiCalculator() {
+function RoiCalculator({ yearly }: { yearly: boolean }) {
   const [salesPerMonth, setSalesPerMonth] = useState(120);
   const [avgPrice, setAvgPrice] = useState(49);
 
   const monthlyRevenue = salesPerMonth * avgPrice;
+  const proFee = yearly ? Math.round(19 * 0.8) : 19;
+  const bizFee = yearly ? Math.round(49 * 0.8) : 49;
   const numbers = useMemo(() => {
     const free = monthlyRevenue * 0.97;
-    const pro = monthlyRevenue * 0.99 - 19;
-    const business = monthlyRevenue - 49;
+    const pro = monthlyRevenue * 0.99 - proFee;
+    const business = monthlyRevenue - bizFee;
     return { free, pro, business };
-  }, [monthlyRevenue]);
+  }, [monthlyRevenue, proFee, bizFee]);
 
   return (
     <section className="py-14 md:py-20">
@@ -411,11 +413,11 @@ function RoiCalculator() {
               <ul className="mt-5 space-y-4">
                 {[
                   { name: "Free", value: numbers.free, fee: "after 3% fee" },
-                  { name: "Pro", value: numbers.pro, fee: "after 1% fee + $19/mo" },
+                  { name: "Pro", value: numbers.pro, fee: `after 1% fee + $${proFee}/mo` },
                   {
                     name: "Business",
                     value: numbers.business,
-                    fee: "after $49/mo, 0% fee",
+                    fee: `after $${bizFee}/mo, 0% fee`,
                     highlight: true,
                   },
                 ].map((row) => (

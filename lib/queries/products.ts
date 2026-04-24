@@ -156,7 +156,9 @@ export async function getNewArrivals(limit = 4) {
 export async function getMarketplaceCategories() {
   return db.category.findMany({
     orderBy: { name: "asc" },
-    include: { _count: { select: { products: true } } },
+    include: {
+      _count: { select: { products: { where: { status: "PUBLISHED" } } } },
+    },
   });
 }
 
