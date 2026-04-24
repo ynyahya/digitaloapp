@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { auth } from "@/auth";
 import { db } from "@/lib/db";
@@ -216,7 +217,25 @@ export async function deleteProduct(id: string): Promise<ProductActionResult> {
     select: { id: true, slug: true },
   });
   if (!row) return { ok: false, error: "Product not found" };
-  await db.product.delete({ where: { id: row.id } });
+  // OrderItem.productId has no `onDelete: Cascade` (and shouldn't — order
+  // history must stay intact). If the product has been purchased, Prisma
+  // returns a FK-violation (P2003) or the related-record variant (P2014).
+  // Translate that into a graceful error and steer the creator toward Archive.
+  try {
+    await db.product.delete({ where: { id: row.id } });
+  } catch (err) {
+    if (
+      err instanceof Prisma.PrismaClientKnownRequestError &&
+      (err.code === "P2003" || err.code === "P2014")
+    ) {
+      return {
+        ok: false,
+        error:
+          "Can't delete a product that already has orders — archive it instead so order history stays intact.",
+      };
+    }
+    throw err;
+  }
   revalidatePath("/dashboard/products");
   return { ok: true, id: row.id, slug: row.slug };
 }

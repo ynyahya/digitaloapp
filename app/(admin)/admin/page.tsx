@@ -58,12 +58,15 @@ export default async function AdminOverviewPage() {
 
   const gross = paidAgg._sum.totalCents ?? 0;
   const refunded = refundedAgg._sum.totalCents ?? 0;
-  const refundRate =
-    (paidAgg._count ?? 0) > 0
-      ? ((refundedAgg._count ?? 0) / (paidAgg._count ?? 0)) * 100
-      : 0;
-  const avgOrderValue =
-    (paidAgg._count ?? 0) > 0 ? Math.round(gross / (paidAgg._count ?? 0)) : 0;
+  // Refund rate denominator is all *originally paid* orders — currently PAID +
+  // REFUNDED (the refunded ones are no longer in PAID status). Using PAID alone
+  // inflates the rate (10 refunded of 100 originally paid would read 11.1%
+  // instead of 10%).
+  const paidCount = paidAgg._count ?? 0;
+  const refundedCount = refundedAgg._count ?? 0;
+  const originallyPaid = paidCount + refundedCount;
+  const refundRate = originallyPaid > 0 ? (refundedCount / originallyPaid) * 100 : 0;
+  const avgOrderValue = paidCount > 0 ? Math.round(gross / paidCount) : 0;
 
   return (
     <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-8 px-5 py-10 md:px-8 md:py-12">
