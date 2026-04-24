@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Archive, CircleCheck, FileText, MoreHorizontal } from "lucide-react";
 import {
@@ -25,48 +25,57 @@ export function ProductAdminActions({
   status: Status;
 }) {
   const [pending, start] = useTransition();
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const setStatus = (next: Status) =>
     start(async () => {
-      await setProductStatusAdmin(productId, next);
+      setError(null);
+      const res = await setProductStatusAdmin(productId, next);
+      if (!res.ok) {
+        setError(res.error);
+        return;
+      }
       router.refresh();
     });
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-paper text-ink-muted transition-colors hover:border-ink/30 hover:text-ink disabled:opacity-50"
-        disabled={pending}
-        aria-label="Product actions"
-      >
-        <MoreHorizontal className="h-4 w-4" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52">
-        <DropdownMenuLabel>Admin</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <a href={`/p/${slug}`} target="_blank" rel="noreferrer">
-            View on store
-          </a>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        {status !== "PUBLISHED" && (
-          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setStatus("PUBLISHED"); }}>
-            <CircleCheck className="h-4 w-4" /> Force publish
+    <div className="flex flex-col items-end gap-1">
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className="inline-flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-paper text-ink-muted transition-colors hover:border-ink/30 hover:text-ink disabled:opacity-50"
+          disabled={pending}
+          aria-label="Product actions"
+        >
+          <MoreHorizontal className="h-4 w-4" />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-52">
+          <DropdownMenuLabel>Admin</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <a href={`/p/${slug}`} target="_blank" rel="noreferrer">
+              View on store
+            </a>
           </DropdownMenuItem>
-        )}
-        {status !== "DRAFT" && (
-          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setStatus("DRAFT"); }}>
-            <FileText className="h-4 w-4" /> Move to draft
-          </DropdownMenuItem>
-        )}
-        {status !== "ARCHIVED" && (
-          <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setStatus("ARCHIVED"); }}>
-            <Archive className="h-4 w-4" /> Archive
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <DropdownMenuSeparator />
+          {status !== "PUBLISHED" && (
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setStatus("PUBLISHED"); }}>
+              <CircleCheck className="h-4 w-4" /> Force publish
+            </DropdownMenuItem>
+          )}
+          {status !== "DRAFT" && (
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setStatus("DRAFT"); }}>
+              <FileText className="h-4 w-4" /> Move to draft
+            </DropdownMenuItem>
+          )}
+          {status !== "ARCHIVED" && (
+            <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setStatus("ARCHIVED"); }}>
+              <Archive className="h-4 w-4" /> Archive
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      {error && <p className="text-[10px] text-ink">{error}</p>}
+    </div>
   );
 }

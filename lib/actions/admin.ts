@@ -40,12 +40,16 @@ export async function setCreatorVerified(
   verified: boolean,
 ): Promise<Result> {
   await requireAdminSession();
-  await db.creator.update({
+  const row = await db.creator.update({
     where: { id: creatorId },
     data: { verified },
+    select: { handle: true },
   });
   revalidatePath("/admin/creators");
-  revalidatePath(`/c`);
+  // Revalidate the specific storefront path so the verified badge flips on the
+  // next visit. `revalidatePath("/c")` doesn't match the dynamic /c/[handle]
+  // route, so we build the concrete path from the handle we just read back.
+  revalidatePath(`/c/${row.handle}`);
   return { ok: true };
 }
 
