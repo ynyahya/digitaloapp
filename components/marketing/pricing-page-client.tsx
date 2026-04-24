@@ -116,7 +116,7 @@ const COMPARE: { group: string; rows: { label: string; values: [CompareValue, Co
       { label: "Transaction fee", values: ["3%", "1%", "0%", "Custom"] },
       { label: "Custom domain", values: [false, false, true, true] },
       { label: "Affiliate program", values: [false, false, true, true] },
-      { label: "Bundles & upsells", values: [false, true, true, true] },
+      { label: "Bundles & upsells", values: [false, false, true, true] },
     ],
   },
   {
