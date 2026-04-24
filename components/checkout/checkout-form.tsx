@@ -34,7 +34,13 @@ export function CheckoutForm({
         const res = await fetch("/api/checkout", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ productSlug, licenseId, email }),
+          // Send `undefined` (not "") when the field is empty so the zod
+          // `.email().optional()` validator on the server accepts the payload.
+          body: JSON.stringify({
+            productSlug,
+            licenseId,
+            email: email || undefined,
+          }),
         });
         if (res.ok) {
           const { url } = (await res.json()) as { url?: string };

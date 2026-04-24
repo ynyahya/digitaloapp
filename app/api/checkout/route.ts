@@ -28,11 +28,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
-  const product = await db.product.findUnique({
-    where: { slug: parsed.data.productSlug },
+  const product = await db.product.findFirst({
+    where: { slug: parsed.data.productSlug, status: "PUBLISHED" },
     include: { licenses: true },
   });
   if (!product) {
+    // Treat DRAFT and ARCHIVED products the same as missing — never surface their
+    // existence to unauthenticated callers and never let them spin up a Stripe
+    // session for something that isn't actually for sale.
     return NextResponse.json({ error: "Product not found" }, { status: 404 });
   }
 
