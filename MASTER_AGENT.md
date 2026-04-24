@@ -2,7 +2,7 @@
 
 ## 📌 SUMBER KEBENARAN UTAMA (SOURCE OF TRUTH)
 **SEMUA KEPUTUSAN, DESAIN, ARSITEKTUR, DAN KODE** yang dihasilkan oleh AI untuk proyek ini **WAJIB SECARA MUTLAK** merujuk pada seluruh dokumen dan gambar yang berada di dalam folder:
-`c:\digitalo\digitaloapp\plan project fullstack\`
+`digitaloapp\plan project fullstack\`
 
 Folder plan ini (yang berisi 11 dokumen instruksi dan 11 desain referensi visual) adalah **Sumber Kerangka Berpikir Utama**. Tidak ada asumsi di luar rencana ini kecuali untuk teknis perbaikan bug.
 
