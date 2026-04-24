@@ -1,8 +1,12 @@
 import type { NextAuthConfig } from "next-auth";
 
 /**
- * Edge-safe NextAuth config (no Prisma adapter, no Node.js APIs).
- * Used by middleware for lightweight auth checks.
+ * Shared NextAuth config. The server instance in auth.ts extends this with the
+ * Prisma adapter and Resend provider; middleware currently does not run auth
+ * checks because we use `session.strategy = "database"` on the server, and
+ * database sessions aren't readable from the edge runtime without Prisma.
+ * Route-level protection lives in the server components (see
+ * `app/(creator)/layout.tsx` which redirects unauthenticated users to /login).
  */
 export const authConfig = {
   pages: {
@@ -11,20 +15,6 @@ export const authConfig = {
   },
   providers: [],
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
-      const isLoggedIn = !!auth?.user;
-      const path = nextUrl.pathname;
-      const isProtected =
-        path.startsWith("/dashboard") ||
-        path.startsWith("/studio") ||
-        path.startsWith("/account");
-      if (isProtected && !isLoggedIn) {
-        const url = new URL("/login", nextUrl.origin);
-        url.searchParams.set("callbackUrl", nextUrl.pathname + nextUrl.search);
-        return Response.redirect(url);
-      }
-      return true;
-    },
     session({ session, user }) {
       if (session.user && user) {
         session.user.id = user.id;
