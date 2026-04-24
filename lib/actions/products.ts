@@ -94,8 +94,18 @@ export async function saveProduct(
   }
   const data = parsed.data;
 
-  // Resolve a unique slug for this creator (auto-generate from title if missing).
+  // Resolve a unique slug (auto-generate from title if missing). Guard the
+  // empty-string case — if a user's title is all non-Latin characters, emoji,
+  // or punctuation, slugify() strips everything and we'd end up persisting
+  // slug = "" (which would route-collide with the /p/ index).
   const baseSlug = slugify(data.slug ?? data.title);
+  if (!baseSlug) {
+    return {
+      ok: false,
+      error:
+        "Title or slug must contain at least one Latin letter or number so we can build a URL.",
+    };
+  }
   let slug = baseSlug;
   let suffix = 2;
   while (

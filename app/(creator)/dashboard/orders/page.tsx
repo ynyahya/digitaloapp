@@ -28,27 +28,36 @@ export default async function OrdersPage({
     ? active
     : "ALL";
 
-  const orders = await db.order.findMany({
-    where: {
-      items: { some: { product: { creatorId: creator.id } } },
-      ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
-    },
-    include: {
-      items: {
-        include: { product: { select: { title: true, slug: true } } },
-      },
-      user: { select: { name: true, email: true } },
-    },
-    orderBy: { createdAt: "desc" },
-    take: 100,
-  });
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-  const stats = await db.order.groupBy({
-    by: ["status"],
-    where: { items: { some: { product: { creatorId: creator.id } } } },
-    _count: true,
-    _sum: { totalCents: true },
-  });
+  const [orders, stats, orders30d] = await Promise.all([
+    db.order.findMany({
+      where: {
+        items: { some: { product: { creatorId: creator.id } } },
+        ...(statusFilter !== "ALL" ? { status: statusFilter } : {}),
+      },
+      include: {
+        items: {
+          include: { product: { select: { title: true, slug: true } } },
+        },
+        user: { select: { name: true, email: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 100,
+    }),
+    db.order.groupBy({
+      by: ["status"],
+      where: { items: { some: { product: { creatorId: creator.id } } } },
+      _count: true,
+      _sum: { totalCents: true },
+    }),
+    db.order.count({
+      where: {
+        items: { some: { product: { creatorId: creator.id } } },
+        createdAt: { gte: thirtyDaysAgo },
+      },
+    }),
+  ]);
   const paid = stats.find((s) => s.status === "PAID");
   const refunded = stats.find((s) => s.status === "REFUNDED");
 
@@ -76,9 +85,7 @@ export default async function OrdersPage({
         />
         <KpiCard
           label="Orders (30d)"
-          value={orders
-            .filter((o) => o.createdAt > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
-            .length.toLocaleString()}
+          value={orders30d.toLocaleString()}
           hint="Rolling window"
         />
       </div>

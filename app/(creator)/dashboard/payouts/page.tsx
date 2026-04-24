@@ -25,6 +25,7 @@ export default async function PayoutsPage() {
         items: { some: { product: { creatorId: creator.id } } },
       },
       _sum: { totalCents: true },
+      _count: true,
     }),
     db.order.aggregate({
       where: {
@@ -36,10 +37,13 @@ export default async function PayoutsPage() {
   ]);
 
   const gross = paidAgg._sum.totalCents ?? 0;
+  const paidOrderCount = paidAgg._count ?? 0;
   const refunded = refundedAgg._sum.totalCents ?? 0;
   // Digitalo take rate placeholder: 5% platform fee + Stripe 2.9% + 30¢ per order.
   const platformFee = Math.round(gross * 0.05);
-  const processingFee = Math.round(gross * 0.029);
+  const processingPercentFee = Math.round(gross * 0.029);
+  const processingFlatFee = paidOrderCount * 30; // 30¢ per order, in cents
+  const processingFee = processingPercentFee + processingFlatFee;
   const net = Math.max(0, gross - refunded - platformFee - processingFee);
 
   const connected = Boolean(creator.stripeAccountId);
