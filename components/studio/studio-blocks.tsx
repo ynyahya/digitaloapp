@@ -467,7 +467,7 @@ export function TagBlock() {
       icon={Layers}
       label="Tags & Categories"
       description="Help buyers discover this product in the marketplace"
-      className="col-span-12 lg:col-span-6"
+      className="col-span-12 lg:col-span-5"
     >
       <div className="space-y-4">
         <label className={LABEL_BASE}>Selected Tags</label>
@@ -629,7 +629,7 @@ export function AutomationBlock() {
       icon={Zap}
       label="Delivery Automations"
       description="Email flows and webhooks triggered on purchase"
-      className="col-span-12 lg:col-span-6"
+      className="col-span-12"
     >
       <div className="space-y-3">
         <div className="p-4 rounded-2xl border border-line bg-paper-soft space-y-3">
