@@ -57,22 +57,22 @@ async function fulfillOrder(session: Stripe.Checkout.Session) {
   const amountTotal = session.amount_total ?? priceCents;
   const email = session.customer_details?.email ?? session.customer_email ?? "";
 
-  // Idempotency: Stripe may deliver the same event more than once. Short-circuit if
-  // this session has already been fulfilled so we never double-increment salesCount
-  // or re-mint download tokens.
+  // Idempotency: Stripe may deliver the same event more than once. Short-circuit
+  // if this session has already been fulfilled so we never double-increment
+  // salesCount or re-mint download tokens.
+  //
+  // Importantly, once a row exists we treat it as terminal and return — we do
+  // NOT re-flip status. Earlier this was `if (existing.status !== "PAID")
+  // update({ status: "PAID" })`, which had a nasty corner case: if Stripe
+  // retried a checkout.session.completed *after* the order had been refunded
+  // (e.g. initial delivery 200'd on our side but was retried anyway, or the
+  // retry arrived after an admin refund), the retry would silently revert
+  // REFUNDED -> PAID while the customer's money was already back. Just return.
   const existing = await db.order.findUnique({
     where: { stripeSessionId: session.id },
-    select: { id: true, status: true },
+    select: { id: true },
   });
-  if (existing) {
-    if (existing.status !== "PAID") {
-      await db.order.update({
-        where: { id: existing.id },
-        data: { status: "PAID", totalCents: amountTotal },
-      });
-    }
-    return;
-  }
+  if (existing) return;
 
   // Resolve the buyer. Use `upsert` on email to avoid the TOCTOU race where two
   // concurrent webhooks (same email, different sessions) both try to `create`.
