@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 import { requireAdminSession } from "@/lib/admin";
 
 const ROLE = z.enum(["BUYER", "CREATOR", "ADMIN"]);
@@ -88,11 +89,61 @@ export async function setProductStatusAdmin(
 
 export async function refundOrderAdmin(orderId: string): Promise<Result> {
   await requireAdminSession();
-  // Flip PAID -> REFUNDED atomically by scoping the update's where clause to
-  // status=PAID. Two concurrent refund requests can both pass an external
-  // status check; here only one of them will match the row, the other throws
-  // P2025 which we translate to a graceful error. The Refund row is created
-  // in the same transaction so it can never exist without the status flip.
+
+  // 1) Pre-flight: look up the order so we know which Stripe PaymentIntent to
+  //    reverse, and surface a meaningful error before touching anything.
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    select: { id: true, status: true, stripePaymentIntentId: true },
+  });
+  if (!order) return { ok: false, error: "Order not found" };
+  if (order.status !== "PAID") {
+    return {
+      ok: false,
+      error: `Cannot refund an order in status ${order.status}`,
+    };
+  }
+
+  // 2) If this order originated from a real Stripe charge, require Stripe to
+  //    be configured and actually issue the refund there first. We never want
+  //    to flip the DB status to REFUNDED while the customer's card is still
+  //    charged — the customer's money must move before we claim a refund
+  //    happened internally.
+  if (order.stripePaymentIntentId) {
+    if (!stripe) {
+      return {
+        ok: false,
+        error:
+          "Stripe isn't configured on the server. Set STRIPE_SECRET_KEY before issuing refunds so the customer actually gets their money back.",
+      };
+    }
+    try {
+      await stripe.refunds.create({
+        payment_intent: order.stripePaymentIntentId,
+      });
+    } catch (err: unknown) {
+      // Treat "already refunded in Stripe dashboard" as a soft success — we
+      // still need to sync our DB to match reality. Everything else is a
+      // hard failure.
+      const code =
+        err && typeof err === "object" && "code" in err
+          ? (err as { code?: string }).code
+          : undefined;
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Stripe rejected the refund request.";
+      if (code !== "charge_already_refunded") {
+        return { ok: false, error: `Stripe refund failed: ${message}` };
+      }
+    }
+  }
+
+  // 3) Flip PAID -> REFUNDED atomically by scoping the update's where clause to
+  //    status=PAID. Two concurrent refund requests both reach this point but
+  //    only one can match the row; the other throws P2025 which we translate
+  //    to a graceful error. The Refund row is created in the same transaction
+  //    so it can never exist without the status flip.
   try {
     await db.$transaction(async (tx) => {
       const updated = await tx.order.update({
@@ -115,9 +166,6 @@ export async function refundOrderAdmin(orderId: string): Promise<Result> {
       err instanceof Prisma.PrismaClientKnownRequestError &&
       err.code === "P2025"
     ) {
-      // Either the order doesn't exist or it wasn't in PAID status — read it
-      // back to produce a helpful error message without relying on the state
-      // observed before the transaction.
       const existing = await db.order.findUnique({
         where: { id: orderId },
         select: { status: true },
