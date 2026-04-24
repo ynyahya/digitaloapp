@@ -249,11 +249,12 @@ function PricingHero({
 }
 
 function PlanCard({ plan, yearly }: { plan: Plan; yearly: boolean }) {
+  const discountedMonthly = Math.round(plan.monthlyPrice * 0.8);
   const shownPrice =
     plan.price === "custom"
       ? "Custom"
       : yearly
-        ? `$${Math.round((plan.monthlyPrice * 12 * 0.8) / 12)}`
+        ? `$${discountedMonthly}`
         : `$${plan.monthlyPrice}`;
   const billed =
     plan.price === "custom"
@@ -261,7 +262,7 @@ function PlanCard({ plan, yearly }: { plan: Plan; yearly: boolean }) {
       : plan.monthlyPrice === 0
         ? "Free forever"
         : yearly
-          ? `Billed yearly · $${Math.round(plan.monthlyPrice * 12 * 0.8)}/yr`
+          ? `Billed yearly · $${discountedMonthly * 12}/yr`
           : "Billed monthly";
 
   return (
