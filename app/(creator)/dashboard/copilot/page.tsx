@@ -48,6 +48,7 @@ export default async function CopilotPage() {
     creatorMetrics,
     newFollowers7d,
     draftCount,
+    reviewCount,
   ] = await Promise.all([
     db.product.findMany({
       where: { creatorId: creator.id },
@@ -93,6 +94,14 @@ export default async function CopilotPage() {
     db.product.count({
       where: { creatorId: creator.id, status: "DRAFT" },
     }),
+    // Actual review count — not productsSold. The brief's rating-trend
+    // signals ("Rating slipping", "Rating steady") need the count of
+    // reviews left on the creator's products, which is what avgRating is
+    // averaged over. Using productsSold here would fire false "0.0★"
+    // warnings for any creator with sales but no reviews.
+    db.review.count({
+      where: { product: { creatorId: creator.id } },
+    }),
   ]);
 
   const peerMedianCents = Math.round(peerMedian._avg.priceCents ?? 4900);
@@ -107,7 +116,7 @@ export default async function CopilotPage() {
     topProductTitle: topProduct?.title ?? null,
     topProductRevenue: topProductSales[0]?._sum.priceCents ?? 0,
     avgRating: creatorMetrics?.avgRating ?? 0,
-    reviewCount: creatorMetrics?.productsSold ?? 0,
+    reviewCount,
     newFollowers7d,
     draftCount,
   });

@@ -25,7 +25,7 @@ export default async function AffiliatePage() {
   });
   if (!creator) redirect("/dashboard");
 
-  const [links, pending, paid] = await Promise.all([
+  const [links, pending, paid, paidLifetime] = await Promise.all([
     db.affiliateLink.findMany({
       where: { creatorId: creator.id },
       include: {
@@ -69,6 +69,16 @@ export default async function AffiliatePage() {
       orderBy: { paidAt: "desc" },
       take: 20,
     }),
+    // Separate aggregate for the "Paid out · Lifetime" KPI so it stays
+    // correct after the 20th payout. The `paid` list above is display-only
+    // (Recent payouts section) and intentionally capped at 20.
+    db.commission.aggregate({
+      where: {
+        status: "PAID",
+        referral: { link: { creatorId: creator.id } },
+      },
+      _sum: { amountCents: true },
+    }),
   ]);
 
   const origin = process.env.AUTH_URL ?? "http://localhost:3000";
@@ -77,7 +87,7 @@ export default async function AffiliatePage() {
   const totalClicks = links.reduce((a, l) => a + l.clicks, 0);
   const totalConversions = links.reduce((a, l) => a + l._count.referrals, 0);
   const pendingCents = pending.reduce((a, c) => a + c.amountCents, 0);
-  const paidCents = paid.reduce((a, c) => a + c.amountCents, 0);
+  const paidCents = paidLifetime._sum.amountCents ?? 0;
   const conversionRate = totalClicks > 0 ? (totalConversions / totalClicks) * 100 : 0;
 
   return (
