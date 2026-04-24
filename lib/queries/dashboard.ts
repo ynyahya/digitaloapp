@@ -168,9 +168,11 @@ export async function getCustomers(creatorId: string) {
 
 export async function getAnalyticsSummary(creatorId: string, days = 30) {
   const since = new Date();
-  since.setDate(since.getDate() - days);
-  const previousSince = new Date();
-  previousSince.setDate(previousSince.getDate() - days * 2);
+  since.setHours(0, 0, 0, 0);
+  since.setDate(since.getDate() - (days - 1));
+
+  const previousSince = new Date(since);
+  previousSince.setDate(previousSince.getDate() - days);
 
   const orders = await db.order.findMany({
     where: {
@@ -185,52 +187,58 @@ export async function getAnalyticsSummary(creatorId: string, days = 30) {
     orderBy: { createdAt: "asc" },
   });
 
-  const current = orders.filter((o) => o.createdAt >= since);
-  const previous = orders.filter((o) => o.createdAt < since);
+  // Per-creator events: one row per (order, item) where item belongs to creator.
+  type CreatorEvent = {
+    orderId: string;
+    userId: string;
+    createdAt: Date;
+    productId: string;
+    productTitle: string;
+    cents: number;
+    qty: number;
+  };
 
-  const sumCents = (list: typeof orders) =>
-    list.reduce((s, o) => s + o.totalCents, 0);
+  const events: CreatorEvent[] = [];
+  for (const o of orders) {
+    for (const item of o.items) {
+      if (item.product.creatorId !== creatorId) continue;
+      events.push({
+        orderId: o.id,
+        userId: o.userId,
+        createdAt: o.createdAt,
+        productId: item.product.id,
+        productTitle: item.product.title,
+        cents: item.priceCents * item.qty,
+        qty: item.qty,
+      });
+    }
+  }
 
-  const revenueCents = sumCents(current);
-  const previousRevenueCents = sumCents(previous);
-  const orderCount = current.length;
-  const previousOrderCount = previous.length;
+  const currentEvents = events.filter((e) => e.createdAt >= since);
+  const previousEvents = events.filter((e) => e.createdAt < since);
+
+  const sumCents = (list: CreatorEvent[]) => list.reduce((s, e) => s + e.cents, 0);
+
+  const revenueCents = sumCents(currentEvents);
+  const previousRevenueCents = sumCents(previousEvents);
+  const orderCount = new Set(currentEvents.map((e) => e.orderId)).size;
+  const previousOrderCount = new Set(previousEvents.map((e) => e.orderId)).size;
   const aov = orderCount > 0 ? revenueCents / orderCount : 0;
   const previousAov =
     previousOrderCount > 0 ? previousRevenueCents / previousOrderCount : 0;
 
-  const buckets = Array.from({ length: days }, (_, i) => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() - (days - 1 - i));
-    return { date: d, revenueCents: 0, orders: 0 };
-  });
-  for (const o of current) {
-    const day = new Date(o.createdAt);
-    day.setHours(0, 0, 0, 0);
-    const idx = buckets.findIndex(
-      (b) => b.date.getTime() === day.getTime(),
-    );
-    if (idx >= 0) {
-      buckets[idx].revenueCents += o.totalCents;
-      buckets[idx].orders += 1;
-    }
-  }
-
   const productMap = new Map<string, { title: string; sales: number; revCents: number }>();
-  for (const o of current) {
-    for (const item of o.items) {
-      const existing = productMap.get(item.product.id) ?? {
-        title: item.product.title,
-        sales: 0,
-        revCents: 0,
-      };
-      productMap.set(item.product.id, {
-        title: existing.title,
-        sales: existing.sales + item.qty,
-        revCents: existing.revCents + item.priceCents * item.qty,
-      });
-    }
+  for (const e of currentEvents) {
+    const existing = productMap.get(e.productId) ?? {
+      title: e.productTitle,
+      sales: 0,
+      revCents: 0,
+    };
+    productMap.set(e.productId, {
+      title: existing.title,
+      sales: existing.sales + e.qty,
+      revCents: existing.revCents + e.cents,
+    });
   }
 
   const topProducts = Array.from(productMap.values())
@@ -242,8 +250,8 @@ export async function getAnalyticsSummary(creatorId: string, days = 30) {
       rev: `$${(p.revCents / 100).toLocaleString()}`,
     }));
 
-  const uniqueCustomers = new Set(current.map((o) => o.userId)).size;
-  const previousUniqueCustomers = new Set(previous.map((o) => o.userId)).size;
+  const uniqueCustomers = new Set(currentEvents.map((e) => e.userId)).size;
+  const previousUniqueCustomers = new Set(previousEvents.map((e) => e.userId)).size;
 
   return {
     revenue: `$${(revenueCents / 100).toLocaleString()}`,
@@ -254,17 +262,14 @@ export async function getAnalyticsSummary(creatorId: string, days = 30) {
     uniqueCustomersDelta: percentDelta(uniqueCustomers, previousUniqueCustomers),
     aov: `$${(aov / 100).toFixed(2)}`,
     aovDelta: percentDelta(aov, previousAov),
-    series: buckets.map((b) => ({
-      date: b.date.toISOString().slice(0, 10),
-      revenueCents: b.revenueCents,
-    })),
-    previousSeries: bucketSeries(previous, days, previousSince),
+    series: bucketSeries(currentEvents, days, since),
+    previousSeries: bucketSeries(previousEvents, days, previousSince),
     topProducts,
   };
 }
 
 function bucketSeries(
-  orders: Array<{ createdAt: Date; totalCents: number }>,
+  events: Array<{ createdAt: Date; cents: number }>,
   days: number,
   start: Date,
 ) {
@@ -274,11 +279,11 @@ function bucketSeries(
     d.setDate(d.getDate() + i);
     return { date: d, revenueCents: 0 };
   });
-  for (const o of orders) {
-    const day = new Date(o.createdAt);
+  for (const e of events) {
+    const day = new Date(e.createdAt);
     day.setHours(0, 0, 0, 0);
     const idx = buckets.findIndex((b) => b.date.getTime() === day.getTime());
-    if (idx >= 0) buckets[idx].revenueCents += o.totalCents;
+    if (idx >= 0) buckets[idx].revenueCents += e.cents;
   }
   return buckets.map((b) => ({
     date: b.date.toISOString().slice(0, 10),
@@ -298,19 +303,32 @@ function percentDelta(current: number, previous: number) {
 
 export async function getRevenueSeries(creatorId: string, days = 7) {
   const since = new Date();
-  since.setDate(since.getDate() - (days - 1));
   since.setHours(0, 0, 0, 0);
+  since.setDate(since.getDate() - (days - 1));
 
   const orders = await db.order.findMany({
     where: {
       createdAt: { gte: since },
       items: { some: { product: { creatorId } } },
     },
-    select: { createdAt: true, totalCents: true },
+    include: {
+      items: { include: { product: true } },
+    },
     orderBy: { createdAt: "asc" },
   });
 
-  return bucketSeries(orders, days, since);
+  const events: Array<{ createdAt: Date; cents: number }> = [];
+  for (const o of orders) {
+    for (const item of o.items) {
+      if (item.product.creatorId !== creatorId) continue;
+      events.push({
+        createdAt: o.createdAt,
+        cents: item.priceCents * item.qty,
+      });
+    }
+  }
+
+  return bucketSeries(events, days, since);
 }
 
 function formatTimeAgo(date: Date) {
