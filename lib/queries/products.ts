@@ -95,6 +95,87 @@ export async function getProductBySlug(slug: string) {
   };
 }
 
+export async function getMarketplaceProducts(options?: {
+  categorySlug?: string;
+  sort?: "trending" | "new" | "top-rated" | "price-asc" | "price-desc";
+  query?: string;
+  limit?: number;
+}) {
+  const { categorySlug, sort = "trending", query, limit = 24 } = options ?? {};
+
+  const where: Prisma.ProductWhereInput = {
+    status: "PUBLISHED",
+    type: { not: "BUNDLE" },
+  };
+  if (categorySlug) where.category = { slug: categorySlug };
+  if (query) {
+    where.OR = [
+      { title: { contains: query } },
+      { tagline: { contains: query } },
+    ];
+  }
+
+  let orderBy: Prisma.ProductOrderByWithRelationInput[] = [
+    { bestSeller: "desc" },
+    { salesCount: "desc" },
+  ];
+  if (sort === "new") orderBy = [{ publishedAt: "desc" }];
+  else if (sort === "top-rated") orderBy = [{ ratingAvg: "desc" }];
+  else if (sort === "price-asc") orderBy = [{ priceCents: "asc" }];
+  else if (sort === "price-desc") orderBy = [{ priceCents: "desc" }];
+
+  const rows = await db.product.findMany({
+    where,
+    include: { creator: true },
+    orderBy,
+    take: limit,
+  });
+  return rows.map(toCardData);
+}
+
+export async function getStaffPicks(limit = 4) {
+  const rows = await db.product.findMany({
+    where: { status: "PUBLISHED", type: { not: "BUNDLE" }, ratingAvg: { gte: 4.7 } },
+    include: { creator: true },
+    orderBy: [{ ratingAvg: "desc" }, { salesCount: "desc" }],
+    take: limit,
+  });
+  return rows.map(toCardData);
+}
+
+export async function getNewArrivals(limit = 4) {
+  const rows = await db.product.findMany({
+    where: { status: "PUBLISHED", type: { not: "BUNDLE" } },
+    include: { creator: true },
+    orderBy: { publishedAt: "desc" },
+    take: limit,
+  });
+  return rows.map(toCardData);
+}
+
+export async function getMarketplaceCategories() {
+  return db.category.findMany({
+    orderBy: { name: "asc" },
+    include: {
+      _count: { select: { products: { where: { status: "PUBLISHED" } } } },
+    },
+  });
+}
+
+export async function getMarketplaceStats() {
+  const [products, creators, sumAgg] = await Promise.all([
+    db.product.count({ where: { status: "PUBLISHED" } }),
+    db.creator.count(),
+    db.creatorMetrics.aggregate({ _sum: { totalSalesCents: true, productsSold: true } }),
+  ]);
+  return {
+    products,
+    creators,
+    totalSalesCents: sumAgg._sum.totalSalesCents ?? 0,
+    productsSold: sumAgg._sum.productsSold ?? 0,
+  };
+}
+
 type RawProduct = Awaited<ReturnType<typeof db.product.findMany>>[number] & {
   creator: { displayName: string; handle: string };
 };
