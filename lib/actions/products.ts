@@ -118,6 +118,39 @@ export async function saveProduct(
     if (suffix > 50) return { ok: false, error: "Could not generate a unique slug" };
   }
 
+  // Look up the existing product (if editing) so we can preserve its published
+  // status/timestamp when the creator clicks "Save" on an already-PUBLISHED
+  // product. Without this, saving edits would silently demote it to DRAFT and
+  // pull it from the storefront.
+  const existing = data.id
+    ? await db.product.findFirst({
+        where: { id: data.id, creatorId: me.creatorId },
+        select: { status: true, publishedAt: true },
+      })
+    : null;
+  if (data.id && !existing) {
+    return { ok: false, error: "Product not found" };
+  }
+
+  // Status/publishedAt resolution:
+  //   - publish=true      → PUBLISHED, keep original publishedAt if it already
+  //                         had one (don't reset publication date on re-save),
+  //                         otherwise stamp now
+  //   - publish=false new → DRAFT
+  //   - publish=false edit→ preserve whatever status/publishedAt exist
+  let nextStatus: "DRAFT" | "PUBLISHED" | "ARCHIVED";
+  let nextPublishedAt: Date | null;
+  if (data.publish) {
+    nextStatus = "PUBLISHED";
+    nextPublishedAt = existing?.publishedAt ?? new Date();
+  } else if (existing) {
+    nextStatus = existing.status as "DRAFT" | "PUBLISHED" | "ARCHIVED";
+    nextPublishedAt = existing.publishedAt;
+  } else {
+    nextStatus = "DRAFT";
+    nextPublishedAt = null;
+  }
+
   const scalar = {
     creatorId: me.creatorId,
     slug,
@@ -143,8 +176,8 @@ export async function saveProduct(
         )
       : null,
     faq: data.faq.length ? JSON.stringify(data.faq) : null,
-    status: data.publish ? "PUBLISHED" : "DRAFT",
-    publishedAt: data.publish ? new Date() : null,
+    status: nextStatus,
+    publishedAt: nextPublishedAt,
   } as const;
 
   const upserted = await db.$transaction(async (tx) => {
@@ -191,11 +224,23 @@ export async function deleteProduct(id: string): Promise<ProductActionResult> {
 export async function setProductStatus(id: string, status: "DRAFT" | "PUBLISHED" | "ARCHIVED") {
   const me = await requireCreator();
   if ("error" in me) return { ok: false, error: me.error } as const;
-  const row = await db.product.update({
+  // Ownership + existence check first so a deleted/non-owned product returns
+  // { ok: false } instead of a Prisma P2025 crash.
+  const existing = await db.product.findFirst({
     where: { id, creatorId: me.creatorId },
+    select: { id: true, slug: true, publishedAt: true },
+  });
+  if (!existing) {
+    return { ok: false, error: "Product not found" } as const;
+  }
+  const row = await db.product.update({
+    where: { id: existing.id },
     data: {
       status,
-      publishedAt: status === "PUBLISHED" ? new Date() : null,
+      // Preserve an existing publish timestamp when re-publishing, so unpublish
+      // → publish doesn't erase the creator's original release date.
+      publishedAt:
+        status === "PUBLISHED" ? (existing.publishedAt ?? new Date()) : null,
     },
     select: { id: true, slug: true },
   });

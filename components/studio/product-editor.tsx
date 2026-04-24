@@ -152,10 +152,18 @@ export function ProductEditor({
               onClick={() => submit(false)}
               disabled={pending}
             >
-              {pending ? "Saving…" : "Save draft"}
+              {pending
+                ? "Saving…"
+                : initial.status === "PUBLISHED"
+                  ? "Save changes"
+                  : "Save draft"}
             </Button>
             <Button onClick={() => submit(true)} disabled={pending}>
-              {pending ? "Publishing…" : "Publish"}
+              {pending
+                ? "Publishing…"
+                : initial.status === "PUBLISHED"
+                  ? "Republish"
+                  : "Publish"}
             </Button>
           </div>
         </div>
