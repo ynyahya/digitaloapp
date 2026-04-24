@@ -23,12 +23,14 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  creator  Creator?
-  orders   Order[]
-  reviews  Review[]
-  follows  Follow[]
-  accounts Account[]
-  sessions Session[]
+  creator       Creator?
+  orders        Order[]
+  reviews       Review[]
+  follows       Follow[]
+  accounts      Account[]
+  sessions      Session[]
+  apiKeys       ApiKey[]
+  agentFlows    AgentWorkflow[]
 }
 
 // ────────────────────────────────────────────────────────────
@@ -88,10 +90,11 @@ model Creator {
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
-  products    Product[]
-  collections Collection[]
-  followers   Follow[]
-  metrics     CreatorMetrics?
+  products       Product[]
+  collections    Collection[]
+  followers      Follow[]
+  metrics        CreatorMetrics?
+  affiliateLinks AffiliateLink[]
 }
 
 model CreatorMetrics {
@@ -262,6 +265,7 @@ model Order {
   items     OrderItem[]
   downloads Download[]
   refunds   Refund[]
+  referral  Referral?
 }
 
 model OrderItem {
@@ -311,4 +315,95 @@ model Review {
   createdAt DateTime @default(now())
 
   @@unique([productId, userId])
+}
+
+// ────────────────────────────────────────────────────────────
+// Affiliate & Growth OS (Pilar 9)
+// ────────────────────────────────────────────────────────────
+model AffiliateLink {
+  id        String    @id @default(cuid())
+  creatorId String
+  creator   Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  code      String    @unique
+  label     String?
+  clicks    Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  referrals Referral[]
+
+  @@index([creatorId])
+}
+
+model Referral {
+  id        String         @id @default(cuid())
+  linkId    String
+  link      AffiliateLink  @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  orderId   String?        @unique
+  order     Order?         @relation(fields: [orderId], references: [id])
+  createdAt DateTime       @default(now())
+
+  commission Commission?
+}
+
+model Commission {
+  id          String     @id @default(cuid())
+  referralId  String     @unique
+  referral    Referral   @relation(fields: [referralId], references: [id], onDelete: Cascade)
+  amountCents Int
+  rateBps     Int        // basis points — 1500 = 15%
+  status      String     @default("PENDING") // PENDING | PAID | REJECTED
+  paidAt      DateTime?
+  createdAt   DateTime   @default(now())
+}
+
+// ────────────────────────────────────────────────────────────
+// Developer API Portal (Pilar 10)
+// ────────────────────────────────────────────────────────────
+model ApiKey {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  prefix    String    // first 8 chars of the cleartext token, stored for display
+  hashed    String    @unique // sha256 of the full token
+  scopes    String    @default("read")
+  lastUsed  DateTime?
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+// ────────────────────────────────────────────────────────────
+// AI Agent Control Center (Pilar 11)
+// ────────────────────────────────────────────────────────────
+model AgentWorkflow {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug        String   // e.g. 'pricing-bot', 'review-responder'
+  name        String
+  description String?
+  template    String   // template id (matches a static definition in code)
+  config      String?  // JSON
+  enabled     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  runs AgentRun[]
+
+  @@unique([userId, slug])
+}
+
+model AgentRun {
+  id         String        @id @default(cuid())
+  workflowId String
+  workflow   AgentWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  status     String        @default("SUCCEEDED") // RUNNING | SUCCEEDED | FAILED
+  summary    String?
+  tokensUsed Int?
+  durationMs Int?
+  createdAt  DateTime      @default(now())
+
+  @@index([workflowId, createdAt])
 }

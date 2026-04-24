@@ -156,7 +156,7 @@ export default async function DashboardOverview() {
                 Revenue · last 30 days
               </p>
               <p className="mt-1 text-[22px] font-semibold tracking-tight">
-                {formatCurrency(totalRevenueCents)}
+                {formatCurrency(revCurr._sum.totalCents ?? 0)}
               </p>
             </div>
             <div className="flex gap-1 rounded-full border border-line bg-paper-soft p-1 text-[11px]">

@@ -74,6 +74,12 @@ export async function POST(req: Request) {
       productId: product.id,
       productSlug: product.slug,
       licenseId: license?.id ?? "",
+      // Snapshot the license details at checkout time so the webhook can
+      // still record the correct per-item price if the creator edits the
+      // product (which re-creates license rows with new IDs) while this
+      // session is in-flight.
+      licenseName: licenseName,
+      licensePriceCents: String(priceCents),
       userId: session?.user?.id ?? "",
     },
     success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
