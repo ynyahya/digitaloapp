@@ -43,7 +43,7 @@ export async function POST(req: Request) {
 }
 
 async function fulfillOrder(session: Stripe.Checkout.Session) {
-  const { productId, licenseId, userId } = session.metadata ?? {};
+  const { productId, licenseId, licensePriceCents, userId } = session.metadata ?? {};
   if (!productId) return;
 
   const product = await db.product.findUnique({
@@ -52,8 +52,21 @@ async function fulfillOrder(session: Stripe.Checkout.Session) {
   });
   if (!product) return;
 
+  // License resolution precedence:
+  //   1. The license row itself, if its ID still exists.
+  //   2. The licensePriceCents we stamped into session metadata at checkout
+  //      time. Needed when the creator edited the product between checkout
+  //      and webhook — saveProduct deletes-and-recreates license rows, so
+  //      the ID in metadata can reference a row that no longer exists even
+  //      though the customer paid for a specific license.
+  //   3. The product base price as a last resort.
   const license = licenseId ? product.licenses.find((l) => l.id === licenseId) : null;
-  const priceCents = license?.priceCents ?? product.priceCents;
+  const metadataPrice =
+    licensePriceCents && /^\d+$/.test(licensePriceCents)
+      ? Number(licensePriceCents)
+      : null;
+  const priceCents =
+    license?.priceCents ?? metadataPrice ?? product.priceCents;
   const amountTotal = session.amount_total ?? priceCents;
   const email = session.customer_details?.email ?? session.customer_email ?? "";
 
