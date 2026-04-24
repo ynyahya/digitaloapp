@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { parseJson } from "@/lib/utils";
 
@@ -31,6 +32,45 @@ export async function getCreatorByHandle(handle: string) {
     socials: parseJson<Record<string, string>>(creator.socials, {}),
     tools: parseJson<string[]>(creator.tools, []),
     featuredClients: parseJson<string[]>(creator.featuredClients, []),
+  };
+}
+
+export async function getAllCreators(options?: {
+  query?: string;
+  limit?: number;
+}) {
+  const { query, limit = 24 } = options ?? {};
+  const where: Prisma.CreatorWhereInput = {};
+  if (query) {
+    where.OR = [
+      { displayName: { contains: query } },
+      { handle: { contains: query } },
+      { tagline: { contains: query } },
+    ];
+  }
+  return db.creator.findMany({
+    where,
+    include: {
+      metrics: true,
+      _count: { select: { products: { where: { status: "PUBLISHED" } } } },
+    },
+    orderBy: [{ verified: "desc" }, { metrics: { totalSalesCents: "desc" } }],
+    take: limit,
+  });
+}
+
+export async function getCreatorEcosystemStats() {
+  const [creatorCount, verifiedCount, productCount, salesAgg] = await Promise.all([
+    db.creator.count(),
+    db.creator.count({ where: { verified: true } }),
+    db.product.count({ where: { status: "PUBLISHED" } }),
+    db.creatorMetrics.aggregate({ _sum: { totalSalesCents: true } }),
+  ]);
+  return {
+    creatorCount,
+    verifiedCount,
+    productCount,
+    totalSalesCents: salesAgg._sum.totalSalesCents ?? 0,
   };
 }
 
