@@ -1,0 +1,32 @@
+import { Hero } from "@/components/marketing/hero";
+import { FeaturedProductsSection } from "@/components/marketing/featured-products-section";
+import { ForCreatorsSection } from "@/components/marketing/for-creators-section";
+import { BundleBanner } from "@/components/marketing/bundle-banner";
+import { CreatorShowcase } from "@/components/marketing/creator-showcase";
+import { Testimonials } from "@/components/marketing/testimonials";
+import { Pricing } from "@/components/marketing/pricing";
+import { FinalCta } from "@/components/marketing/final-cta";
+import { getFeaturedProducts } from "@/lib/queries/products";
+import { getFeaturedCreators } from "@/lib/queries/creators";
+
+export const revalidate = 60;
+
+export default async function LandingPage() {
+  const [products, creators] = await Promise.all([
+    getFeaturedProducts(5),
+    getFeaturedCreators(5),
+  ]);
+
+  return (
+    <>
+      <Hero />
+      <FeaturedProductsSection products={products} />
+      <ForCreatorsSection />
+      <BundleBanner />
+      <CreatorShowcase creators={creators} />
+      <Testimonials />
+      <Pricing />
+      <FinalCta />
+    </>
+  );
+}

@@ -1,0 +1,272 @@
+// Digitalo — Prisma schema (Sprint 1: SQLite)
+// Sprint 2 will switch provider to postgresql without schema breakage.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ────────────────────────────────────────────────────────────
+// Identity
+// ────────────────────────────────────────────────────────────
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  role          String    @default("BUYER") // BUYER | CREATOR | ADMIN
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  creator Creator?
+  orders  Order[]
+  reviews Review[]
+  follows Follow[]
+}
+
+model Creator {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  handle          String   @unique
+  displayName     String
+  tagline         String?
+  bio             String?
+  avatarUrl       String?
+  coverUrl        String?
+  verified        Boolean  @default(false)
+  socials         String? // JSON-encoded: { twitter, github, website, linkedin }
+  tools           String? // JSON-encoded: string[]
+  featuredClients String? // JSON-encoded: string[]
+  stripeAccountId String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  products    Product[]
+  collections Collection[]
+  followers   Follow[]
+  metrics     CreatorMetrics?
+}
+
+model CreatorMetrics {
+  creatorId       String   @id
+  creator         Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  customers       Int      @default(0)
+  totalSalesCents Int      @default(0)
+  productsSold    Int      @default(0)
+  avgRating       Float    @default(0)
+  updatedAt       DateTime @updatedAt
+}
+
+model Follow {
+  id         String   @id @default(cuid())
+  followerId String
+  follower   User     @relation(fields: [followerId], references: [id], onDelete: Cascade)
+  creatorId  String
+  creator    Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@unique([followerId, creatorId])
+}
+
+// ────────────────────────────────────────────────────────────
+// Catalog
+// ────────────────────────────────────────────────────────────
+model Category {
+  id       String    @id @default(cuid())
+  slug     String    @unique
+  name     String
+  blurb    String?
+  products Product[]
+}
+
+model Tag {
+  id       String          @id @default(cuid())
+  slug     String          @unique
+  name     String
+  products ProductOnTag[]
+}
+
+model ProductOnTag {
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tagId     String
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+}
+
+model Product {
+  id             String    @id @default(cuid())
+  creatorId      String
+  creator        Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  slug           String    @unique
+  title          String
+  tagline        String?
+  description    String? // long-form markdown
+  coverImage     String?
+  gallery        String? // JSON-encoded: string[]
+  type           String    @default("ONE_TIME") // ONE_TIME | SUBSCRIPTION | BUNDLE
+  status         String    @default("DRAFT") // DRAFT | PUBLISHED | ARCHIVED
+  priceCents     Int
+  compareAtCents Int?
+  currency       String    @default("USD")
+  bestSeller     Boolean   @default(false)
+  instantDelivery Boolean  @default(true)
+  lifetimeUpdates Boolean  @default(true)
+  included       String? // JSON-encoded: { icon, title, description }[]
+  highlights     String? // JSON-encoded: { eyebrow, title, body, imageUrl }[] (Apple-style panels)
+  faq            String? // JSON-encoded: { q, a }[]
+  comparison     String? // JSON-encoded: { tiers:[{name,priceCents,popular?}], features:[{label, values:[]}] }
+  categoryId     String?
+  category       Category? @relation(fields: [categoryId], references: [id])
+  tags           ProductOnTag[]
+  licenses       License[]
+  files          ProductFile[]
+  bundleItems    BundleItem[] @relation("BundleParent")
+  inBundles      BundleItem[] @relation("BundleChild")
+  orderItems     OrderItem[]
+  reviews        Review[]
+  salesCount     Int       @default(0)
+  ratingAvg      Float     @default(0)
+  ratingCount    Int       @default(0)
+  viewsCount     Int       @default(0)
+  publishedAt    DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([creatorId, status])
+  @@index([categoryId, status])
+}
+
+model License {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String // Personal, Commercial, Extended, Agency
+  priceCents Int
+  description String?
+  perks      String? // JSON-encoded: string[]
+  createdAt  DateTime @default(now())
+}
+
+model ProductFile {
+  id         String  @id @default(cuid())
+  productId  String
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  filename   String
+  storageKey String
+  sizeBytes  Int?
+  version    String  @default("1.0.0")
+  createdAt  DateTime @default(now())
+}
+
+model BundleItem {
+  bundleId  String
+  bundle    Product @relation("BundleParent", fields: [bundleId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product @relation("BundleChild", fields: [productId], references: [id], onDelete: Cascade)
+  position  Int     @default(0)
+
+  @@id([bundleId, productId])
+}
+
+model Collection {
+  id           String           @id @default(cuid())
+  creatorId    String
+  creator      Creator          @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  slug         String
+  name         String
+  description  String?
+  coverImage   String?
+  createdAt    DateTime         @default(now())
+  items        CollectionItem[]
+
+  @@unique([creatorId, slug])
+}
+
+model CollectionItem {
+  collectionId String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  productId    String
+  position     Int        @default(0)
+
+  @@id([collectionId, productId])
+}
+
+// ────────────────────────────────────────────────────────────
+// Commerce
+// ────────────────────────────────────────────────────────────
+model Order {
+  id                    String   @id @default(cuid())
+  userId                String
+  user                  User     @relation(fields: [userId], references: [id])
+  email                 String
+  country               String?
+  status                String   @default("PENDING") // PENDING | PAID | FAILED | REFUNDED
+  subtotalCents         Int
+  feeCents              Int      @default(0)
+  totalCents            Int
+  currency              String   @default("USD")
+  stripeSessionId       String?  @unique
+  stripePaymentIntentId String?  @unique
+  createdAt             DateTime @default(now())
+
+  items     OrderItem[]
+  downloads Download[]
+  refunds   Refund[]
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  orderId    String
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product @relation(fields: [productId], references: [id])
+  licenseId  String?
+  priceCents Int
+  qty        Int     @default(1)
+}
+
+model Download {
+  id        String    @id @default(cuid())
+  orderId   String
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fileId    String
+  token     String    @unique
+  expiresAt DateTime?
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model Refund {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  amountCents Int
+  reason      String?
+  createdAt   DateTime @default(now())
+}
+
+// ────────────────────────────────────────────────────────────
+// Social
+// ────────────────────────────────────────────────────────────
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  rating    Int
+  title     String?
+  body      String?
+  role      String? // buyer role/title shown in testimonial
+  createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
+}
