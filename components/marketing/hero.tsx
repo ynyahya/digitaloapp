@@ -49,13 +49,12 @@ export function Hero() {
               <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-subtle">
                 Trusted by creators shipping products on:
               </p>
-              <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
                 {TRUSTED.map((name) => (
                   <li
                     key={name}
-                    className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-ink-muted"
+                    className="text-[14px] font-semibold tracking-tight text-ink/70 transition-colors hover:text-ink"
                   >
-                    <span className="inline-block h-3 w-3 rounded-sm bg-ink/80" />
                     {name}
                   </li>
                 ))}
