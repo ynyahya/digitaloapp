@@ -44,7 +44,7 @@ function render(
           Instant access, lifetime updates, 30-day money-back guarantee.
         </p>
         <div className="mt-8">
-          <CheckoutForm />
+          <CheckoutForm productSlug={product.slug} licenseId={li.id} />
         </div>
       </div>
       <div className="lg:sticky lg:top-24 lg:self-start">

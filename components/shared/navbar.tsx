@@ -1,12 +1,9 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { Search, ShoppingBag } from "lucide-react";
 import { Logo } from "@/components/shared/logo";
 import { Container } from "@/components/shared/container";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { NavbarScrollShell } from "@/components/shared/navbar-scroll-shell";
+import { UserMenu } from "@/components/shared/user-menu";
 
 const NAV = [
   { label: "Products", href: "/products" },
@@ -21,23 +18,8 @@ export function Navbar({
 }: {
   variant?: "marketing" | "marketplace";
 }) {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
-        scrolled
-          ? "border-b border-line bg-paper/85 backdrop-blur-xl"
-          : "border-b border-transparent bg-paper/60 backdrop-blur-md",
-      )}
-    >
+    <NavbarScrollShell>
       <Container size="wide">
         <nav className="flex h-16 items-center justify-between gap-6">
           <div className="flex items-center gap-10">
@@ -73,15 +55,10 @@ export function Navbar({
             >
               <ShoppingBag className="h-4 w-4" />
             </Link>
-            <Button variant="ghost" size="sm" asChild className="hidden md:inline-flex">
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href="/register">Start Selling</Link>
-            </Button>
+            <UserMenu />
           </div>
         </nav>
       </Container>
-    </header>
+    </NavbarScrollShell>
   );
 }

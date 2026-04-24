@@ -12,24 +12,67 @@ const METHODS = [
   { id: "google", label: "Google Pay", icon: Wallet },
 ];
 
-export function CheckoutForm() {
+export function CheckoutForm({
+  productSlug,
+  licenseId,
+}: {
+  productSlug?: string;
+  licenseId?: string;
+}) {
   const router = useRouter();
   const [method, setMethod] = useState("card");
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
 
-  async function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setError(null);
     setSubmitting(true);
-    // Sprint 1: UI stub. Sprint 2 will call /api/checkout → Stripe.
-    await new Promise((r) => setTimeout(r, 700));
-    router.push("/checkout/success");
+    try {
+      if (productSlug) {
+        const res = await fetch("/api/checkout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productSlug, licenseId, email }),
+        });
+        if (res.ok) {
+          const { url } = (await res.json()) as { url?: string };
+          if (url) {
+            window.location.href = url;
+            return;
+          }
+        } else if (res.status !== 501) {
+          const { error } = (await res.json().catch(() => ({}))) as { error?: string };
+          throw new Error(error ?? `Checkout failed (${res.status})`);
+        }
+      }
+      // Stripe not configured yet (501) or no slug — fall back to visual success.
+      router.push("/checkout/success");
+    } catch (err) {
+      setError((err as Error).message);
+      setSubmitting(false);
+    }
   }
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-8">
+      {error && (
+        <div className="rounded-xl border border-ink/20 bg-paper-soft px-3 py-2 text-[12.5px] text-ink-muted">
+          {error}
+        </div>
+      )}
       <div className="flex flex-col gap-3">
         <SectionHeading step="1" title="Contact" />
-        <Input label="Email" type="email" placeholder="you@work.com" required />
+        <Input
+          label="Email"
+          name="email"
+          type="email"
+          placeholder="you@work.com"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
         <div className="grid grid-cols-2 gap-3">
           <Input label="First name" placeholder="Alex" required />
           <Input label="Last name" placeholder="Morgan" required />
