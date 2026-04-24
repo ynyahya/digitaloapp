@@ -591,6 +591,15 @@ async function main() {
     await db.category.create({ data: c });
   }
 
+  console.log("\u00b7 Seeding admin user \u2026");
+  await db.user.create({
+    data: {
+      email: "admin@digitalo.app",
+      name: "Digitalo Admin",
+      role: "ADMIN",
+    },
+  });
+
   console.log("\u00b7 Seeding creators \u2026");
   for (const c of CREATORS) {
     await db.user.create({

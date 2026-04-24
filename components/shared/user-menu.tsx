@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LogOut, LayoutDashboard, UserIcon } from "lucide-react";
+import { LogOut, LayoutDashboard, Shield, UserIcon } from "lucide-react";
 import { auth, signOut } from "@/auth";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,7 +26,7 @@ export async function UserMenu() {
       </>
     );
   }
-  const { name, email, image } = session.user;
+  const { name, email, image, role } = session.user;
   const initials = (name ?? email ?? "U")
     .split(" ")
     .map((p) => p[0])
@@ -64,6 +64,13 @@ export async function UserMenu() {
             <UserIcon className="mr-2 h-4 w-4" /> Account
           </Link>
         </DropdownMenuItem>
+        {role === "ADMIN" && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <Shield className="mr-2 h-4 w-4" /> Admin
+            </Link>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuSeparator />
         <form
           action={async () => {
