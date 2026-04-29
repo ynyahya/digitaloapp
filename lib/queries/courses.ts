@@ -526,6 +526,58 @@ export async function getPublicCourseBySlug(handle: string, courseSlug: string) 
   });
 }
 
+// Returns a free preview lesson safely — only accessible if isFree=true and course is published.
+export async function getPreviewLesson(lessonId: string) {
+  const lesson = await db.lesson.findFirst({
+    where: {
+      id: lessonId,
+      isFree: true,
+      isPublished: true,
+      chapter: { course: { status: "PUBLISHED" } },
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      contentType: true,
+      contentJson: true,
+      videoUrl: true,
+      videoProvider: true,
+      embedUrl: true,
+      durationMin: true,
+    },
+  });
+  return lesson;
+}
+
+// Other courses by the same creator (excludes current course).
+export async function getRelatedCourses(creatorId: string, excludeCourseId: string, limit = 3) {
+  return db.course.findMany({
+    where: {
+      creatorId,
+      status: "PUBLISHED",
+      id: { not: excludeCourseId },
+    },
+    orderBy: { publishedAt: "desc" },
+    take: limit,
+    select: {
+      id: true,
+      slug: true,
+      title: true,
+      subtitle: true,
+      coverImage: true,
+      thumbnailUrl: true,
+      thumbnailColor: true,
+      priceCents: true,
+      currency: true,
+      level: true,
+      totalLessons: true,
+      creator: { select: { handle: true, displayName: true } },
+      _count: { select: { enrollments: true } },
+    },
+  });
+}
+
 // ────────────────────────────────────────────────────────────
 // Student Course Player
 // ────────────────────────────────────────────────────────────

@@ -20,8 +20,9 @@ const COURSE_META_FIELDS = [
   "title", "subtitle", "description", "level", "category",
   "language", "format", "visibility", "pricingModel",
   "priceCents", "compareAtCents", "currency",
-  "coverImage", "thumbnailUrl", "thumbnailColor", "trailerUrl",
+  "coverImage", "thumbnailUrl", "thumbnailColor", "trailerUrl", "trailerPoster",
   "whatYouLearn", "outcomes", "requirements",
+  "audience", "faqJson", "guarantees",
   "metaTitle", "metaDescription",
 ] as const;
 

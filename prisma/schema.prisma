@@ -331,6 +331,10 @@ model Course {
   whatYouLearn    String?
   outcomes        String?
   requirements    String?
+  audience        String?
+  faqJson         String?
+  guarantees      String?
+  trailerPoster   String?
   metaTitle       String?
   metaDescription String?
   totalLessons    Int            @default(0)
