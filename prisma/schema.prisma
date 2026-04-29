@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -164,6 +164,12 @@ model Product {
   blockOrder      String?
   bonuses         String?
   discountCodes   String?
+  demoUrl         String?
+  videoUrl        String?
+  techStack       String?
+  compatibility   String?
+  changelog       String?
+  trustBadges     String?
   categoryId      String?
   salesCount      Int            @default(0)
   ratingAvg       Float          @default(0)

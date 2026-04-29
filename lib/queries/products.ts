@@ -63,7 +63,8 @@ export async function getProductBySlug(slug: string) {
       creator: { include: { metrics: true } },
       category: true,
       licenses: { orderBy: { priceCents: "asc" } },
-      reviews: { include: { user: true }, orderBy: { createdAt: "desc" }, take: 6 },
+      files: { orderBy: { createdAt: "asc" } },
+      reviews: { include: { user: true }, orderBy: { createdAt: "desc" }, take: 20 },
       bundleItems: {
         orderBy: { position: "asc" },
         include: { product: { include: { creator: true } } },
@@ -103,6 +104,22 @@ export async function getProductBySlug(slug: string) {
         usedCount: number;
       }[]
     >(product.discountCodes, []),
+    techStack: parseJson<{ label: string; href?: string | null }[]>(
+      product.techStack,
+      [],
+    ),
+    compatibility: parseJson<{ label: string; supported: boolean }[]>(
+      product.compatibility,
+      [],
+    ),
+    changelog: parseJson<{ version: string; date: string; notes: string }[]>(
+      product.changelog,
+      [],
+    ),
+    trustBadges: parseJson<{ label: string; icon?: string | null }[]>(
+      product.trustBadges,
+      [],
+    ),
     licenses: product.licenses.map((l) => ({
       ...l,
       perks: parseJson<string[]>(l.perks, []),

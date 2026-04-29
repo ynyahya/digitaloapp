@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { Check } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 import { formatCompactNumber, formatCurrency } from "@/lib/utils";
 
 type Props = {
@@ -22,49 +21,66 @@ export function CreatorMiniCard({ creator }: Props) {
   const initials = creator.displayName
     .split(" ")
     .map((p) => p[0])
+    .filter(Boolean)
     .join("")
     .slice(0, 2);
+
+  const customers = creator.metrics?.customers ?? 0;
+  const totalSalesCents = creator.metrics?.totalSalesCents ?? 0;
+  const productsSold = creator.metrics?.productsSold ?? 0;
+
   return (
-    <section className="py-16 md:py-20">
-      <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8">
-        <div className="grid items-center gap-8 rounded-3xl border border-line bg-paper p-8 md:grid-cols-[1.1fr_1fr] md:p-12">
-          <div className="flex items-start gap-5">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback className="text-[18px]">{initials}</AvatarFallback>
-            </Avatar>
-            <div>
-              <div className="flex items-center gap-2">
-                <p className="text-[18px] font-semibold">{creator.displayName}</p>
-                {creator.verified && (
-                  <span className="inline-flex h-5 items-center gap-1 rounded-full bg-ink px-2 text-[10px] font-medium text-paper">
-                    <Check className="h-3 w-3" /> Verified
-                  </span>
-                )}
-              </div>
-              <p className="mt-0.5 text-[13px] text-ink-muted">@{creator.handle}</p>
-              {creator.tagline && (
-                <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-ink-muted">
-                  {creator.tagline}
-                </p>
+    <section className="border-y border-line bg-paper-soft">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between md:gap-8 md:px-8">
+        <Link
+          href={`/c/${creator.handle}`}
+          className="group flex items-center gap-4"
+        >
+          <Avatar className="h-14 w-14 border border-line">
+            <AvatarFallback className="text-[15px] font-semibold">
+              {initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <p className="text-[15px] font-semibold text-ink group-hover:underline">
+                {creator.displayName}
+              </p>
+              {creator.verified && (
+                <BadgeCheck className="h-4 w-4 text-ink" />
               )}
-              <div className="mt-5 flex flex-wrap gap-3">
-                <Button size="sm" asChild>
-                  <Link href={`/c/${creator.handle}`}>View Storefront</Link>
-                </Button>
-                <Button size="sm" variant="secondary">
-                  Follow
-                </Button>
-              </div>
             </div>
+            <p className="mt-0.5 truncate text-[12.5px] text-ink-muted">
+              @{creator.handle}
+              {creator.tagline && (
+                <>
+                  <span className="mx-1.5 text-line">·</span>
+                  {creator.tagline}
+                </>
+              )}
+            </p>
           </div>
-          <div className="grid grid-cols-3 gap-3">
-            <Stat label="Customers" value={`${formatCompactNumber(creator.metrics?.customers ?? 0)}+`} />
+        </Link>
+
+        <div className="flex items-center gap-6 text-[12.5px]">
+          {customers > 0 && (
+            <Stat label="Customers" value={`${formatCompactNumber(customers)}+`} />
+          )}
+          {productsSold > 0 && (
+            <Stat label="Products" value={String(productsSold)} />
+          )}
+          {totalSalesCents > 0 && (
             <Stat
-              label="Total Sales"
-              value={`${formatCurrency(creator.metrics?.totalSalesCents ?? 0).replace(".00", "")}+`}
+              label="Total sales"
+              value={`${formatCurrency(totalSalesCents).replace(".00", "")}+`}
             />
-            <Stat label="Products" value={String(creator.metrics?.productsSold ?? 0)} />
-          </div>
+          )}
+          <Link
+            href={`/c/${creator.handle}`}
+            className="inline-flex h-9 items-center rounded-full border border-line bg-paper px-4 text-[12px] font-semibold text-ink hover:border-ink/30"
+          >
+            View storefront
+          </Link>
         </div>
       </div>
     </section>
@@ -73,11 +89,13 @@ export function CreatorMiniCard({ creator }: Props) {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-paper-soft p-4">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-subtle">
+    <div>
+      <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-ink-subtle">
         {label}
       </p>
-      <p className="mt-1 text-[20px] font-semibold tracking-tight">{value}</p>
+      <p className="mt-0.5 text-[15px] font-semibold tabular-nums text-ink">
+        {value}
+      </p>
     </div>
   );
 }
