@@ -5,14 +5,14 @@ import { ProductCard, type ProductCardData } from "@/components/marketplace/prod
 export function RelatedProducts({ products }: { products: ProductCardData[] }) {
   if (!products.length) return null;
   return (
-    <section className="py-16 md:py-24">
+    <section className="border-t border-line bg-paper-soft py-16 md:py-20">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8">
         <div className="flex items-end justify-between gap-6">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
               You may also like
             </p>
-            <h2 className="mt-2 text-balance text-[28px] font-semibold leading-tight tracking-tight md:text-[34px]">
+            <h2 className="mt-2 text-balance text-[26px] font-semibold leading-tight tracking-tight md:text-[32px]">
               More premium products
             </h2>
           </div>
@@ -23,7 +23,7 @@ export function RelatedProducts({ products }: { products: ProductCardData[] }) {
             View all <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
           {products.map((p) => (
             <ProductCard key={p.slug} product={p} />
           ))}

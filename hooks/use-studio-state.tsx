@@ -36,6 +36,12 @@ export interface StudioProduct {
   blockOrder: string | null;
   bonuses: string | null;
   discountCodes: string | null;
+  demoUrl: string | null;
+  videoUrl: string | null;
+  techStack: string | null;
+  compatibility: string | null;
+  changelog: string | null;
+  trustBadges: string | null;
   categoryId: string | null;
   publishedAt: string | null;
   viewsCount: number;

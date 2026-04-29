@@ -19,7 +19,20 @@ import { Button } from "@/components/ui/button";
 import { useStudio } from "@/hooks/use-studio-state";
 import { HeroShowcase } from "@/components/product/hero-showcase";
 import { CheckoutOverlay } from "@/components/product/checkout-overlay";
+import { ProductTechStack } from "@/components/product/product-tech-stack";
+import { ProductDemoEmbed } from "@/components/product/product-demo-embed";
+import { ProductChangelog } from "@/components/product/product-changelog";
 import Image from "next/image";
+
+function safeParseArr<T>(value: string | null, fallback: T[]): T[] {
+  if (!value) return fallback;
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? (parsed as T[]) : fallback;
+  } catch {
+    return fallback;
+  }
+}
 
 export function PreviewMode() {
   const { product } = useStudio();
@@ -45,8 +58,10 @@ export function PreviewMode() {
     slug: product.slug,
     priceCents: product.priceCents,
     compareAtCents: product.compareAtCents,
+    currency: product.currency || "USD",
     instantDelivery: product.instantDelivery,
     lifetimeUpdates: product.lifetimeUpdates,
+    refundPolicy: product.refundPolicy || "30_DAY",
   };
 
   const creator = product.creator || { handle: "creator", displayName: "Creator", verified: false };
@@ -206,6 +221,31 @@ export function PreviewMode() {
                          </div>
                       </div>
                     );
+                 })()}
+
+                 {/* New storefront sections (Tech stack, Demo, Changelog) */}
+                 {(() => {
+                   const techStack = safeParseArr<{ label: string; href?: string | null }>(product.techStack, []);
+                   const compatibility = safeParseArr<{ label: string; supported: boolean }>(product.compatibility, []);
+                   const changelog = safeParseArr<{ version: string; date: string; notes: string }>(product.changelog, []);
+                   const hasAny =
+                     techStack.length > 0 ||
+                     compatibility.length > 0 ||
+                     changelog.length > 0 ||
+                     !!product.demoUrl ||
+                     !!product.videoUrl;
+                   if (!hasAny) return null;
+                   return (
+                     <div className="mx-auto w-full max-w-[1100px] px-5 md:px-8 space-y-14 pt-4 pb-4">
+                       <ProductTechStack techStack={techStack} compatibility={compatibility} />
+                       <ProductDemoEmbed
+                         demoUrl={product.demoUrl}
+                         videoUrl={product.videoUrl}
+                         title={normalizedProduct.title}
+                       />
+                       <ProductChangelog entries={changelog} />
+                     </div>
+                   );
                  })()}
 
                  <div className="mx-auto grid w-full max-w-[1200px] gap-12 px-5 py-12 md:px-8 lg:grid-cols-[1fr_380px] lg:gap-20">

@@ -72,6 +72,37 @@ export function LaunchCenter() {
       done: product.type !== "BUNDLE" || !!(product.bundleItems && product.bundleItems.length > 0),
       field: "bundle",
     },
+    {
+      label: "Live demo or walkthrough video",
+      done: !!(product.demoUrl || product.videoUrl),
+      field: "demo",
+    },
+    {
+      label: "Tech stack chips",
+      done: (() => {
+        try {
+          return product.techStack
+            ? JSON.parse(product.techStack).length > 0
+            : false;
+        } catch {
+          return false;
+        }
+      })(),
+      field: "techStack",
+    },
+    {
+      label: "Changelog (at least one release)",
+      done: (() => {
+        try {
+          return product.changelog
+            ? JSON.parse(product.changelog).length > 0
+            : false;
+        } catch {
+          return false;
+        }
+      })(),
+      field: "changelog",
+    },
   ];
 
   const completedCount = checks.filter((c) => c.done).length;

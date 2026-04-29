@@ -48,6 +48,7 @@ export async function updateProductFields(
     "metaTitle", "metaDescription", "ogImageUrl", "customSlug",
     "refundPolicy", "blockOrder", "bonuses", "discountCodes",
     "faq", "included", "highlights", "comparison",
+    "demoUrl", "videoUrl", "techStack", "compatibility", "changelog", "trustBadges",
     "categoryId",
   ];
 

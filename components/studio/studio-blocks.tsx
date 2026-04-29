@@ -128,6 +128,35 @@ export function HeroBlock() {
             placeholder="Write a compelling description of your product..."
           />
         </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label className={LABEL_BASE}>Live Demo URL</label>
+            <input
+              type="url"
+              value={product.demoUrl || ""}
+              onChange={(e) => setField("demoUrl", e.target.value)}
+              className={INPUT_BASE}
+              placeholder="https://demo.yourproduct.com"
+            />
+            <p className="text-[10.5px] text-ink-muted">
+              Embed as iframe on the storefront.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <label className={LABEL_BASE}>Walkthrough Video</label>
+            <input
+              type="url"
+              value={product.videoUrl || ""}
+              onChange={(e) => setField("videoUrl", e.target.value)}
+              className={INPUT_BASE}
+              placeholder="YouTube or Vimeo URL"
+            />
+            <p className="text-[10.5px] text-ink-muted">
+              Shows below the demo on the storefront.
+            </p>
+          </div>
+        </div>
       </div>
     </BlockWrapper>
   );
@@ -1773,6 +1802,354 @@ export function AnalyticsBlock() {
   );
 }
 
+// ────────────────────────────────────────────────────────────
+// Tech Stack Block
+// ────────────────────────────────────────────────────────────
+
+type TechChip = { label: string; href?: string | null };
+type CompatRow = { label: string; supported: boolean };
+
+export function TechStackBlock() {
+  const { product, setField } = useStudio();
+  const chips = parseJsonFields<TechChip[]>(product.techStack, []);
+  const compat = parseJsonFields<CompatRow[]>(product.compatibility, []);
+
+  const updateChips = (next: TechChip[]) =>
+    setField("techStack", JSON.stringify(next));
+  const updateCompat = (next: CompatRow[]) =>
+    setField("compatibility", JSON.stringify(next));
+
+  return (
+    <BlockWrapper
+      icon={Layers}
+      label="Tech stack & compatibility"
+      description="Show buyers the tools, frameworks, and platforms your product uses."
+      className="col-span-12 lg:col-span-7"
+      blockId="tech-stack"
+    >
+      <div className="space-y-6">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <label className={LABEL_BASE}>Stack chips</label>
+            <span className={COUNTER_BASE}>{chips.length} chips</span>
+          </div>
+          <div className="space-y-2">
+            {chips.map((chip, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={chip.label}
+                  onChange={(e) => {
+                    const next = [...chips];
+                    next[i] = { ...chip, label: e.target.value };
+                    updateChips(next);
+                  }}
+                  className={`${INPUT_BASE} flex-1`}
+                  placeholder="Next.js"
+                />
+                <input
+                  type="url"
+                  value={chip.href || ""}
+                  onChange={(e) => {
+                    const next = [...chips];
+                    next[i] = { ...chip, href: e.target.value || null };
+                    updateChips(next);
+                  }}
+                  className={`${INPUT_BASE} flex-1`}
+                  placeholder="https://nextjs.org (optional)"
+                />
+                <button
+                  type="button"
+                  onClick={() => updateChips(chips.filter((_, j) => j !== i))}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                  aria-label="Remove"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => updateChips([...chips, { label: "", href: null }])}
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add chip
+          </button>
+        </div>
+
+        <div className="space-y-3 border-t border-line pt-6">
+          <div className="flex items-center justify-between">
+            <label className={LABEL_BASE}>Compatibility matrix</label>
+            <span className={COUNTER_BASE}>{compat.length} rows</span>
+          </div>
+          <div className="space-y-2">
+            {compat.map((row, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={row.label}
+                  onChange={(e) => {
+                    const next = [...compat];
+                    next[i] = { ...row, label: e.target.value };
+                    updateCompat(next);
+                  }}
+                  className={`${INPUT_BASE} flex-1`}
+                  placeholder="Works with Supabase"
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    const next = [...compat];
+                    next[i] = { ...row, supported: !row.supported };
+                    updateCompat(next);
+                  }}
+                  className={cn(
+                    "inline-flex h-11 shrink-0 items-center rounded-xl border px-4 text-[12px] font-semibold transition-colors",
+                    row.supported
+                      ? "border-ink bg-ink text-paper"
+                      : "border-line bg-paper text-ink-muted",
+                  )}
+                >
+                  {row.supported ? "Supported" : "Not yet"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updateCompat(compat.filter((_, j) => j !== i))}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                  aria-label="Remove"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              updateCompat([...compat, { label: "", supported: true }])
+            }
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add compatibility row
+          </button>
+        </div>
+      </div>
+    </BlockWrapper>
+  );
+}
+
+// ────────────────────────────────────────────────────────────
+// Changelog Block
+// ────────────────────────────────────────────────────────────
+
+type ChangelogRow = { version: string; date: string; notes: string };
+
+export function ChangelogBlock() {
+  const { product, setField } = useStudio();
+  const entries = parseJsonFields<ChangelogRow[]>(product.changelog, []);
+
+  const update = (next: ChangelogRow[]) =>
+    setField("changelog", JSON.stringify(next));
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  return (
+    <BlockWrapper
+      icon={ListChecks}
+      label="Changelog"
+      description="Keep buyers updated on new versions, fixes, and features."
+      className="col-span-12 lg:col-span-5"
+      blockId="changelog"
+    >
+      <div className="space-y-3">
+        {entries.length === 0 && (
+          <p className="rounded-xl border border-dashed border-line bg-paper-soft px-4 py-6 text-center text-[12.5px] text-ink-muted">
+            No entries yet. Add your first release below.
+          </p>
+        )}
+        {entries.map((entry, i) => (
+          <div key={i} className="space-y-2 rounded-xl border border-line p-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={entry.version}
+                onChange={(e) => {
+                  const next = [...entries];
+                  next[i] = { ...entry, version: e.target.value };
+                  update(next);
+                }}
+                className={`${INPUT_BASE} w-28 font-mono`}
+                placeholder="1.2.0"
+              />
+              <input
+                type="date"
+                value={entry.date}
+                onChange={(e) => {
+                  const next = [...entries];
+                  next[i] = { ...entry, date: e.target.value };
+                  update(next);
+                }}
+                className={`${INPUT_BASE} flex-1`}
+              />
+              <button
+                type="button"
+                onClick={() => update(entries.filter((_, j) => j !== i))}
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                aria-label="Remove"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+            <textarea
+              value={entry.notes}
+              onChange={(e) => {
+                const next = [...entries];
+                next[i] = { ...entry, notes: e.target.value };
+                update(next);
+              }}
+              rows={3}
+              className={`${INPUT_BASE} resize-none`}
+              placeholder="- Added dark mode\n- Fixed checkout bug"
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() =>
+            update([
+              { version: "", date: today, notes: "" },
+              ...entries,
+            ])
+          }
+          className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+        >
+          <Plus className="h-3.5 w-3.5" />
+          Add release
+        </button>
+      </div>
+    </BlockWrapper>
+  );
+}
+
+// ────────────────────────────────────────────────────────────
+// Trust Block
+// ────────────────────────────────────────────────────────────
+
+type TrustBadge = { label: string; icon?: string | null };
+
+const REFUND_OPTIONS = [
+  { value: "30_DAY", label: "30-day money-back" },
+  { value: "14_DAY", label: "14-day money-back" },
+  { value: "7_DAY", label: "7-day money-back" },
+  { value: "NO_REFUND", label: "Final sale (no refund)" },
+];
+
+export function TrustBlock() {
+  const { product, setField } = useStudio();
+  const badges = parseJsonFields<TrustBadge[]>(product.trustBadges, []);
+
+  const update = (next: TrustBadge[]) =>
+    setField("trustBadges", JSON.stringify(next));
+
+  return (
+    <BlockWrapper
+      icon={CheckCircle2}
+      label="Trust & guarantees"
+      description="Refund policy, delivery, updates — everything buyers check before clicking Buy."
+      className="col-span-12 lg:col-span-7"
+      blockId="trust"
+    >
+      <div className="space-y-6">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label className={LABEL_BASE}>Refund policy</label>
+            <select
+              value={product.refundPolicy}
+              onChange={(e) => setField("refundPolicy", e.target.value)}
+              className={INPUT_BASE}
+            >
+              {REFUND_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex flex-col gap-2 pt-1">
+            <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink">
+              <input
+                type="checkbox"
+                checked={product.instantDelivery}
+                onChange={(e) => setField("instantDelivery", e.target.checked)}
+                className="h-4 w-4 accent-ink"
+              />
+              Instant delivery after checkout
+            </label>
+            <label className="flex items-center gap-2 text-[12.5px] font-medium text-ink">
+              <input
+                type="checkbox"
+                checked={product.lifetimeUpdates}
+                onChange={(e) => setField("lifetimeUpdates", e.target.checked)}
+                className="h-4 w-4 accent-ink"
+              />
+              Lifetime updates included
+            </label>
+          </div>
+        </div>
+
+        <div className="space-y-3 border-t border-line pt-6">
+          <div className="flex items-center justify-between">
+            <label className={LABEL_BASE}>Trust badges</label>
+            <span className={COUNTER_BASE}>
+              {badges.length === 0 ? "Using defaults" : `${badges.length} custom`}
+            </span>
+          </div>
+          <p className="text-[11.5px] text-ink-muted">
+            Custom lines shown on the final pricing card. Leave empty to show
+            defaults from refund & delivery settings.
+          </p>
+          <div className="space-y-2">
+            {badges.map((badge, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={badge.label}
+                  onChange={(e) => {
+                    const next = [...badges];
+                    next[i] = { ...badge, label: e.target.value };
+                    update(next);
+                  }}
+                  className={`${INPUT_BASE} flex-1`}
+                  placeholder="Lifetime license · 2 projects"
+                />
+                <button
+                  type="button"
+                  onClick={() => update(badges.filter((_, j) => j !== i))}
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                  aria-label="Remove"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={() => update([...badges, { label: "", icon: null }])}
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add trust badge
+          </button>
+        </div>
+      </div>
+    </BlockWrapper>
+  );
+}
+
 export function StudioBuildBlocks() {
   return (
     <>
@@ -1798,6 +2175,15 @@ export function StudioBuildBlocks() {
 
       <StudioSection
         eyebrow="Step 03"
+        title="Tech & Evidence"
+        description="Stack, compatibility, changelog — signal that this product is real and maintained."
+      />
+      <TechStackBlock />
+      <ChangelogBlock />
+      <TrustBlock />
+
+      <StudioSection
+        eyebrow="Step 04"
         title="Trust & Discovery"
         description="Help buyers find and trust your product."
       />
@@ -1807,7 +2193,7 @@ export function StudioBuildBlocks() {
       <TestimonialBlock />
 
       <StudioSection
-        eyebrow="Step 04"
+        eyebrow="Step 05"
         title="Advanced"
         description="Post-purchase delivery flows and integrations."
       />
