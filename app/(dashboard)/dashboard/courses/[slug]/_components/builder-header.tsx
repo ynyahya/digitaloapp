@@ -114,12 +114,13 @@ export function BuilderHeader() {
           Settings
         </TabButton>
         <a
-          href={`/c/${(course as any).creatorHandle || "creator"}/${course.slug}`}
+          href={`/c/${course.creatorHandle || "creator"}/${course.slug}`}
           target="_blank"
+          rel="noopener noreferrer"
           className="px-3 py-1 text-[11px] font-medium text-ink-muted hover:text-ink transition-colors flex items-center gap-1"
         >
           <Eye className="h-3 w-3" />
-          Preview
+          Live preview
         </a>
       </div>
 

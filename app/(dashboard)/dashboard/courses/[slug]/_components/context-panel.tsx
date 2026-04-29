@@ -287,7 +287,157 @@ function CourseSettingsPanel() {
             <option value="UNLISTED">Unlisted</option>
           </select>
         </Section>
+
+        <Section title="Storefront · What you'll learn">
+          <p className="text-[10.5px] text-ink-muted mb-2">One outcome per line. Shown on the landing page.</p>
+          <textarea
+            value={course.whatYouLearn || ""}
+            onChange={(e) => setCourseField("whatYouLearn", e.target.value)}
+            placeholder={"Ship a production Next.js app\nDeploy to Vercel with CI/CD"}
+            rows={5}
+            className="w-full p-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none resize-y"
+          />
+        </Section>
+
+        <Section title="Storefront · Who this is for">
+          <p className="text-[10.5px] text-ink-muted mb-2">One audience persona per line.</p>
+          <textarea
+            value={course.audience || ""}
+            onChange={(e) => setCourseField("audience", e.target.value)}
+            placeholder={"Junior devs leveling up to senior\nIndie hackers shipping their first SaaS"}
+            rows={4}
+            className="w-full p-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none resize-y"
+          />
+        </Section>
+
+        <Section title="Storefront · Requirements">
+          <p className="text-[10.5px] text-ink-muted mb-2">One requirement per line.</p>
+          <textarea
+            value={course.requirements || ""}
+            onChange={(e) => setCourseField("requirements", e.target.value)}
+            placeholder={"Basic JavaScript knowledge\nA computer with Node 18+"}
+            rows={3}
+            className="w-full p-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none resize-y"
+          />
+        </Section>
+
+        <Section title="Storefront · Guarantees">
+          <p className="text-[10.5px] text-ink-muted mb-2">Bullets shown next to the final pricing CTA. One per line. Leave empty for defaults.</p>
+          <textarea
+            value={course.guarantees || ""}
+            onChange={(e) => setCourseField("guarantees", e.target.value)}
+            placeholder={"Lifetime access\nCertificate of completion\n30-day money-back guarantee"}
+            rows={4}
+            className="w-full p-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none resize-y"
+          />
+        </Section>
+
+        <Section title="Storefront · FAQ">
+          <FaqEditor
+            value={course.faqJson}
+            onChange={(v) => setCourseField("faqJson", v)}
+          />
+        </Section>
+
+        <Section title="Storefront · Trailer poster">
+          <p className="text-[10.5px] text-ink-muted mb-2">Image shown when trailer is paused. URL.</p>
+          <input
+            type="text"
+            placeholder="https://…/poster.jpg"
+            value={course.trailerPoster || ""}
+            onChange={(e) => setCourseField("trailerPoster", e.target.value)}
+            className="w-full h-9 px-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+          />
+        </Section>
+
+        <Section title="SEO">
+          <input
+            type="text"
+            placeholder="Meta title"
+            value={course.metaTitle || ""}
+            onChange={(e) => setCourseField("metaTitle", e.target.value)}
+            className="w-full h-9 px-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+          />
+          <textarea
+            placeholder="Meta description"
+            rows={3}
+            value={course.metaDescription || ""}
+            onChange={(e) => setCourseField("metaDescription", e.target.value)}
+            className="w-full mt-2 p-3 rounded-lg border border-line bg-paper-soft text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none resize-none"
+          />
+        </Section>
       </div>
+    </div>
+  );
+}
+
+function FaqEditor({
+  value,
+  onChange,
+}: {
+  value: string | null;
+  onChange: (v: string | null) => void;
+}) {
+  const items = (() => {
+    if (!value) return [] as { q: string; a: string }[];
+    try {
+      const parsed = JSON.parse(value);
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((i) => i && typeof i.q === "string" && typeof i.a === "string");
+    } catch {
+      return [];
+    }
+  })();
+
+  const update = (next: { q: string; a: string }[]) => {
+    onChange(next.length === 0 ? null : JSON.stringify(next));
+  };
+
+  return (
+    <div className="space-y-2">
+      {items.length === 0 && (
+        <p className="text-[10.5px] text-ink-muted">No FAQ yet. Add your first question below.</p>
+      )}
+      {items.map((item, i) => (
+        <div key={i} className="rounded-lg border border-line bg-paper-soft p-2 space-y-1.5">
+          <input
+            type="text"
+            placeholder="Question"
+            value={item.q}
+            onChange={(e) => {
+              const next = [...items];
+              next[i] = { ...next[i], q: e.target.value };
+              update(next);
+            }}
+            className="w-full h-8 px-2 rounded-md border border-line bg-paper text-[11.5px] font-semibold text-ink focus:border-indigo-400 outline-none"
+          />
+          <textarea
+            placeholder="Answer"
+            rows={2}
+            value={item.a}
+            onChange={(e) => {
+              const next = [...items];
+              next[i] = { ...next[i], a: e.target.value };
+              update(next);
+            }}
+            className="w-full p-2 rounded-md border border-line bg-paper text-[11.5px] text-ink-muted focus:border-indigo-400 outline-none resize-y"
+          />
+          <button
+            type="button"
+            onClick={() => update(items.filter((_, j) => j !== i))}
+            className="text-[10px] font-semibold text-rose-600 hover:text-rose-700"
+          >
+            Remove
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={() => update([...items, { q: "", a: "" }])}
+        className="w-full h-8 rounded-lg border border-dashed border-line text-[11px] font-medium text-ink-muted hover:border-indigo-300 hover:text-indigo-600 transition-all"
+      >
+        + Add question
+      </button>
     </div>
   );
 }

@@ -74,6 +74,10 @@ export interface StudioCourse {
   whatYouLearn: string | null;
   outcomes: string | null;
   requirements: string | null;
+  audience: string | null;
+  faqJson: string | null;
+  guarantees: string | null;
+  trailerPoster: string | null;
   metaTitle: string | null;
   metaDescription: string | null;
   totalLessons: number;
