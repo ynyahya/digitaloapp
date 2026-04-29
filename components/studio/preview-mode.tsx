@@ -1,25 +1,35 @@
 "use client";
 
 import { useState } from "react";
-import { Monitor, Smartphone, Tablet, ExternalLink, ShieldCheck, Gauge, Search, Globe } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { 
+  Monitor, 
+  Smartphone, 
+  Tablet, 
+  ExternalLink, 
+  ShieldCheck, 
+  Search, 
+  Globe, 
+  Star, 
+  Package, 
+  CheckCircle2, 
+  Zap 
+} from "lucide-react";
+import { sanitizeHtml, cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useStudio } from "@/hooks/use-studio-state";
 import { HeroShowcase } from "@/components/product/hero-showcase";
-import { PurchaseRail } from "@/components/product/purchase-rail";
 import { CheckoutOverlay } from "@/components/product/checkout-overlay";
+import Image from "next/image";
 
 export function PreviewMode() {
   const { product } = useStudio();
   const [device, setDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
-  const [checkoutLicenseId, setCheckoutLicenseId] = useState<string | null>(null);
 
   const seoScore = (product.metaTitle ? 50 : 0) + (product.metaDescription ? 50 : 0);
   const trustScore = (product.reviews?.length ? 50 : 0) + (product.refundPolicy ? 50 : 0);
 
-  const handleCheckout = (licenseId?: string) => {
-    setCheckoutLicenseId(licenseId || product.licenses?.[0]?.id || null);
+  const handleCheckout = () => {
     setIsCheckoutOpen(true);
   };
 
@@ -30,7 +40,7 @@ export function PreviewMode() {
     category: product.category,
     ratingAvg: product.reviews?.length ? product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length : 0,
     ratingCount: product.reviews?.length || 0,
-    salesCount: 0,
+    salesCount: product.salesCount || 0,
     bestSeller: product.bestSeller,
     slug: product.slug,
     priceCents: product.priceCents,
@@ -112,7 +122,7 @@ export function PreviewMode() {
               </span>
             </div>
             <p className="text-[11.5px] text-ink-muted truncate font-mono">
-              digitalo.app/p/{product.customSlug || product.slug}/preview
+              teskel.app/p/{product.customSlug || product.slug}/preview
             </p>
             <Button
               variant="outline"
@@ -145,9 +155,17 @@ export function PreviewMode() {
              <div className="pointer-events-none pb-24">
                {/* Navbar mockup */}
                <div className="h-14 border-b border-line px-8 flex items-center justify-between bg-paper">
-                  <span className="font-bold text-[14px]">Digitalo</span>
+                  <span className="font-bold text-[14px]">TESKEL</span>
                   <div className="h-8 w-8 rounded-full bg-paper-muted overflow-hidden">
-                     {creator?.avatarUrl ? <img src={creator.avatarUrl} className="w-full h-full object-cover" /> : null}
+                     {creator?.avatarUrl ? (
+                       <Image 
+                         src={creator.avatarUrl} 
+                         className="w-full h-full object-cover" 
+                         alt="avatar" 
+                         width={32}
+                         height={32}
+                       />
+                     ) : null}
                   </div>
                </div>
                
@@ -159,15 +177,15 @@ export function PreviewMode() {
                   </div>
                   <div className="flex items-center gap-4">
                      <span className="font-bold text-[14px]">${(normalizedProduct.priceCents / 100).toFixed(2)}</span>
-                     <Button onClick={() => handleCheckout()} className="h-8 px-4 rounded-lg bg-primary text-primary-foreground font-bold text-[12px]">Add to cart</Button>
+                     <Button onClick={() => handleCheckout()} className="h-8 px-4 rounded-lg bg-ink text-paper font-bold text-[12px]">Add to cart</Button>
                   </div>
                </div>
 
                {/* Main Product View */}
                <div>
-                 <HeroShowcase product={normalizedProduct} creator={creator} viewersNow={12} onCheckout={() => handleCheckout()} />
+                 <HeroShowcase product={normalizedProduct} creator={creator} viewersNow={12} />
                  
-                 {/* UI8 Prominent Gallery Grid */}
+                 {/* Prominent Gallery Grid */}
                  {(() => {
                     let gallery: string[] = [];
                     try { gallery = product.gallery ? JSON.parse(product.gallery) : []; } catch {}
@@ -176,8 +194,13 @@ export function PreviewMode() {
                       <div className="mx-auto w-full max-w-[1200px] px-5 pt-8 md:px-8">
                          <div className="grid grid-cols-2 gap-4 md:gap-6">
                            {gallery.map((img, i) => (
-                             <div key={i} className="aspect-[4/3] rounded-2xl overflow-hidden border border-line shadow-soft">
-                               <img src={img} className="w-full h-full object-cover" alt={`Preview ${i+1}`} />
+                             <div key={i} className="aspect-[4/3] rounded-2xl overflow-hidden border border-line shadow-soft relative">
+                               <Image 
+                                 src={img} 
+                                 className="w-full h-full object-cover" 
+                                 alt={`Preview ${i+1}`} 
+                                 fill
+                               />
                              </div>
                            ))}
                          </div>
@@ -190,9 +213,9 @@ export function PreviewMode() {
                    <div className="space-y-8">
                      <h2 className="text-[24px] font-bold text-ink">Overview</h2>
                      {product.description ? (
-                       <div 
+                       <div
                          className="prose prose-sm prose-p:text-ink-muted prose-headings:text-ink prose-a:text-blue-500 max-w-none"
-                         dangerouslySetInnerHTML={{ __html: product.description }}
+                         dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.description) }}
                        />
                      ) : (
                        <p className="text-ink-muted text-[14px]">No description provided yet.</p>
@@ -200,7 +223,7 @@ export function PreviewMode() {
                    </div>
 
                    {/* Right Column: Highlights & Purchase Rail */}
-                   <div className="lg:sticky lg:top-24 lg:self-start space-y-8">
+                   <div className="lg:sticky lg:top-24 lg:self-start space-y-10">
                      {/* Highlights Block */}
                      {(() => {
                         let highlights: string[] = [];
@@ -208,11 +231,11 @@ export function PreviewMode() {
                         if (highlights.length === 0) return null;
                         return (
                           <div className="space-y-4">
-                            <h3 className="text-[16px] font-bold text-ink">Highlights</h3>
+                            <h3 className="text-[16px] font-bold text-ink">What&apos;s Included</h3>
                             <ul className="space-y-3">
                               {highlights.map((h, i) => (
-                                <li key={i} className="flex items-center gap-3 text-[13px] text-ink-muted">
-                                  <ShieldCheck className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                                <li key={i} className="flex items-start gap-3 text-[13px] text-ink-muted">
+                                  <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                                   <span>{h}</span>
                                 </li>
                               ))}
@@ -221,31 +244,122 @@ export function PreviewMode() {
                         );
                      })()}
 
-                     {/* Format Info (UI8 Style) */}
-                     <div className="space-y-4 pt-4 border-t border-line">
-                       <h3 className="text-[16px] font-bold text-ink">Format</h3>
-                       <div className="flex gap-2">
-                         <div className="px-3 py-1 rounded-md bg-paper-muted border border-line text-[12px] font-medium text-ink-muted">PDF</div>
-                         <div className="px-3 py-1 rounded-md bg-paper-muted border border-line text-[12px] font-medium text-ink-muted">Figma</div>
-                       </div>
-                       <p className="text-[12px] text-ink-muted flex items-center gap-2 pt-2">
-                         <Globe className="h-4 w-4" /> Secure instant download
+                     {/* FAQs Preview */}
+                     {(() => {
+                        let faq: { q: string; a: string }[] = [];
+                        try { faq = product.faq ? JSON.parse(product.faq) : []; } catch {}
+                        if (faq.length === 0) return null;
+                        return (
+                          <div className="space-y-4 pt-6 border-t border-line">
+                            <h3 className="text-[16px] font-bold text-ink">FAQs</h3>
+                            <div className="space-y-4">
+                              {faq.map((item, i) => (
+                                <div key={i} className="space-y-1">
+                                  <p className="text-[13px] font-bold text-ink leading-tight">{item.q}</p>
+                                  <p className="text-[12px] text-ink-muted leading-relaxed">{item.a}</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                     })()}
+
+                     {/* Format Info */}
+                     <div className="space-y-4 pt-6 border-t border-line">
+                       <h3 className="text-[16px] font-bold text-ink">Delivery</h3>
+                       <p className="text-[12px] text-ink-muted flex items-center gap-2">
+                         <ShieldCheck className="h-4 w-4 text-emerald-500" /> Secure instant download
+                       </p>
+                       <p className="text-[12px] text-ink-muted flex items-center gap-2">
+                         <Zap className="h-4 w-4 text-amber-500" /> Lifetime access & updates
                        </p>
                      </div>
                    </div>
                  </div>
+
+                 {/* Bundled Products (if any) */}
+                 {product.type === "BUNDLE" && product.bundleItems && product.bundleItems.length > 0 && (
+                   <div className="mx-auto w-full max-w-[1200px] px-5 py-16 md:px-8 border-t border-line">
+                      <div className="space-y-8">
+                        <div className="space-y-2">
+                          <h2 className="text-[24px] font-bold text-ink">Inside this bundle</h2>
+                          <p className="text-[14px] text-ink-muted">Everything you get when you purchase this collection.</p>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {product.bundleItems.map((item) => (
+                            <div key={item.productId} className="group/item border border-line rounded-2xl p-4 bg-paper hover:shadow-card transition-all">
+                               <div className="aspect-video rounded-xl overflow-hidden border border-line bg-paper-muted mb-4 relative">
+                                 {item.product.coverImage ? (
+                                   <Image 
+                                     src={item.product.coverImage} 
+                                     className="w-full h-full object-cover" 
+                                     alt={item.product.title} 
+                                     fill
+                                   />
+                                 ) : (
+                                   <div className="w-full h-full flex items-center justify-center"><Package className="h-8 w-8 text-ink-muted" /></div>
+                                 )}
+                               </div>
+                               <h4 className="text-[15px] font-bold text-ink mb-1">{item.product.title}</h4>
+                               <p className="text-[13px] text-ink-muted line-clamp-1">Individual value: ${(item.product.priceCents / 100).toFixed(2)}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                   </div>
+                 )}
+
+                 {/* Testimonials Section */}
+                 {product.reviews && product.reviews.length > 0 && (
+                   <div className="mx-auto w-full max-w-[1200px] px-5 py-16 md:px-8 border-t border-line bg-paper-muted/30">
+                      <div className="space-y-10">
+                         <div className="text-center space-y-2">
+                            <h2 className="text-[24px] font-bold text-ink">Loved by creators</h2>
+                            <div className="flex items-center justify-center gap-1">
+                               {[1,2,3,4,5].map(s => <Star key={s} className="h-4 w-4 text-amber-400 fill-amber-400" />)}
+                               <span className="ml-2 text-[14px] font-bold">4.9/5 based on {product.reviews.length} reviews</span>
+                            </div>
+                         </div>
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {product.reviews.map((r, i) => (
+                              <div key={i} className="p-6 rounded-2xl bg-paper border border-line shadow-soft space-y-4">
+                                 <div className="flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-full bg-paper-muted overflow-hidden relative">
+                                       {r.user.image ? (
+                                         <Image 
+                                           src={r.user.image} 
+                                           className="w-full h-full object-cover" 
+                                           alt="reviewer" 
+                                           width={40}
+                                           height={40}
+                                         />
+                                       ) : null}
+                                    </div>
+                                    <div className="min-w-0">
+                                       <p className="text-[13px] font-bold text-ink truncate">{r.user.name}</p>
+                                       <p className="text-[11px] text-ink-muted uppercase font-bold tracking-wider">{r.role || "Verified Buyer"}</p>
+                                    </div>
+                                 </div>
+                                 <p className="text-[13.5px] text-ink-muted leading-relaxed italic">&ldquo;{r.body}&rdquo;</p>
+                              </div>
+                            ))}
+                         </div>
+                      </div>
+                   </div>
+                 )}
                </div>
              </div>
           </div>
         </div>
+
+        {/* Checkout Overlay Modal */}
+        <CheckoutOverlay 
+          product={normalizedProduct} 
+          licenses={licenses}
+          isOpen={isCheckoutOpen} 
+          onClose={() => setIsCheckoutOpen(false)} 
+        />
       </div>
-      {/* Checkout Overlay Modal */}
-      <CheckoutOverlay 
-        product={normalizedProduct} 
-        licenses={licenses}
-        isOpen={isCheckoutOpen} 
-        onClose={() => setIsCheckoutOpen(false)} 
-      />
     </div>
   );
 }
@@ -255,7 +369,7 @@ function ScoreItem({
   label,
   score,
 }: {
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   label: string;
   score: number;
 }) {

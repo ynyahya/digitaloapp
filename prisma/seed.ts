@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding database...");
-  const demoPassword = await bcrypt.hash("digitalo123", 10);
+  const demoPassword = await bcrypt.hash("teskel123", 10);
 
   // 1. Create a Category
   const category = await prisma.category.upsert({
@@ -18,12 +18,12 @@ async function main() {
     },
   });
 
-  // 2. Create a User (Creator) — demo login: alex@digitalo.app / digitalo123
+  // 2. Create a User (Creator) — demo login: alex@teskel.app / teskel123
   const user = await prisma.user.upsert({
-    where: { email: "alex@digitalo.app" },
+    where: { email: "alex@teskel.app" },
     update: { passwordHash: demoPassword },
     create: {
-      email: "alex@digitalo.app",
+      email: "alex@teskel.app",
       name: "Alex Morgan",
       role: "CREATOR",
       passwordHash: demoPassword,

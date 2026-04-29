@@ -1,12 +1,13 @@
-import { Plus, Search, Filter, MoreHorizontal, ExternalLink, ArrowUpDown } from "lucide-react";
+import { Plus, Search, Filter, ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { requireCreator } from "@/lib/auth/session";
 import { getProducts } from "@/lib/queries/dashboard";
+import { ProductActions } from "@/components/dashboard/product-actions";
 
 export default async function ProductsPage() {
   const creator = await requireCreator();
@@ -22,7 +23,7 @@ export default async function ProductsPage() {
           <p className="text-[14px] text-ink-muted">Manage your digital assets and sales channels.</p>
         </div>
         <Button className="rounded-xl shadow-float h-11 px-6" asChild>
-          <Link href="/dashboard/studio">
+          <Link href="/dashboard/studio?new=1">
             <Plus className="mr-2 h-4 w-4" />
             Create Product
           </Link>
@@ -63,17 +64,17 @@ export default async function ProductsPage() {
             </thead>
             <tbody className="divide-y divide-line">
               {products.map((p) => (
-                <tr key={p.id} className="group hover:bg-paper-soft transition-colors cursor-pointer">
+                <tr key={p.id} className="group hover:bg-paper-soft transition-colors">
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
+                    <Link href={`/dashboard/studio?slug=${p.slug}`} className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-lg bg-paper-muted border border-line flex items-center justify-center text-ink group-hover:bg-ink group-hover:text-paper transition-colors overflow-hidden">
                         <span className="text-[10px] font-bold">{p.title.charAt(0)}</span>
                       </div>
                       <div>
                         <p className="text-[13.5px] font-semibold text-ink">{p.title}</p>
-                        <p className="text-[11px] text-ink-muted truncate max-w-[200px]">digitalo.app/p/{p.slug}</p>
+                        <p className="text-[11px] text-ink-muted truncate max-w-[200px]">TESKEL.app/p/{p.slug}</p>
                       </div>
-                    </div>
+                    </Link>
                   </td>
                   <td className="px-6 py-4 text-center">
                     <Badge variant="soft" className={cn(
@@ -88,17 +89,8 @@ export default async function ProductsPage() {
                   <td className="px-6 py-4 text-[13px] font-medium text-ink">{p.sales.toLocaleString()}</td>
                   <td className="px-6 py-4 text-[13px] font-bold text-ink">{p.price}</td>
                   <td className="px-6 py-4 text-[13px] font-medium text-ink-muted">{p.category}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg" asChild>
-                        <Link href={`/p/${p.slug}`} target="_blank">
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </Link>
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg">
-                        <MoreHorizontal className="h-3.5 w-3.5" />
-                      </Button>
-                    </div>
+                  <td className="px-6 py-4 text-right">
+                    <ProductActions product={p} />
                   </td>
                 </tr>
               ))}

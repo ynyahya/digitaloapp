@@ -24,9 +24,9 @@ import {
 } from "@/lib/queries/creators";
 
 export const metadata = {
-  title: "Creators — Grow your business as a digital creator",
+  title: "Creators — Grow your business with TESKEL",
   description:
-    "Meet the creators powering Digitalo. Build, sell and scale digital products with the platform built for the creator economy.",
+    "Meet the creators powering TESKEL. Build, test, and scale digital products with the engine built for performance.",
 };
 
 export const revalidate = 60;
@@ -53,7 +53,7 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Sea
             {[
               {
                 icon: Users,
-                label: "Creators on Digitalo",
+                label: "Creators on TESKEL",
                 value: formatCompactNumber(stats.creatorCount),
               },
               {
@@ -210,9 +210,9 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Sea
         <Container size="wide">
           <SectionHeading
             align="center"
-            eyebrow="The creator OS"
-            title="Everything you need to grow as a creator"
-            description="Storefronts, payouts, analytics, automation — all in one platform."
+            eyebrow="The product engine"
+            title="Everything you need to grow your digital business"
+            description="Build, test, and scale your digital products with ease — all in one engine."
           />
           <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {[
@@ -313,7 +313,7 @@ export default async function CreatorsPage({ searchParams }: { searchParams: Sea
                   Become a creator
                 </span>
                 <h2 className="mt-5 text-balance text-[30px] font-semibold leading-tight tracking-tight md:text-[44px]">
-                  Start selling on Digitalo today.
+                  Start selling on TESKEL today.
                 </h2>
                 <p className="mt-3 text-[15px] text-paper/70">
                   Free forever to start. Upgrade when your store grows.
@@ -351,14 +351,14 @@ function CreatorsHero({ query }: { query?: string }) {
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-1.5 text-[12px] font-medium text-ink-muted">
             <Users className="h-3.5 w-3.5" />
-            The Digitalo creator ecosystem
+            The TESKEL creator ecosystem
           </span>
           <h1 className="mt-6 text-balance text-[40px] font-semibold leading-[1.05] tracking-[-0.02em] text-ink md:text-[56px]">
             Grow your business
             <br /> as a creator.
           </h1>
           <p className="mt-5 text-pretty text-[15px] leading-relaxed text-ink-muted md:text-[16.5px]">
-            Discover the makers, designers, and operators selling on Digitalo — and join them.
+            Discover the makers, designers, and operators selling on TESKEL — and join them.
           </p>
         </div>
 

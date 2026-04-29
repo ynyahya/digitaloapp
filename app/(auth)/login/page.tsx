@@ -1,9 +1,9 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 
 export const metadata = {
   title: "Sign in",
-  description: "Sign in to your Digitalo account.",
+  description: "Sign in to your TESKEL account.",
 };
 
 type SearchParams = { redirectTo?: string; error?: string };
@@ -35,16 +35,6 @@ export default async function LoginPage({
         </Link>
       </p>
 
-      <div className="rounded-xl border border-line bg-paper-muted/40 p-4 text-center">
-        <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-ink-subtle">
-          Demo account
-        </p>
-        <p className="mt-1 text-[13px] text-ink-muted">
-          <span className="font-mono text-ink">alex@digitalo.app</span>
-          {" / "}
-          <span className="font-mono text-ink">digitalo123</span>
-        </p>
-      </div>
     </div>
   );
 }

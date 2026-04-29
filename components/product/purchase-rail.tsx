@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Check, Download, Heart, Lock, RefreshCw, ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { formatCurrency, cn } from "@/lib/utils";
+import { useCart } from "@/hooks/use-cart";
 
 type LicenseOption = {
   id: string;
@@ -21,12 +22,15 @@ export function PurchaseRail({
   onCheckout,
 }: {
   product: {
+    id: string;
     slug: string;
     title: string;
     priceCents: number;
     compareAtCents: number | null;
     instantDelivery: boolean;
     lifetimeUpdates: boolean;
+    coverImage?: string | null;
+    creatorId: string;
   };
   licenses: LicenseOption[];
   bundleCta?: { title: string; priceCents: number; slug: string };
@@ -35,6 +39,27 @@ export function PurchaseRail({
   const [selectedId, setSelectedId] = useState(licenses[0]?.id ?? "");
   const selected = licenses.find((l) => l.id === selectedId);
   const priceCents = selected?.priceCents ?? product.priceCents;
+
+  const { addItem } = useCart();
+  const [isAdded, setIsAdded] = useState(false);
+
+  const handleAddToCart = () => {
+    if (!selected) return;
+    
+    addItem({
+      productId: product.id,
+      licenseId: selected.id,
+      slug: product.slug,
+      title: product.title,
+      priceCents: selected.priceCents,
+      coverImage: product.coverImage ?? null, 
+      licenseName: selected.name,
+      creatorId: product.creatorId,
+    });
+    
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
+  };
 
   return (
     <aside className="flex flex-col gap-5">
@@ -63,14 +88,14 @@ export function PurchaseRail({
                   key={l.id}
                   onClick={() => setSelectedId(l.id)}
                   className={cn(
-                    "flex w-full items-start justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors",
+                    "flex w-full items-start justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-all",
                     selectedId === l.id
-                      ? "border-ink bg-paper shadow-soft"
-                      : "border-line bg-paper hover:border-ink/30",
+                      ? "border-ink bg-ink/[0.03] shadow-sm"
+                      : "border-line bg-paper hover:border-ink/20",
                   )}
                 >
                   <div>
-                    <p className="text-[13.5px] font-semibold">{l.name}</p>
+                    <p className="text-[13.5px] font-semibold">{l.name.replace("Standart", "Standard")}</p>
                     {l.description && (
                       <p className="mt-0.5 text-[11.5px] text-ink-muted">{l.description}</p>
                     )}
@@ -105,8 +130,22 @@ export function PurchaseRail({
               </Link>
             </Button>
           )}
-          <Button size="lg" variant="secondary" className="w-full" onClick={() => onCheckout?.(selectedId)}>
-            <ShoppingCart className="h-4 w-4" /> Add to Cart
+          <Button 
+            size="lg" 
+            variant="secondary" 
+            className="w-full" 
+            onClick={handleAddToCart}
+            disabled={isAdded}
+          >
+            {isAdded ? (
+              <>
+                <Check className="h-4 w-4 mr-2" /> Added!
+              </>
+            ) : (
+              <>
+                <ShoppingCart className="h-4 w-4 mr-2" /> Add to Cart
+              </>
+            )}
           </Button>
           <button
             type="button"

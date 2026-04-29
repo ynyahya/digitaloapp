@@ -24,23 +24,53 @@ export function LaunchCenter() {
   const [showShareKit, setShowShareKit] = useState(false);
 
   const checks = [
-    { label: "Product title and tagline", done: !!product.title && !!product.tagline },
+    { label: "Product title and tagline", done: !!product.title && !!product.tagline, field: "title" },
     {
       label: "Detailed product description",
       done: !!product.description && product.description.length > 50,
+      field: "description",
     },
     {
       label: "Pricing tiers and licensing",
       done: !!(product.licenses && product.licenses.length > 0),
+      field: "pricing",
     },
-    { label: "Product cover image", done: !!product.coverImage },
+    { label: "Product cover image", done: !!product.coverImage, field: "coverImage" },
     {
       label: "Digital assets uploaded",
       done: !!((product.files && product.files.length > 0) || !product.instantDelivery),
+      field: "assets",
     },
     {
       label: "SEO meta descriptions",
       done: !!product.metaTitle && !!product.metaDescription,
+      field: "seo",
+    },
+    {
+      label: "FAQ section",
+      done: (() => {
+        try {
+          return product.faq ? JSON.parse(product.faq).length >= 3 : false;
+        } catch {
+          return false;
+        }
+      })(),
+      field: "faq",
+    },
+    {
+      label: "Tags for discoverability",
+      done: !!(product.tags && product.tags.length > 0),
+      field: "tags",
+    },
+    {
+      label: "Social proof (Reviews)",
+      done: !!(product.reviews && product.reviews.length > 0),
+      field: "reviews",
+    },
+    {
+      label: "Bundle content (if applicable)",
+      done: product.type !== "BUNDLE" || !!(product.bundleItems && product.bundleItems.length > 0),
+      field: "bundle",
     },
   ];
 
@@ -192,7 +222,7 @@ export function LaunchCenter() {
 
           <ul className="divide-y divide-line/70">
             {checks.map((check, i) => (
-              <ValidationItem key={i} label={check.label} done={check.done} />
+              <ValidationItem key={i} label={check.label} done={check.done} field={check.field} />
             ))}
           </ul>
 
@@ -206,7 +236,7 @@ export function LaunchCenter() {
                   Production Domain
                 </p>
                 <p className="text-[13px] font-mono text-ink truncate">
-                  digitalo.app/p/{product.customSlug || product.slug}
+                  TESKEL.app/p/{product.customSlug || product.slug}
                 </p>
               </div>
             </div>
@@ -233,10 +263,10 @@ export function LaunchCenter() {
                 )}
               >
                 {isPublishing
-                  ? "Publishing…"
+                  ? "Publishingâ€¦"
                   : product.status === "PUBLISHED"
-                  ? "Re-publish Updates"
-                  : "Deploy to Production"}
+                  ? "Publish Updates"
+                  : "Publish Product"}
                 {!isPublishing && (
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 )}
@@ -304,7 +334,13 @@ function AuditCard({
   );
 }
 
-function ValidationItem({ label, done }: { label: string; done: boolean }) {
+function ValidationItem({ label, done, field }: { label: string; done: boolean; field?: string }) {
+  // Map field names to scroll targets in the build mode
+  const scrollToField = () => {
+    // Dispatch a custom event that the studio canvas can listen to
+    window.dispatchEvent(new CustomEvent("studio-scroll-to", { detail: { field } }));
+  };
+
   return (
     <li className="px-8 py-4 flex items-center justify-between group/check hover:bg-paper-soft/50 transition-colors">
       <div className="flex items-center gap-3.5">
@@ -332,7 +368,10 @@ function ValidationItem({ label, done }: { label: string; done: boolean }) {
         </span>
       </div>
       {!done && (
-        <button className="inline-flex items-center gap-1 text-[11.5px] font-bold text-ink hover:gap-1.5 transition-all">
+        <button
+          onClick={scrollToField}
+          className="inline-flex items-center gap-1 text-[11.5px] font-bold text-ink hover:gap-1.5 transition-all"
+        >
           Complete
           <ArrowRight className="h-3 w-3" />
         </button>

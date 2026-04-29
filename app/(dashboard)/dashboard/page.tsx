@@ -4,14 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getDashboardStats, getRecentSales, getRevenueSeries } from "@/lib/queries/dashboard";
 import { LineChart } from "@/components/dashboard/line-chart";
 import { requireCreator } from "@/lib/auth/session";
+import { ActivityFeed } from "@/components/dashboard/activity-feed";
 
 export const metadata = {
   title: "Dashboard",
-  description: "Manage your Digitalo creator account.",
+  description: "Manage your TESKEL creator account.",
 };
 
 export default async function DashboardPage() {
-  // For the final SaaS, this would come from session
   const creator = await requireCreator();
   if (!creator) return <div>No creator found. Please seed the database.</div>;
 
@@ -71,6 +71,28 @@ export default async function DashboardPage() {
         />
       </div>
 
+      {/* Smart Insight Banner */}
+      <div className="p-1 rounded-[20px] bg-gradient-to-r from-emerald-500/10 via-ink/5 to-emerald-500/10 border border-line">
+        <div className="bg-paper rounded-[16px] px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="h-10 w-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
+              <TrendingUp className="h-5 w-5 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-[13px] font-bold text-ink">Creator Insight</p>
+              <p className="text-[11px] text-ink-muted leading-relaxed">
+                {sales.length > 0 
+                  ? `Your product "${sales[0].name}" is seeing increased traffic. This might be a good time to create a discount bundle.`
+                  : "Welcome! Start by publishing your first product to see real-time insights here."}
+              </p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" className="h-8 rounded-lg text-[11px] font-bold shrink-0">
+            View Analytics
+          </Button>
+        </div>
+      </div>
+
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2 rounded-2xl border-line shadow-soft overflow-hidden">
           <CardHeader className="flex flex-row items-center justify-between border-b border-line bg-paper-soft px-6 py-4">
@@ -87,29 +109,18 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="rounded-2xl border-line shadow-soft overflow-hidden">
-          <CardHeader className="border-b border-line bg-paper-soft px-6 py-4">
-            <CardTitle className="text-[15px] font-semibold">Recent Sales</CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            <div className="divide-y divide-line">
-              {sales.map((sale, i) => (
-                <div key={i} className="flex items-center justify-between px-6 py-4 hover:bg-paper-soft transition-colors cursor-pointer">
-                  <div>
-                    <p className="text-[13px] font-medium text-ink">{sale.name}</p>
-                    <p className="text-[11px] text-ink-muted">by {sale.buyer} · {sale.time}</p>
-                  </div>
-                  <p className="text-[13px] font-bold text-ink">{sale.price}</p>
-                </div>
-              ))}
-              {sales.length === 0 && (
-                <div className="px-6 py-12 text-center text-ink-muted text-[13px] italic">
-                  No sales recorded yet.
-                </div>
-              )}
+          <CardHeader className="border-b border-line bg-paper-soft px-6 py-4 flex flex-row items-center justify-between">
+            <CardTitle className="text-[15px] font-semibold">Live Activity</CardTitle>
+            <div className="flex items-center gap-1.5">
+               <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Live</span>
+               <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             </div>
-            <div className="p-4 border-t border-line">
-              <Button variant="ghost" className="w-full text-[12.5px] font-medium text-ink-muted hover:text-ink">
-                View all sales
+          </CardHeader>
+          <CardContent className="p-4">
+            <ActivityFeed />
+            <div className="mt-4 pt-4 border-t border-line">
+              <Button variant="ghost" className="w-full h-9 rounded-xl text-[12px] font-bold text-ink-muted hover:text-ink">
+                View Detailed Logs
               </Button>
             </div>
           </CardContent>

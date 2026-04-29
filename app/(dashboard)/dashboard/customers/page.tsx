@@ -1,11 +1,12 @@
-import { Search, Filter, MoreHorizontal, Mail, ExternalLink, ArrowUpDown, UserPlus, Star } from "lucide-react";
+import { Search, Filter, MoreHorizontal, Mail, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { requireCreator } from "@/lib/auth/session";
 import { getCustomers } from "@/lib/queries/dashboard";
+import Image from "next/image";
 
 export default async function CustomersPage() {
   const creator = await requireCreator();
@@ -60,7 +61,17 @@ export default async function CustomersPage() {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                        <div className="h-10 w-10 rounded-xl bg-paper-muted border border-line flex items-center justify-center text-ink group-hover:bg-ink group-hover:text-paper transition-colors shadow-soft overflow-hidden">
-                         {c.avatar ? <img src={c.avatar} alt={c.name} className="w-full h-full object-cover" /> : <span className="text-[11px] font-bold">{c.name.charAt(0)}</span>}
+                         {c.avatar ? (
+                           <Image 
+                             src={c.avatar} 
+                             alt={c.name} 
+                             className="w-full h-full object-cover" 
+                             width={40}
+                             height={40}
+                           />
+                         ) : (
+                           <span className="text-[11px] font-bold">{c.name.charAt(0)}</span>
+                         )}
                        </div>
                        <div>
                          <p className="text-[13.5px] font-semibold text-ink">{c.name}</p>

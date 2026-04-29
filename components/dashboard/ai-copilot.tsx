@@ -1,8 +1,7 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import { Sparkles, X, Send, Bot, MessageSquare, TrendingUp, Lightbulb } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function AICopilot() {
@@ -97,7 +96,7 @@ export function AICopilot() {
           </div>
           <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-ink-subtle uppercase tracking-widest font-medium">
              <MessageSquare className="h-3 w-3" />
-             AI-Powered by Digitalo Brain
+             AI-Powered by TESKEL Brain
           </div>
         </div>
       </div>
@@ -105,7 +104,7 @@ export function AICopilot() {
   );
 }
 
-function InsightCard({ icon: Icon, title, description }: any) {
+function InsightCard({ icon: Icon, title, description }: { icon: React.ComponentType<{ className?: string }>; title: string; description: string }) {
   return (
     <div className="rounded-2xl border border-line bg-paper p-3.5 shadow-soft hover:shadow-card transition-all cursor-pointer group">
       <div className="flex items-start gap-3">

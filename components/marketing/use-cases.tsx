@@ -47,7 +47,7 @@ export function UseCases() {
           align="center"
           eyebrow="Use cases"
           title="Built for every kind of creator"
-          description="From solo makers to agencies — Digitalo scales with the way you work."
+          description="From solo makers to agencies — TESKEL scales with the way you work."
         />
         <ul className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {USE_CASES.map(({ icon: Icon, title, description, metric }) => (

@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus, Command, Sparkles } from "lucide-react";
+import { StudioMiniMap } from "./studio-minimap";
 
 interface StudioCanvasProps {
   children: React.ReactNode;
@@ -8,8 +9,11 @@ interface StudioCanvasProps {
 
 export function StudioCanvas({ children }: StudioCanvasProps) {
   return (
-    <main className="min-h-screen bg-paper-soft pt-24 pb-40">
-      <div className="mx-auto w-full max-w-[1360px] px-6 md:px-10">
+    <main className="min-h-screen bg-paper-soft pt-24 pb-40 relative">
+      {/* Mini Map Navigation */}
+      <StudioMiniMap />
+
+      <div className="mx-auto w-full max-w-[1360px] px-6 md:px-10 xl:pl-64">
         <div className="grid grid-cols-12 gap-6">{children}</div>
 
         <div className="pt-10 flex flex-col items-center gap-5">

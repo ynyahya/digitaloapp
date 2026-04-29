@@ -38,9 +38,20 @@ export interface StudioProduct {
   discountCodes: string | null;
   categoryId: string | null;
   publishedAt: string | null;
+  viewsCount: number;
+  salesCount: number;
   
   // Relations
   category: { id: string; name: string; slug: string } | null;
+  bundleItems: Array<{
+    productId: string;
+    product: {
+      id: string;
+      title: string;
+      priceCents: number;
+      coverImage: string | null;
+    };
+  }>;
   licenses: Array<{
     id: string;
     name: string;
@@ -252,12 +263,23 @@ export function StudioProvider({
       const dirty = dirtyRef.current;
       if (dirty.size === 0) return;
 
+      // Relation fields are managed via their own API endpoints — skip them in autosave
+      const RELATION_FIELDS = new Set(["licenses", "files", "tags", "reviews", "category", "creator"]);
+
+      const fieldsToSave: Record<string, any> = {};
+      for (const field of dirty) {
+        if (RELATION_FIELDS.has(field)) continue;
+        fieldsToSave[field] = (productRef.current as any)[field];
+      }
+
+      if (Object.keys(fieldsToSave).length === 0) {
+        // Only relation fields changed — mark as saved without a server call
+        dispatch({ type: "CLEAR_DIRTY" });
+        return;
+      }
+
       dispatch({ type: "MARK_SAVING" });
       try {
-        const fieldsToSave: Record<string, any> = {};
-        for (const field of dirty) {
-          fieldsToSave[field] = (productRef.current as any)[field];
-        }
         await updateProductFields(productRef.current.id, fieldsToSave);
         dispatch({ type: "MARK_SAVED" });
       } catch (err) {
@@ -292,12 +314,21 @@ export function StudioProvider({
     const dirty = dirtyRef.current;
     if (dirty.size === 0) return;
 
+    const RELATION_FIELDS = new Set(["licenses", "files", "tags", "reviews", "category", "creator"]);
+
+    const fieldsToSave: Record<string, any> = {};
+    for (const field of dirty) {
+      if (RELATION_FIELDS.has(field)) continue;
+      fieldsToSave[field] = (productRef.current as any)[field];
+    }
+
+    if (Object.keys(fieldsToSave).length === 0) {
+      dispatch({ type: "CLEAR_DIRTY" });
+      return;
+    }
+
     dispatch({ type: "MARK_SAVING" });
     try {
-      const fieldsToSave: Record<string, any> = {};
-      for (const field of dirty) {
-        fieldsToSave[field] = (productRef.current as any)[field];
-      }
       await updateProductFields(productRef.current.id, fieldsToSave);
       dispatch({ type: "MARK_SAVED" });
     } catch (err) {

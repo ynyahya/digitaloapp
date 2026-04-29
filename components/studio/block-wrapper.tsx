@@ -19,6 +19,7 @@ interface BlockWrapperProps {
   isAi?: boolean;
   advancedControls?: React.ReactNode;
   className?: string;
+  blockId?: string;
 }
 
 export function BlockWrapper({
@@ -29,11 +30,14 @@ export function BlockWrapper({
   isAi,
   advancedControls,
   className,
+  blockId,
 }: BlockWrapperProps) {
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
     <section
+      id={blockId}
+      data-block={blockId}
       className={cn(
         "group relative bg-paper rounded-3xl border border-line",
         "hover:border-line-strong hover:shadow-card transition-all duration-300",

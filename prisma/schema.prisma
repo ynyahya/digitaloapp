@@ -1,38 +1,33 @@
-// Digitalo — Prisma schema (Sprint 1: SQLite)
-// Sprint 2 will switch provider to postgresql without schema breakage.
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-// ────────────────────────────────────────────────────────────
-// Identity
-// ────────────────────────────────────────────────────────────
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
+  id            String         @id @default(cuid())
+  email         String         @unique
   name          String?
   image         String?
   passwordHash  String?
-  role          String    @default("BUYER") // BUYER | CREATOR | ADMIN
+  role          String         @default("BUYER")
   emailVerified DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  creator  Creator?
-  orders   Order[]
-  reviews  Review[]
-  follows  Follow[]
-  accounts Account[]
-  sessions Session[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  accounts      Account[]
+  creator       Creator?
+  follows       Follow[]
+  orders        Order[]
+  reviews       Review[]
+  sessions      Session[]
+  enrollments   Enrollment[]
+  courseReviews CourseReview[]
+  quizAttempts  QuizAttempt[]
 }
 
-// Auth.js (NextAuth v5) tables
 model Account {
   id                String  @id @default(cuid())
   userId            String
@@ -46,8 +41,7 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -69,53 +63,53 @@ model VerificationToken {
 }
 
 model Creator {
-  id              String   @id @default(cuid())
-  userId          String   @unique
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  handle          String   @unique
+  id              String          @id @default(cuid())
+  userId          String          @unique
+  handle          String          @unique
   displayName     String
   tagline         String?
   bio             String?
   avatarUrl       String?
   coverUrl        String?
-  verified        Boolean  @default(false)
-  socials         String? // JSON-encoded: { twitter, github, website, linkedin }
-  tools           String? // JSON-encoded: string[]
-  featuredClients String? // JSON-encoded: string[]
+  verified        Boolean         @default(false)
+  socials         String?
+  tools           String?
+  featuredClients String?
   stripeAccountId String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  products    Product[]
-  collections Collection[]
-  followers   Follow[]
-  metrics     CreatorMetrics?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  collections     Collection[]
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  metrics         CreatorMetrics?
+  followers       Follow[]
+  products        Product[]
+  courses         Course[]
+  services        Service[]
+  events          Event[]
+  memberships     Membership[]
 }
 
 model CreatorMetrics {
   creatorId       String   @id
-  creator         Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   customers       Int      @default(0)
   totalSalesCents Int      @default(0)
   productsSold    Int      @default(0)
   avgRating       Float    @default(0)
   updatedAt       DateTime @updatedAt
+  creator         Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 }
 
 model Follow {
   id         String   @id @default(cuid())
   followerId String
-  follower   User     @relation(fields: [followerId], references: [id], onDelete: Cascade)
   creatorId  String
-  creator    Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
+  creator    Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  follower   User     @relation(fields: [followerId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, creatorId])
 }
 
-// ────────────────────────────────────────────────────────────
-// Catalog
-// ────────────────────────────────────────────────────────────
 model Category {
   id       String    @id @default(cuid())
   slug     String    @unique
@@ -125,196 +119,513 @@ model Category {
 }
 
 model Tag {
-  id       String          @id @default(cuid())
-  slug     String          @unique
+  id       String         @id @default(cuid())
+  slug     String         @unique
   name     String
   products ProductOnTag[]
 }
 
 model ProductOnTag {
   productId String
-  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   tagId     String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([productId, tagId])
 }
 
 model Product {
-  id             String    @id @default(cuid())
-  creatorId      String
-  creator        Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  slug           String    @unique
-  title          String
-  tagline        String?
-  description    String? // long-form markdown
-  coverImage     String?
-  gallery        String? // JSON-encoded: string[]
-  type           String    @default("ONE_TIME") // ONE_TIME | SUBSCRIPTION | BUNDLE
-  status         String    @default("DRAFT") // DRAFT | PUBLISHED | ARCHIVED
-  priceCents     Int
-  compareAtCents Int?
-  currency        String    @default("USD")
-  pricingModel    String    @default("ONE_TIME") // ONE_TIME | SUBSCRIPTION | PWYW | FREE
-  bestSeller      Boolean   @default(false)
-  instantDelivery Boolean   @default(true)
-  lifetimeUpdates Boolean   @default(true)
-  included        String? // JSON-encoded: { icon, title, description }[]
-  highlights      String? // JSON-encoded: { eyebrow, title, body, imageUrl }[] (Apple-style panels)
-  faq             String? // JSON-encoded: { q, a }[]
-  comparison      String? // JSON-encoded: { tiers:[{name,priceCents,popular?}], features:[{label, values:[]}] }
+  id              String         @id @default(cuid())
+  creatorId       String
+  slug            String         @unique
+  title           String
+  tagline         String?
+  description     String?
+  coverImage      String?
+  gallery         String?
+  type            String         @default("ONE_TIME")
+  status          String         @default("DRAFT")
+  priceCents      Int
+  compareAtCents  Int?
+  currency        String         @default("USD")
+  pricingModel    String         @default("ONE_TIME")
+  bestSeller      Boolean        @default(false)
+  instantDelivery Boolean        @default(true)
+  lifetimeUpdates Boolean        @default(true)
+  included        String?
+  highlights      String?
+  faq             String?
+  comparison      String?
   metaTitle       String?
   metaDescription String?
   ogImageUrl      String?
   customSlug      String?
-  refundPolicy    String    @default("30_DAY") // 30_DAY | 14_DAY | NO_REFUND | CUSTOM
-  blockOrder      String? // JSON-encoded: string[] — ordered list of block IDs for studio
-  bonuses         String? // JSON-encoded: { title, description, type, value }[]
-  discountCodes   String? // JSON-encoded: { code, type, amount, expiresAt, usageLimit, usedCount }[]
-  categoryId     String?
-  category       Category? @relation(fields: [categoryId], references: [id])
-  tags           ProductOnTag[]
-  licenses       License[]
-  files          ProductFile[]
-  bundleItems    BundleItem[] @relation("BundleParent")
-  inBundles      BundleItem[] @relation("BundleChild")
-  orderItems     OrderItem[]
-  reviews        Review[]
-  salesCount     Int       @default(0)
-  ratingAvg      Float     @default(0)
-  ratingCount    Int       @default(0)
-  viewsCount     Int       @default(0)
-  publishedAt    DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  refundPolicy    String         @default("30_DAY")
+  blockOrder      String?
+  bonuses         String?
+  discountCodes   String?
+  categoryId      String?
+  salesCount      Int            @default(0)
+  ratingAvg       Float          @default(0)
+  ratingCount     Int            @default(0)
+  viewsCount      Int            @default(0)
+  publishedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  bundleItems     BundleItem[]   @relation("BundleParent")
+  inBundles       BundleItem[]   @relation("BundleChild")
+  licenses        License[]
+  orderItems      OrderItem[]
+  category        Category?      @relation(fields: [categoryId], references: [id])
+  creator         Creator        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  files           ProductFile[]
+  tags            ProductOnTag[]
+  reviews         Review[]
 
   @@index([creatorId, status])
   @@index([categoryId, status])
 }
 
 model License {
-  id         String   @id @default(cuid())
-  productId  String
-  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name       String // Personal, Commercial, Extended, Agency
-  priceCents Int
+  id          String   @id @default(cuid())
+  productId   String
+  name        String
+  priceCents  Int
   description String?
-  perks      String? // JSON-encoded: string[]
-  createdAt  DateTime @default(now())
+  perks       String?
+  createdAt   DateTime @default(now())
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model ProductFile {
-  id         String  @id @default(cuid())
+  id         String   @id @default(cuid())
   productId  String
-  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   filename   String
   storageKey String
   sizeBytes  Int?
-  version    String  @default("1.0.0")
+  version    String   @default("1.0.0")
   createdAt  DateTime @default(now())
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model BundleItem {
   bundleId  String
-  bundle    Product @relation("BundleParent", fields: [bundleId], references: [id], onDelete: Cascade)
   productId String
-  product   Product @relation("BundleChild", fields: [productId], references: [id], onDelete: Cascade)
   position  Int     @default(0)
+  bundle    Product @relation("BundleParent", fields: [bundleId], references: [id], onDelete: Cascade)
+  product   Product @relation("BundleChild", fields: [productId], references: [id], onDelete: Cascade)
 
   @@id([bundleId, productId])
 }
 
 model Collection {
-  id           String           @id @default(cuid())
-  creatorId    String
-  creator      Creator          @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  slug         String
-  name         String
-  description  String?
-  coverImage   String?
-  createdAt    DateTime         @default(now())
-  items        CollectionItem[]
+  id          String           @id @default(cuid())
+  creatorId   String
+  slug        String
+  name        String
+  description String?
+  coverImage  String?
+  createdAt   DateTime         @default(now())
+  creator     Creator          @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  items       CollectionItem[]
 
   @@unique([creatorId, slug])
 }
 
 model CollectionItem {
   collectionId String
-  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
   productId    String
   position     Int        @default(0)
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
 
   @@id([collectionId, productId])
 }
 
-// ────────────────────────────────────────────────────────────
-// Commerce
-// ────────────────────────────────────────────────────────────
 model Order {
-  id                    String   @id @default(cuid())
+  id                    String      @id @default(cuid())
   userId                String
-  user                  User     @relation(fields: [userId], references: [id])
   email                 String
   country               String?
-  status                String   @default("PENDING") // PENDING | PAID | FAILED | REFUNDED
+  status                String      @default("PENDING")
   subtotalCents         Int
-  feeCents              Int      @default(0)
+  feeCents              Int         @default(0)
   totalCents            Int
-  currency              String   @default("USD")
-  stripeSessionId       String?  @unique
-  stripePaymentIntentId String?  @unique
-  createdAt             DateTime @default(now())
-
-  items     OrderItem[]
-  downloads Download[]
-  refunds   Refund[]
+  currency              String      @default("USD")
+  stripeSessionId       String?     @unique
+  stripePaymentIntentId String?     @unique
+  createdAt             DateTime    @default(now())
+  downloads             Download[]
+  user                  User        @relation(fields: [userId], references: [id])
+  items                 OrderItem[]
+  refunds               Refund[]
 }
 
 model OrderItem {
   id         String  @id @default(cuid())
   orderId    String
-  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId  String
-  product    Product @relation(fields: [productId], references: [id])
   licenseId  String?
   priceCents Int
   qty        Int     @default(1)
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [productId], references: [id])
 }
 
 model Download {
   id        String    @id @default(cuid())
   orderId   String
-  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
   fileId    String
   token     String    @unique
   expiresAt DateTime?
   usedAt    DateTime?
   createdAt DateTime  @default(now())
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
 model Refund {
   id          String   @id @default(cuid())
   orderId     String
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
   amountCents Int
   reason      String?
   createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 }
 
-// ────────────────────────────────────────────────────────────
-// Social
-// ────────────────────────────────────────────────────────────
 model Review {
   id        String   @id @default(cuid())
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   userId    String
-  user      User     @relation(fields: [userId], references: [id])
   rating    Int
   title     String?
   body      String?
-  role      String? // buyer role/title shown in testimonial
+  role      String?
   createdAt DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id])
 
   @@unique([productId, userId])
+}
+
+model Course {
+  id              String         @id @default(cuid())
+  creatorId       String
+  slug            String         @unique
+  title           String
+  subtitle        String?
+  description     String?
+  level           String         @default("BEGINNER")
+  category        String?
+  language        String         @default("en")
+  format          String         @default("SELF_PACED")
+  visibility      String         @default("PUBLIC")
+  pricingModel    String         @default("ONE_TIME")
+  priceCents      Int            @default(0)
+  compareAtCents  Int?
+  currency        String         @default("IDR")
+  status          String         @default("DRAFT")
+  pipelineStage   String         @default("IDEA")
+  coverImage      String?
+  thumbnailUrl    String?
+  thumbnailColor  String?
+  trailerUrl      String?
+  whatYouLearn    String?
+  outcomes        String?
+  requirements    String?
+  metaTitle       String?
+  metaDescription String?
+  totalLessons    Int            @default(0)
+  totalStudents   Int            @default(0)
+  totalHours      Int            @default(0)
+  ratingAvg       Float          @default(0)
+  ratingCount     Int            @default(0)
+  completionRate  Float          @default(0)
+  scheduledFor    DateTime?
+  publishedAt     DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  creator         Creator        @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  chapters        Chapter[]
+  enrollments     Enrollment[]
+  courseReviews   CourseReview[]
+
+  @@index([creatorId, status])
+  @@index([creatorId, pipelineStage])
+}
+
+model Chapter {
+  id        String   @id @default(cuid())
+  courseId  String
+  title     String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons   Lesson[]
+
+  @@index([courseId, position])
+}
+
+model Lesson {
+  id              String             @id @default(cuid())
+  chapterId       String
+  title           String
+  description     String?
+  contentType     String             @default("TEXT")
+  contentJson     String?
+  videoUrl        String?
+  videoProvider   String?
+  documentUrl     String?
+  quizJson        String?
+  codeConfig      String?
+  embedUrl        String?
+  liveSessionAt   DateTime?
+  liveSessionUrl  String?
+  assignmentBrief String?
+  attachments     String?
+  transcript      String?
+  prerequisiteIds String?
+  position        Int                @default(0)
+  durationMin     Int?
+  dripDays        Int?
+  isFree          Boolean            @default(false)
+  isPublished     Boolean            @default(true)
+  publishedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  chapter         Chapter            @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  completions     LessonCompletion[]
+  quiz            Quiz?
+
+  @@index([chapterId, position])
+}
+
+model LessonCompletion {
+  id          String   @id @default(cuid())
+  lessonId    String
+  userId      String
+  completedAt DateTime @default(now())
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, userId])
+}
+
+model Enrollment {
+  id                   String    @id @default(cuid())
+  userId               String
+  courseId             String
+  status               String    @default("ACTIVE")
+  source               String    @default("DIRECT")
+  dripStartAt          DateTime  @default(now())
+  lastAccessedLessonId String?
+  progressPercent      Float     @default(0)
+  completedAt          DateTime?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course               Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, courseId])
+  @@index([courseId, status])
+}
+
+model CourseReview {
+  id        String   @id @default(cuid())
+  courseId  String
+  userId    String
+  rating    Int
+  title     String?
+  body      String?
+  createdAt DateTime @default(now())
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, userId])
+  @@index([courseId, rating])
+}
+
+model Quiz {
+  id           String         @id @default(cuid())
+  lessonId     String         @unique
+  passingScore Int            @default(70)
+  randomize    Boolean        @default(false)
+  allowRetake  Boolean        @default(true)
+  timeLimitMin Int?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  lesson       Lesson         @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  questions    QuizQuestion[]
+  attempts     QuizAttempt[]
+}
+
+model QuizQuestion {
+  id          String  @id @default(cuid())
+  quizId      String
+  type        String  @default("MULTIPLE_CHOICE")
+  prompt      String
+  optionsJson String?
+  correctJson String?
+  explanation String?
+  points      Int     @default(1)
+  position    Int     @default(0)
+  quiz        Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId, position])
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  quizId      String
+  userId      String
+  score       Float    @default(0)
+  passed      Boolean  @default(false)
+  answersJson String?
+  attemptedAt DateTime @default(now())
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([quizId, userId])
+}
+
+model Service {
+  id           String    @id @default(cuid())
+  creatorId    String
+  slug         String    @unique
+  title        String
+  description  String?
+  category     String?
+  priceCents   Int       @default(0)
+  currency     String    @default("IDR")
+  status       String    @default("DRAFT")
+  deliveryDays Int       @default(1)
+  revisions    Int       @default(0)
+  coverImage   String?
+  ratingAvg    Float     @default(0)
+  ratingCount  Int       @default(0)
+  salesCount   Int       @default(0)
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  creator      Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId, status])
+}
+
+model Event {
+  id                  String                 @id @default(cuid())
+  creatorId           String
+  slug                String                 @unique
+  title               String
+  description         String?
+  locationType        String                 @default("ONLINE")
+  venueAddress        String?
+  onlineUrl           String?
+  startDate           DateTime?
+  endDate             DateTime?
+  timezone            String                 @default("Asia/Jakarta")
+  priceCents          Int                    @default(0)
+  currency            String                 @default("IDR")
+  status              String                 @default("DRAFT")
+  maxAttendees        Int                    @default(0)
+  registeredCount     Int                    @default(0)
+  ticketTypes         String?
+  coverImage          String?
+  thumbnailUrl        String?
+  themeId             String?
+  themeConfig         String?
+  agenda              String?
+  guestListVisibility Boolean                @default(true)
+  publishedAt         DateTime?
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  creator             Creator                @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  tickets             TicketType[]
+  questions           RegistrationQuestion[]
+  speakers            EventSpeaker[]
+  registrations       Registration[]
+
+  @@index([creatorId, status])
+}
+
+model TicketType {
+  id              String         @id @default(cuid())
+  eventId         String
+  name            String
+  description     String?
+  priceCents      Int            @default(0)
+  currency        String         @default("IDR")
+  quantity        Int?
+  remainingCount  Int            @default(0)
+  salesStart      DateTime?
+  salesEnd        DateTime?
+  requireApproval Boolean        @default(false)
+  hidden          Boolean        @default(false)
+  position        Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  event           Event          @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  registrations   Registration[]
+
+  @@index([eventId, position])
+}
+
+model RegistrationQuestion {
+  id           String  @id @default(cuid())
+  eventId      String
+  label        String
+  required     Boolean @default(false)
+  questionType String
+  options      String?
+  position     Int     @default(0)
+  event        Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, position])
+}
+
+model EventSpeaker {
+  id          String  @id @default(cuid())
+  eventId     String
+  name        String
+  title       String?
+  bio         String?
+  photoUrl    String?
+  socialLinks String?
+  position    Int     @default(0)
+  event       Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@index([eventId, position])
+}
+
+model Registration {
+  id        String     @id @default(cuid())
+  eventId   String
+  ticketId  String
+  userId    String
+  status    String     @default("CONFIRMED")
+  answers   String?
+  createdAt DateTime   @default(now())
+  event     Event      @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticket    TicketType @relation(fields: [ticketId], references: [id])
+
+  @@unique([eventId, userId, ticketId])
+}
+
+model Membership {
+  id           String    @id @default(cuid())
+  creatorId    String
+  slug         String    @unique
+  title        String
+  description  String?
+  priceCents   Int       @default(0)
+  currency     String    @default("IDR")
+  billingCycle String    @default("MONTHLY")
+  benefits     String?
+  memberCount  Int       @default(0)
+  coverImage   String?
+  status       String    @default("DRAFT")
+  publishedAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  creator      Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId, status])
 }

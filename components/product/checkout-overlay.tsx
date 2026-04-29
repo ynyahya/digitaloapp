@@ -2,6 +2,7 @@ import { useState, useEffect, useTransition } from "react";
 import { X, Lock, Mail, CheckCircle2, Circle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createOrder } from "@/lib/actions/checkout";
+import Image from "next/image";
 
 export function CheckoutOverlay({
   product,
@@ -9,8 +10,8 @@ export function CheckoutOverlay({
   isOpen,
   onClose,
 }: {
-  product: any;
-  licenses?: any[];
+  product: { id?: string; title: string; coverImage?: string; priceCents: number };
+  licenses?: { id: string; name: string; priceCents: number }[];
   isOpen: boolean;
   onClose: () => void;
 }) {
@@ -28,7 +29,7 @@ export function CheckoutOverlay({
     if (!email || !fullName) return alert("Please fill in your name and email.");
     
     const formData = new FormData();
-    formData.append("productId", product.id);
+    formData.append("productId", product.id || "");
     formData.append("licenseId", selectedId || "");
     formData.append("email", email);
     
@@ -69,7 +70,13 @@ export function CheckoutOverlay({
           <div className="flex-1">
              <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-paper-muted border border-line mb-6">
                 {product.coverImage ? (
-                  <img src={product.coverImage} alt={product.title} className="w-full h-full object-cover" />
+                  <Image 
+                    src={product.coverImage} 
+                    alt={product.title} 
+                    className="w-full h-full object-cover" 
+                    width={360}
+                    height={270}
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-ink-subtle">No Cover</div>
                 )}

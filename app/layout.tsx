@@ -17,19 +17,22 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: {
-    default: "Digitalo — The premium marketplace for digital creators",
-    template: "%s · Digitalo",
+    default: "TESKEL — Build, Test, Scale",
+    template: "%s · TESKEL",
   },
   description:
-    "Sell and discover premium digital products. Templates, SaaS boilerplates, UI kits, ebooks, plugins and creator assets — beautifully curated.",
-  metadataBase: new URL("https://digitalo.app"),
+    "The engine for digital product. Build, test, and scale your digital creations with ease.",
+  metadataBase: new URL("https://teskel.app"),
   openGraph: {
-    title: "Digitalo — The premium marketplace for digital creators",
+    title: "TESKEL — Build, Test, Scale",
     description:
-      "Templates, SaaS boilerplates, UI kits, ebooks, plugins and creator assets — beautifully curated.",
+      "The engine for digital product. Build, test, and scale your digital creations with ease.",
     type: "website",
   },
 };
+
+import { CartProvider } from "@/hooks/use-cart";
+import { Toaster } from "sonner";
 
 export default function RootLayout({
   children,
@@ -41,7 +44,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-paper font-sans text-ink antialiased`}
       >
-        {children}
+        <CartProvider>
+          {children}
+          <Toaster position="top-right" richColors closeButton />
+        </CartProvider>
       </body>
     </html>
   );

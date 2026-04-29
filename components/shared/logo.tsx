@@ -35,7 +35,7 @@ export function Logo({
       {showMark && <LogoMark />}
       <span className="flex flex-col leading-none">
         <span className="font-sans text-[17px] font-semibold tracking-tight text-ink">
-          Digitalo
+          TESKEL
         </span>
         {subtitle && (
           <span className="mt-0.5 text-[10px] font-medium uppercase tracking-[0.14em] text-ink-subtle">
@@ -58,7 +58,7 @@ export function Logo({
     <Link
       href="/"
       className={cn("group inline-flex items-center gap-2.5", className)}
-      aria-label="Digitalo home"
+      aria-label="TESKEL home"
     >
       {content}
     </Link>

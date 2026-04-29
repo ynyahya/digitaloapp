@@ -5,7 +5,7 @@ import { StarRating } from "@/components/ui/star-rating";
 
 const QUOTES = [
   {
-    body: "Digitalo transformed how I sell my digital products. The platform is sleek, fast, and incredibly easy to use.",
+    body: "TESKEL transformed how I sell my digital products. The platform is sleek, fast, and incredibly easy to use.",
     name: "Arvid Kahl",
     role: "Founder of Lindo",
   },
@@ -28,7 +28,7 @@ export function Testimonials() {
         <SectionHeading
           eyebrow="Testimonials"
           title="What creators are saying"
-          description="Operators and indie hackers building on Digitalo."
+          description="Operators and indie hackers building on TESKEL."
         />
         <div className="mt-10 grid gap-4 md:grid-cols-3">
           {QUOTES.map((q) => {

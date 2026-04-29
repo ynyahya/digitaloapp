@@ -10,6 +10,7 @@ import { CreatorMiniCard } from "@/components/product/creator-card";
 import { FaqSection } from "@/components/product/faq-section";
 import { RelatedProducts } from "@/components/product/related-products";
 import { getProductBySlug, getRelatedProducts } from "@/lib/queries/products";
+import { sanitizeHtml } from "@/lib/utils";
 import { db } from "@/lib/db";
 
 export const revalidate = 120;
@@ -88,21 +89,25 @@ export default async function ProductDetailPage({
                 <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-subtle">
                   Overview
                 </p>
-                <p className="mt-3 text-pretty text-[15.5px] leading-relaxed text-ink">
-                  {product.description}
-                </p>
+                <div
+                  className="mt-4 prose prose-neutral prose-p:text-[17px] prose-p:leading-[1.7] prose-p:text-ink prose-headings:text-ink prose-headings:font-bold prose-strong:text-ink prose-em:text-ink-muted prose-li:text-ink prose-ul:my-4 prose-ol:my-4 prose-li:my-1 prose-a:text-ink prose-a:underline prose-a:underline-offset-4 prose-a:font-semibold max-w-none"
+                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.description) }}
+                />
               </div>
             )}
           </div>
-          <div className="lg:sticky lg:top-24 lg:self-start">
+          <div id="purchase-rail" className="lg:sticky lg:top-24 lg:self-start">
             <PurchaseRail
               product={{
+                id: product.id,
                 slug: product.slug,
                 title: product.title,
                 priceCents: product.priceCents,
                 compareAtCents: product.compareAtCents,
                 instantDelivery: product.instantDelivery,
                 lifetimeUpdates: product.lifetimeUpdates,
+                coverImage: product.coverImage,
+                creatorId: product.creatorId,
               }}
               licenses={product.licenses.map((l) => ({
                 id: l.id,

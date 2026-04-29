@@ -47,7 +47,7 @@ const PLANS: Plan[] = [
       "Up to 5 products",
       "Unlimited customers",
       "Basic analytics",
-      "Storefront on digitalo.app",
+      "Storefront on teskel.app",
       "Community support",
     ],
   },
@@ -93,7 +93,7 @@ const PLANS: Plan[] = [
     monthlyPrice: 0,
     tagline: "For teams, agencies, and large stores.",
     cta: "Contact sales",
-    ctaHref: "mailto:hello@digitalo.app",
+    ctaHref: "mailto:hello@teskel.app",
     ctaVariant: "outline",
     fee: "Custom contract",
     features: [
@@ -362,7 +362,7 @@ function RoiCalculator({ yearly }: { yearly: boolean }) {
               Revenue calculator
             </span>
             <h2 className="mt-4 text-balance text-[28px] font-semibold leading-tight tracking-tight text-ink md:text-[34px]">
-              See how much more you keep on Digitalo.
+              See how much more you keep on TESKEL.
             </h2>
             <p className="mt-3 text-[14px] text-ink-muted">
               Estimate your monthly take-home across plans. The Business plan eliminates
@@ -530,7 +530,7 @@ function NoHiddenFees() {
             {
               icon: ShieldCheck,
               title: "14-day money-back",
-              desc: "If Digitalo doesn't work for you, get a full refund within 14 days. No questions asked.",
+              desc: "If TESKEL doesn't work for you, get a full refund within 14 days. No questions asked.",
             },
             {
               icon: Lock,
@@ -550,7 +550,7 @@ function NoHiddenFees() {
             {
               icon: Sparkles,
               title: "Free forever tier",
-              desc: "Start at $0 with 5 products and a digitalo.app storefront. Upgrade only when you need to.",
+              desc: "Start at $0 with 5 products and a teskel.app storefront. Upgrade only when you need to.",
             },
             {
               icon: Calculator,

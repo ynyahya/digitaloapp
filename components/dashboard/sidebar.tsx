@@ -5,47 +5,68 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Box,
-  PenTool,
   Layers,
   ShoppingBag,
   Users,
   BarChart3,
-  Zap,
-  FileText,
   Settings,
-  PlusCircle,
   Plus,
   Upload,
   Eye,
-  Bot,
   ChevronDown,
+  CheckCircle2,
+  GraduationCap,
+  Briefcase,
+  Ticket,
+  Award,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LogoMark } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const MENU_ITEMS = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Products", href: "/dashboard/products", icon: Box },
-  { label: "Product Studio", href: "/dashboard/studio", icon: PenTool },
+  { label: "Courses", href: "/dashboard/courses", icon: GraduationCap },
+  { label: "Services", href: "/dashboard/services", icon: Briefcase },
+  { label: "Events", href: "/dashboard/events", icon: Ticket },
+  { label: "Memberships", href: "/dashboard/memberships", icon: Award },
   { label: "Bundles", href: "/dashboard/bundles", icon: Layers },
-  { label: "Orders", href: "/dashboard/orders", icon: ShoppingBag, count: 248 },
+  { label: "Orders", href: "/dashboard/orders", icon: ShoppingBag },
   { label: "Customers", href: "/dashboard/customers", icon: Users },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
-  { label: "Automations", href: "/dashboard/automations", icon: Zap },
-  { label: "Content", href: "/dashboard/content", icon: FileText },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 const SHORTCUTS = [
-  { label: "Create Product", icon: Plus, href: "/dashboard/studio" },
-  { label: "Upload Assets", icon: Upload, href: "/dashboard/studio?tab=assets" },
-  { label: "View Storefront", icon: Eye, href: "/storefront" },
-  { label: "AI Assistant", icon: Bot, href: "#", shortcut: "⌘ J" },
+  { label: "Create Course", icon: Plus, href: "/dashboard/courses/new" },
+  { label: "Create Service", icon: Upload, href: "/dashboard/services/new" },
+  { label: "Create Event", icon: Eye, href: "/dashboard/events/new" },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  userName: string | null;
+  userEmail: string | null;
+  userImage: string | null;
+  planName?: string;
+}
+
+export function Sidebar({
+  userName,
+  userEmail,
+  userImage,
+  planName = "Creator",
+}: SidebarProps) {
   const pathname = usePathname();
+
+  const displayName = userName ?? userEmail ?? "Account";
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
   return (
     <aside className="fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-line bg-paper">
@@ -55,7 +76,7 @@ export function Sidebar() {
           <LogoMark className="h-6 w-6" />
         </div>
         <span className="font-sans text-[17px] font-semibold tracking-tight text-ink">
-          CreatorOS
+          TESKEL
         </span>
       </div>
 
@@ -63,13 +84,27 @@ export function Sidebar() {
         {/* User Profile Card */}
         <div className="px-3">
           <div className="flex items-center gap-3 p-2 rounded-2xl border border-line bg-paper-soft shadow-soft">
-            <div className="h-10 w-10 rounded-xl bg-ink text-[12px] font-bold text-paper flex items-center justify-center">
-              AM
+            <div className="h-10 w-10 rounded-xl bg-ink text-[12px] font-bold text-paper flex items-center justify-center overflow-hidden">
+              {userImage ? (
+                <Image
+                  src={userImage}
+                  alt={displayName}
+                  className="h-full w-full object-cover"
+                  width={40}
+                  height={40}
+                />
+              ) : (
+                initials
+              )}
             </div>
             <div className="flex-1 overflow-hidden">
-              <p className="truncate text-[13px] font-bold text-ink">Alex Morgan</p>
+              <p className="truncate text-[13px] font-bold text-ink">
+                {displayName}
+              </p>
               <div className="flex items-center gap-1.5">
-                <span className="text-[10px] font-medium text-ink-muted">Creator Plan</span>
+                <span className="text-[10px] font-medium text-ink-muted">
+                  {planName} Plan
+                </span>
                 <ChevronDown className="h-3 w-3 text-ink-subtle" />
               </div>
             </div>
@@ -100,11 +135,6 @@ export function Sidebar() {
                   />
                   {item.label}
                 </div>
-                {item.count && (
-                  <span className="text-[10px] font-bold text-ink-subtle px-1.5 py-0.5 rounded-md bg-paper-muted group-hover:bg-paper-soft">
-                    {item.count}
-                  </span>
-                )}
               </Link>
             );
           })}
@@ -112,7 +142,9 @@ export function Sidebar() {
 
         {/* Quick Shortcuts */}
         <div className="space-y-2 px-3">
-          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink-subtle px-1">Quick Shortcuts</p>
+          <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink-subtle px-1">
+            Quick Shortcuts
+          </p>
           <div className="space-y-0.5">
             {SHORTCUTS.map((s) => (
               <Link
@@ -124,46 +156,69 @@ export function Sidebar() {
                   <s.icon className="h-3.5 w-3.5 text-ink-subtle group-hover:text-ink" />
                   {s.label}
                 </div>
-                {s.shortcut ? (
-                  <span className="text-[9px] font-bold text-ink-subtle opacity-40">{s.shortcut}</span>
-                ) : (
-                  <ChevronDown className="h-3 w-3 -rotate-90 opacity-0 group-hover:opacity-100 transition-opacity" />
-                )}
+                <ChevronDown className="h-3 w-3 -rotate-90 opacity-0 group-hover:opacity-100 transition-opacity" />
               </Link>
             ))}
           </div>
         </div>
 
-        {/* Usage & Plan */}
-        <div className="px-3 space-y-6 pt-4 border-t border-line">
-           <div className="space-y-4">
-              <div className="space-y-2">
-                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-ink-subtle">
-                   <span>Storage Used</span>
-                   <span className="text-ink">34.2 GB / 100 GB</span>
-                 </div>
-                 <div className="h-1 w-full bg-paper-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-ink w-[34%]" />
-                 </div>
-              </div>
-              <div className="space-y-2">
-                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-ink-subtle">
-                   <span>Bandwidth</span>
-                   <span className="text-ink">120 GB / 500 GB</span>
-                 </div>
-                 <div className="h-1 w-full bg-paper-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-ink w-[24%]" />
-                 </div>
-              </div>
-           </div>
+        {/* Setup Guide Checklist */}
+        <div className="px-3 space-y-3 pt-2">
+           <div className="flex items-center justify-between px-1">
+            <p className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink-subtle">
+              Setup Guide
+            </p>
+            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-md">33%</span>
+          </div>
+          <div className="p-3 rounded-2xl border border-line bg-paper-muted/50 space-y-4 relative overflow-hidden">
+            {/* Progress vertical line */}
+            <div className="absolute left-[20px] top-[40px] bottom-[40px] w-[1px] bg-line z-0" />
 
-           <div className="p-4 rounded-2xl bg-paper-soft border border-line space-y-3">
-              <p className="text-[13px] font-bold text-ink">CreatorOS Pro</p>
-              <p className="text-[11px] text-ink-muted leading-relaxed">Unlock advanced features, custom domains, and memberships.</p>
-              <Button size="sm" className="w-full h-8 rounded-lg text-[11px] bg-ink text-paper border-none">
-                Upgrade Plan
-              </Button>
-           </div>
+            <div className="flex items-start gap-3 w-full relative z-10">
+               <div className="h-4 w-4 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                  <CheckCircle2 className="h-2.5 w-2.5 text-white" />
+               </div>
+               <div className="flex-1">
+                  <p className="text-[12px] font-bold text-ink opacity-40 line-through">Create Account</p>
+               </div>
+            </div>
+
+            <Link href="/dashboard/settings" className="flex items-start gap-3 w-full group relative z-10">
+               <div className="h-4 w-4 rounded-full border border-line bg-paper flex items-center justify-center shrink-0 mt-0.5 group-hover:border-emerald-200 group-hover:bg-emerald-50 transition-colors">
+                  <div className="h-1.5 w-1.5 rounded-full bg-line group-hover:bg-emerald-500 transition-colors" />
+               </div>
+               <div className="flex-1">
+                  <p className="text-[12px] font-bold text-ink group-hover:text-emerald-700 transition-colors">Connect Stripe</p>
+                  <p className="text-[10px] text-ink-muted mt-0.5">Required to receive payouts</p>
+               </div>
+            </Link>
+
+            <Link href="/dashboard/studio?new=1" className="flex items-start gap-3 w-full group relative z-10">
+               <div className="h-4 w-4 rounded-full border border-line bg-paper flex items-center justify-center shrink-0 mt-0.5 group-hover:border-emerald-200 group-hover:bg-emerald-50 transition-colors">
+                  <div className="h-1.5 w-1.5 rounded-full bg-line group-hover:bg-emerald-500 transition-colors" />
+               </div>
+               <div className="flex-1">
+                  <p className="text-[12px] font-bold text-ink group-hover:text-emerald-700 transition-colors">First Product</p>
+                  <p className="text-[10px] text-ink-muted mt-0.5">Upload and launch assets</p>
+               </div>
+            </Link>
+          </div>
+        </div>
+
+        {/* Upgrade Banner */}
+        <div className="px-3 space-y-6 pt-4 border-t border-line">
+          <div className="p-4 rounded-2xl bg-paper-soft border border-line space-y-3">
+            <p className="text-[13px] font-bold text-ink">TESKEL Pro</p>
+            <p className="text-[11px] text-ink-muted leading-relaxed">
+              Unlock advanced features, custom domains, and memberships.
+            </p>
+            <Button
+              size="sm"
+              className="w-full h-8 rounded-lg text-[11px] bg-ink text-paper border-none"
+            >
+              Upgrade Plan
+            </Button>
+          </div>
         </div>
       </div>
     </aside>

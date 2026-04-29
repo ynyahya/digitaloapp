@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowRight, AlertCircle } from "lucide-react";
@@ -18,7 +18,7 @@ function SubmitButton() {
       className="h-11 w-full rounded-xl shadow-float"
       disabled={pending}
     >
-      {pending ? "Creating profile…" : "Create profile"}
+      {pending ? "Creating profileâ€¦" : "Create profile"}
       {!pending ? <ArrowRight className="ml-2 h-4 w-4" /> : null}
     </Button>
   );
@@ -69,7 +69,7 @@ export function OnboardingForm({
         <Label htmlFor="handle">Storefront handle</Label>
         <div className="flex items-center overflow-hidden rounded-xl border border-line bg-paper-soft focus-within:border-ink/20 focus-within:ring-4 focus-within:ring-ink/5">
           <span className="px-3 text-[13px] text-ink-subtle">
-            digitalo.app/
+            TESKEL.app/
           </span>
           <input
             id="handle"

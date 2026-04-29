@@ -12,19 +12,19 @@ export function StatsStrip() {
   return (
     <section className="border-y border-line bg-paper-soft py-12 md:py-16">
       <Container size="wide">
-        <p className="text-center text-[11px] font-medium uppercase tracking-[0.16em] text-ink-subtle">
+        <p className="text-center text-[11px] font-medium uppercase tracking-[0.18em] text-ink-subtle">
           Powering the creator economy
         </p>
-        <ul className="mt-8 grid grid-cols-2 gap-y-8 sm:grid-cols-3 md:grid-cols-5">
-          {STATS.map((s) => (
+        <ul className="mt-8 grid grid-cols-2 divide-y divide-line border-line sm:grid-cols-3 sm:divide-x md:grid-cols-5 md:divide-y-0">
+          {STATS.map((s, i) => (
             <li
               key={s.label}
-              className="flex flex-col items-center text-center"
+              className={`flex flex-col items-center gap-1.5 px-4 py-6 text-center sm:py-3 ${i >= 3 ? "sm:border-t md:border-t-0" : ""}`}
             >
-              <span className="text-[28px] font-semibold tracking-[-0.02em] text-ink md:text-[36px]">
+              <span className="text-[30px] font-semibold tracking-[-0.025em] text-ink md:text-[38px]">
                 {s.value}
               </span>
-              <span className="mt-2 text-[12px] font-medium uppercase tracking-[0.1em] text-ink-subtle">
+              <span className="text-[11.5px] font-medium uppercase tracking-[0.12em] text-ink-subtle">
                 {s.label}
               </span>
             </li>

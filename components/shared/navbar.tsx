@@ -1,17 +1,19 @@
 import Link from "next/link";
-import { ShoppingBag } from "lucide-react";
+import { CartButton } from "@/components/cart/cart-button";
 import { Logo } from "@/components/shared/logo";
 import { Container } from "@/components/shared/container";
 import { Button } from "@/components/ui/button";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { NavbarSearchButton } from "@/components/shared/navbar-search-button";
 import { NavbarUserMenu } from "@/components/shared/navbar-user-menu";
+import { NavbarMobile } from "@/components/shared/navbar-mobile";
 import { getCurrentUser } from "@/lib/auth/session";
 
 const NAV = [
   { label: "Marketplace", href: "/products" },
   { label: "Creators", href: "/creators" },
   { label: "Pricing", href: "/pricing" },
+  { label: "Mission", href: "/mission" },
 ];
 
 export async function Navbar({
@@ -27,7 +29,7 @@ export async function Navbar({
         <nav className="flex h-16 items-center justify-between gap-6">
           <div className="flex items-center gap-10">
             <Logo />
-            <ul className="hidden items-center gap-6 lg:flex">
+            <ul className="hidden items-center gap-7 lg:flex">
               {NAV.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -53,13 +55,7 @@ export async function Navbar({
 
           <div className="flex items-center gap-2">
             {variant === "marketplace" ? <NavbarSearchButton /> : null}
-            <Link
-              href="/cart"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink transition-colors hover:border-ink/30"
-              aria-label="Cart"
-            >
-              <ShoppingBag className="h-4 w-4" />
-            </Link>
+            <CartButton />
             {user ? (
               <NavbarUserMenu
                 name={user.name ?? user.email ?? "Account"}
@@ -76,11 +72,12 @@ export async function Navbar({
                 >
                   <Link href="/login">Sign in</Link>
                 </Button>
-                <Button size="sm" asChild className="rounded-full">
-                  <Link href="/register">Start Selling</Link>
+                <Button size="sm" asChild className="hidden rounded-full md:inline-flex">
+                  <Link href="/register">Start selling</Link>
                 </Button>
               </>
             )}
+            <NavbarMobile items={NAV} authed={!!user} />
           </div>
         </nav>
       </Container>

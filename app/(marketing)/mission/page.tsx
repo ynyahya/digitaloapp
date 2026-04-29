@@ -15,9 +15,9 @@ import { Button } from "@/components/ui/button";
 import { FinalCta } from "@/components/marketing/final-cta";
 
 export const metadata = {
-  title: "Mission — Why we built Digitalo",
+  title: "Mission — Why we built TESKEL",
   description:
-    "We believe the next generation of businesses will be built by independent creators. Digitalo is the operating system to help them ship.",
+    "We believe the next generation of businesses will be built by independent creators. TESKEL is the operating system to help them ship.",
 };
 
 const PRINCIPLES = [
@@ -57,7 +57,7 @@ const TIMELINE = [
   {
     year: "2024",
     title: "The first creators",
-    desc: "Digitalo opens to a small group of indie makers shipping templates, kits, and ebooks.",
+    desc: "TESKEL opens to a small group of indie makers shipping templates, kits, and ebooks.",
   },
   {
     year: "2025",
@@ -93,7 +93,7 @@ export default function MissionPage() {
             </h1>
             <p className="mt-6 text-pretty text-[16px] leading-relaxed text-ink-muted md:text-[18px]">
               We believe the next generation of great businesses will be built by independent
-              creators — designers, makers, educators, and operators. Digitalo exists to give them
+              creators — designers, makers, educators, and operators. TESKEL exists to give them
               the tools to ship, sell, and scale on their own terms.
             </p>
             <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
@@ -115,7 +115,7 @@ export default function MissionPage() {
         <Container size="narrow">
           <div className="prose prose-neutral max-w-none">
             <h2 className="text-balance text-[28px] font-semibold leading-tight tracking-tight text-ink md:text-[34px]">
-              Why we&apos;re building Digitalo.
+              Why we&apos;re building TESKEL.
             </h2>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-muted md:text-[16.5px]">
               For the first time in history, anyone with an idea and an internet connection can
@@ -124,7 +124,7 @@ export default function MissionPage() {
               a dozen platforms — losing time, margin, and trust along the way.
             </p>
             <p className="mt-5 text-[15.5px] leading-relaxed text-ink-muted md:text-[16.5px]">
-              Digitalo brings every part of the creator commerce stack into one intentional,
+              TESKEL brings every part of the creator commerce stack into one intentional,
               opinionated, beautifully designed platform. Not a no-code generator. Not a
               marketplace tax. An operating system — built with the same care as the products our
               creators ship.

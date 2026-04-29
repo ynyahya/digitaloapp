@@ -1,4 +1,3 @@
-import { db } from "@/lib/db";
 import { getProductBySlug } from "@/lib/queries/products";
 import { NextResponse } from "next/server";
 
@@ -12,7 +11,7 @@ export async function GET(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
     return NextResponse.json(product);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

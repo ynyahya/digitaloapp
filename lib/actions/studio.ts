@@ -38,7 +38,7 @@ export async function unpublishProduct(productId: string) {
  */
 export async function updateProductFields(
   productId: string, 
-  data: Record<string, any>
+  data: Record<string, string | number | boolean | null>
 ) {
   // Whitelist of safe fields to prevent arbitrary writes
   const ALLOWED_FIELDS = [
@@ -51,7 +51,7 @@ export async function updateProductFields(
     "categoryId",
   ];
 
-  const sanitized: Record<string, any> = {};
+  const sanitized: Record<string, string | number | boolean | null> = {};
   for (const key of ALLOWED_FIELDS) {
     if (key in data) {
       sanitized[key] = data[key];
@@ -59,7 +59,7 @@ export async function updateProductFields(
   }
 
   if (Object.keys(sanitized).length === 0) {
-    throw new Error("No valid fields provided");
+    return null;
   }
 
   const product = await db.product.update({
@@ -98,7 +98,7 @@ export async function updateLicense(licenseId: string, data: {
   description?: string;
   perks?: string[];
 }) {
-  const updateData: Record<string, any> = {};
+  const updateData: Record<string, string | number | null> = {};
   if (data.name !== undefined) updateData.name = data.name;
   if (data.priceCents !== undefined) updateData.priceCents = data.priceCents;
   if (data.description !== undefined) updateData.description = data.description;
@@ -196,6 +196,18 @@ export async function getStudioProduct(productId: string) {
       tags: { include: { tag: true } },
       category: true,
       creator: true,
+      bundleItems: {
+        include: {
+          product: {
+            select: {
+              id: true,
+              title: true,
+              priceCents: true,
+              coverImage: true,
+            },
+          },
+        },
+      },
       reviews: {
         take: 10,
         orderBy: { createdAt: "desc" },

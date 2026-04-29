@@ -3,9 +3,12 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
-import { Bold, Italic, Strikethrough, Heading1, Heading2, List, ListOrdered } from 'lucide-react'
+import Link from '@tiptap/extension-link'
+import { Bold, Italic, Strikethrough, Heading1, Heading2, List, ListOrdered, Link as LinkIcon } from 'lucide-react'
 
-const MenuBar = ({ editor }: { editor: any }) => {
+import type { Editor } from '@tiptap/react'
+
+const MenuBar = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
     return null
   }
@@ -77,6 +80,22 @@ const MenuBar = ({ editor }: { editor: any }) => {
       >
         <ListOrdered className="h-4 w-4" />
       </button>
+
+      <div className="w-px h-4 bg-line mx-1" />
+
+      <button
+        onClick={() => {
+          const url = window.prompt('Enter URL:')
+          if (url) {
+            editor.chain().focus().setLink({ href: url }).run()
+          }
+        }}
+        className={`p-1.5 rounded-md hover:bg-paper transition-colors ${editor.isActive('link') ? 'bg-paper text-ink shadow-sm' : 'text-ink-muted'}`}
+        type="button"
+        title="Add Link"
+      >
+        <LinkIcon className="h-4 w-4" />
+      </button>
     </div>
   )
 }
@@ -95,6 +114,13 @@ export function RichTextEditor({
       StarterKit.configure({
         heading: {
           levels: [1, 2, 3],
+        },
+      }),
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          rel: 'noopener noreferrer',
+          target: '_blank',
         },
       }),
       Placeholder.configure({

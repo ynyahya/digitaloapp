@@ -45,3 +45,49 @@ export function parseJson<T>(value: string | null | undefined, fallback: T): T {
     return fallback;
   }
 }
+
+/** Sanitize HTML from rich text editor — strip dangerous tags/attributes, keep formatting */
+const ALLOWED_TAGS = new Set([
+  "h1", "h2", "h3", "h4", "p", "br", "hr",
+  "strong", "b", "em", "i", "s", "u",
+  "ul", "ol", "li",
+  "a", "blockquote", "pre", "code",
+]);
+
+const ALLOWED_ATTRS: Record<string, Set<string>> = {
+  a: new Set(["href", "target", "rel"]),
+};
+
+export function sanitizeHtml(html: string): string {
+  if (!html) return "";
+  // Simple tag-level sanitizer: allow known tags, strip everything else
+  return html.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g, (match, tag) => {
+    const lower = tag.toLowerCase();
+    if (!ALLOWED_TAGS.has(lower)) return "";
+    // For closing tags, just pass through
+    if (match.startsWith("</")) return `</${lower}>`;
+    // For opening tags, filter attributes
+    const allowedForTag = ALLOWED_ATTRS[lower];
+    if (!allowedForTag) return `<${lower}>`;
+    // Extract allowed attributes
+    const attrRegex = /([a-zA-Z-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/g;
+    let attrs = "";
+    let m;
+    while ((m = attrRegex.exec(match)) !== null) {
+      const attrName = m[1].toLowerCase();
+      const attrVal = m[2] ?? m[3] ?? "";
+      if (allowedForTag.has(attrName)) {
+        // Only allow http/https links for href
+        if (attrName === "href" && !attrVal.startsWith("http://") && !attrVal.startsWith("https://")) {
+          continue;
+        }
+        attrs += ` ${attrName}="${attrVal}"`;
+      }
+    }
+    // Add rel="noopener noreferrer" for links with target
+    if (lower === "a" && attrs.includes("target")) {
+      attrs += ' rel="noopener noreferrer"';
+    }
+    return `<${lower}${attrs}>`;
+  });
+}

@@ -1,39 +1,47 @@
 import { Hero } from "@/components/marketing/hero";
 import { StatsStrip } from "@/components/marketing/stats-strip";
-import { FeaturedProductsSection } from "@/components/marketing/featured-products-section";
+import { MarketplaceHighlights } from "@/components/marketing/marketplace-highlights";
+import { CategoryBrowseSection } from "@/components/marketing/category-browse-section";
 import { UseCases } from "@/components/marketing/use-cases";
-import { WhyDigitalo } from "@/components/marketing/why-digitalo";
+import { WhyTESKEL } from "@/components/marketing/why-teskel";
+import { HowItWorks } from "@/components/marketing/how-it-works";
 import { ForCreatorsSection } from "@/components/marketing/for-creators-section";
 import { BundleBanner } from "@/components/marketing/bundle-banner";
 import { CreatorShowcase } from "@/components/marketing/creator-showcase";
+import { Integrations } from "@/components/marketing/integrations";
 import { Testimonials } from "@/components/marketing/testimonials";
-import { Pricing } from "@/components/marketing/pricing";
-import { FAQ } from "@/components/marketing/faq";
+import { PricingHighlights } from "@/components/marketing/pricing-highlights";
 import { FinalCta } from "@/components/marketing/final-cta";
+import { CourseHighlights } from "@/components/marketing/course-highlights";
 import { getFeaturedProducts } from "@/lib/queries/products";
 import { getFeaturedCreators } from "@/lib/queries/creators";
+import { getFeaturedCourses } from "@/lib/queries/courses";
 
 export const revalidate = 60;
 
 export default async function LandingPage() {
-  const [products, creators] = await Promise.all([
-    getFeaturedProducts(5),
+  const [featured, creators, courses] = await Promise.all([
+    getFeaturedProducts(8),
     getFeaturedCreators(5),
+    getFeaturedCourses(4),
   ]);
 
   return (
     <>
       <Hero />
       <StatsStrip />
-      <FeaturedProductsSection products={products} />
+      <CourseHighlights courses={courses} />
+      <MarketplaceHighlights products={featured} />
+      <CategoryBrowseSection />
+      <HowItWorks />
       <UseCases />
       <ForCreatorsSection />
-      <WhyDigitalo />
+      <WhyTESKEL />
+      <Integrations />
       <BundleBanner />
       <CreatorShowcase creators={creators} />
       <Testimonials />
-      <Pricing />
-      <FAQ />
+      <PricingHighlights />
       <FinalCta />
     </>
   );

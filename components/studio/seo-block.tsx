@@ -12,6 +12,7 @@ export function SEOBlock({ className }: { className?: string }) {
       icon={Search} 
       label="SEO & Metadata" 
       className={className}
+      blockId="seo"
     >
       <div className="space-y-6">
         <div className="space-y-1.5">
@@ -48,7 +49,7 @@ export function SEOBlock({ className }: { className?: string }) {
           <div className="flex items-center border border-line rounded-xl bg-paper overflow-hidden focus-within:border-ink/30 focus-within:ring-4 focus-within:ring-ink/5 transition-all">
             <span className="pl-4 pr-2 text-[13px] text-ink-muted bg-paper-soft border-r border-line py-3 flex items-center gap-2">
               <LinkIcon className="h-3.5 w-3.5" />
-              digitalo.app/p/
+              teskel.app/p/
             </span>
             <input 
               type="text" 
@@ -71,8 +72,8 @@ export function SEOBlock({ className }: { className?: string }) {
                 <Globe className="w-3 h-3 text-ink" />
               </div>
               <div>
-                <p className="text-[12px] text-[#202124] leading-tight">Digitalo</p>
-                <p className="text-[11px] text-[#4d5156] leading-tight">https://digitalo.app/p/{product.customSlug || product.slug}</p>
+                <p className="text-[12px] text-[#202124] leading-tight">TESKEL</p>
+                <p className="text-[11px] text-[#4d5156] leading-tight">https://teskel.app/p/{product.customSlug || product.slug}</p>
               </div>
             </div>
             <h4 className="text-[18px] text-[#1a0dab] hover:underline cursor-pointer mb-1 leading-snug">

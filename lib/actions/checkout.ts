@@ -4,23 +4,35 @@ import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
 
 export async function createOrder(formData: FormData) {
-  const productId = formData.get("productId") as string;
-  const licenseId = formData.get("licenseId") as string;
   const email = formData.get("email") as string;
   const name = `${formData.get("firstName")} ${formData.get("lastName")}`;
+  const itemsJson = formData.get("items") as string;
+  
+  let cartItems: { productId: string; licenseId: string; priceCents: number; qty: number; creatorId: string }[] = [];
+  
+  try {
+    cartItems = JSON.parse(itemsJson);
+  } catch {
+    // Fallback for old single-item submissions if any
+    const productId = formData.get("productId") as string;
+    const licenseId = formData.get("licenseId") as string;
+    if (productId) {
+      const p = await db.product.findUnique({ where: { id: productId } });
+      if (p) {
+        cartItems = [{ 
+          productId: p.id, 
+          licenseId: licenseId || "", 
+          priceCents: p.priceCents, 
+          qty: 1,
+          creatorId: p.creatorId
+        }];
+      }
+    }
+  }
 
-  const product = await db.product.findUnique({
-    where: { id: productId },
-    include: { creator: true },
-  });
+  if (cartItems.length === 0) throw new Error("No items in order");
 
-  if (!product) throw new Error("Product not found");
-
-  const license = await db.license.findUnique({
-    where: { id: licenseId },
-  });
-
-  const priceCents = license ? license.priceCents : product.priceCents;
+  const subtotalCents = cartItems.reduce((acc, item) => acc + (item.priceCents * item.qty), 0);
 
   // 1. Create or Find User
   let user = await db.user.findUnique({ where: { email } });
@@ -30,43 +42,44 @@ export async function createOrder(formData: FormData) {
     });
   }
 
-  // 2. Create Order
-  const order = await db.order.create({
-    data: {
-      userId: user.id,
-      email: email,
-      status: "PAID", // Simulation: mark as paid immediately
-      totalCents: priceCents,
-      subtotalCents: priceCents,
-      items: {
-        create: {
-          productId: product.id,
-          licenseId: licenseId || null,
-          priceCents: priceCents,
-          qty: 1,
+  // 2. Create Order in Transaction
+  await db.$transaction(async (tx) => {
+    const newOrder = await tx.order.create({
+      data: {
+        userId: user!.id,
+        email: email,
+        status: "PAID",
+        totalCents: subtotalCents,
+        subtotalCents: subtotalCents,
+        items: {
+          create: cartItems.map(item => ({
+            productId: item.productId,
+            licenseId: item.licenseId || null,
+            priceCents: item.priceCents,
+            qty: item.qty,
+          })),
         },
       },
-    },
-  });
+    });
 
-  // 3. Update Creator Metrics
-  await db.creatorMetrics.update({
-    where: { creatorId: product.creatorId },
-    data: {
-      totalSalesCents: { increment: priceCents },
-      productsSold: { increment: 1 },
-      customers: {
-        // Simple approximation: check if this is the first order from this user for this creator
-        // For brevity, we just increment for now.
-        increment: 1, 
-      },
-    },
-  });
+    // 3. Update Creator Metrics & Product Sales for each item
+    for (const item of cartItems) {
+      await tx.creatorMetrics.update({
+        where: { creatorId: item.creatorId },
+        data: {
+          totalSalesCents: { increment: item.priceCents * item.qty },
+          productsSold: { increment: item.qty },
+          customers: { increment: 1 }, 
+        },
+      });
 
-  // 4. Update Product Sales Count
-  await db.product.update({
-    where: { id: product.id },
-    data: { salesCount: { increment: 1 } },
+      await tx.product.update({
+        where: { id: item.productId },
+        data: { salesCount: { increment: item.qty } },
+      });
+    }
+
+    return newOrder;
   });
 
   redirect("/checkout/success");

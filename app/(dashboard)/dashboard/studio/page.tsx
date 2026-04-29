@@ -15,28 +15,54 @@ import { publishProduct } from "@/lib/actions/studio";
 function StudioContent() {
   const [activeMode, setActiveMode] = useState<"build" | "preview" | "launch">("build");
   const searchParams = useSearchParams();
-  const slug = searchParams.get("slug") || "saas-starter-kit";
+  const slug = searchParams.get("slug");
+  const isNew = searchParams.get("new") === "1";
 
   const [product, setProduct] = useState<StudioProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchOrCreateProduct = async () => {
       try {
-        const res = await fetch(`/api/products/${slug}`);
-        if (!res.ok) throw new Error(`Product not found (${res.status})`);
-        const data = await res.json();
-        setProduct(data);
-      } catch (err: any) {
-        console.error("Failed to fetch product", err);
-        setError(err.message || "Failed to load product");
+        if (slug) {
+          // Load existing product by slug
+          const res = await fetch(`/api/products/${slug}`);
+          if (!res.ok) throw new Error(`Product not found (${res.status})`);
+          const data = await res.json();
+          setProduct(data);
+        } else if (isNew) {
+          // Create a new draft product
+          const createRes = await fetch("/api/studio/products", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title: "Untitled Product" }),
+          });
+          if (!createRes.ok) {
+            const err = await createRes.json();
+            throw new Error(err.error || "Failed to create product");
+          }
+          const data = await createRes.json();
+          setProduct(data);
+        } else {
+          // Default: try to load the first product, or create one
+          const res = await fetch("/api/products/saas-starter-kit");
+          if (res.ok) {
+            const data = await res.json();
+            setProduct(data);
+          } else {
+            throw new Error("No product found. Create one from the Products page.");
+          }
+        }
+      } catch (err: unknown) {
+        console.error("Failed to fetch/create product", err);
+        setError(err instanceof Error ? err.message : "Failed to load product");
       } finally {
         setLoading(false);
       }
     };
-    fetchProduct();
-  }, [slug]);
+    fetchOrCreateProduct();
+  }, [slug, isNew]);
 
   const handlePublish = async () => {
     if (!product) return;
@@ -47,6 +73,36 @@ function StudioContent() {
       console.error("Failed to publish:", error);
     }
   };
+
+  // Listen for "Complete" clicks from Launch Center — switch to build mode and scroll
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { field } = (e as CustomEvent).detail || {};
+      setActiveMode("build");
+      // Scroll to the relevant block after a short delay for mode switch
+      setTimeout(() => {
+        const targets: Record<string, string> = {
+          title: "[data-block='hero']",
+          description: "[data-block='hero']",
+          coverImage: "[data-block='cover']",
+          pricing: "[data-block='pricing']",
+          assets: "[data-block='assets']",
+          seo: "[data-block='seo']",
+          faq: "[data-block='faq']",
+          tags: "[data-block='tags']",
+          analytics: "[data-block='analytics']",
+          automations: "[data-block='automations']",
+          reviews: "[data-block='reviews']",
+          bundle: "[data-block='bundle']",
+        };
+        const selector = targets[field] || "[data-block='hero']";
+        const el = document.querySelector(selector);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 300);
+    };
+    window.addEventListener("studio-scroll-to", handler);
+    return () => window.removeEventListener("studio-scroll-to", handler);
+  }, []);
 
   if (loading) {
     return (

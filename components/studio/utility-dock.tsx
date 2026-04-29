@@ -19,8 +19,8 @@ export function UtilityDock() {
   return (
     <div className="fixed bottom-6 right-6 z-50 pointer-events-none">
       <div className="flex items-center gap-1.5 p-1.5 bg-ink rounded-2xl shadow-float border border-white/10 backdrop-blur-md pointer-events-auto">
-        <DockItem icon={BarChart3} label="Analytics" />
-        <DockItem icon={Zap} label="Automations" />
+        <DockItem icon={BarChart3} label="Analytics" onClick={() => window.dispatchEvent(new CustomEvent("studio-scroll-to", { detail: { field: "analytics" } }))} />
+        <DockItem icon={Zap} label="Automations" onClick={() => window.dispatchEvent(new CustomEvent("studio-scroll-to", { detail: { field: "automations" } }))} />
         <DockItem icon={HelpCircle} label="Help & tutorials" />
 
         <div className="w-px h-6 bg-white/10 mx-1.5" />
@@ -98,10 +98,11 @@ export function UtilityDock() {
   );
 }
 
-function DockItem({ icon: Icon, label }: { icon: LucideIcon; label: string }) {
+function DockItem({ icon: Icon, label, onClick }: { icon: LucideIcon; label: string; onClick?: () => void }) {
   return (
     <button
       title={label}
+      onClick={onClick}
       className="flex items-center justify-center h-9 w-9 rounded-xl text-white/60 hover:text-white hover:bg-white/10 transition-all group/dock relative"
     >
       <Icon className="h-4 w-4" />

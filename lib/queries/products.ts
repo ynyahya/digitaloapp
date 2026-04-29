@@ -88,6 +88,21 @@ export async function getProductBySlug(slug: string) {
       tiers: { name: string; priceCents: number; popular?: boolean }[];
       features: { label: string; values: (boolean | string)[] }[];
     } | null>(product.comparison, null),
+    blockOrder: parseJson<string[]>(product.blockOrder, []),
+    bonuses: parseJson<{ title: string; description: string; type: string; value: string }[]>(
+      product.bonuses,
+      [],
+    ),
+    discountCodes: parseJson<
+      {
+        code: string;
+        type: string;
+        amount: number;
+        expiresAt: string | null;
+        usageLimit: number | null;
+        usedCount: number;
+      }[]
+    >(product.discountCodes, []),
     licenses: product.licenses.map((l) => ({
       ...l,
       perks: parseJson<string[]>(l.perks, []),

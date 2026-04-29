@@ -1,17 +1,25 @@
-"use client";
+﻿"use client";
 
-import { Check, Copy, ExternalLink, Globe, LayoutTemplate, Linkedin, Mail, Twitter, ArrowLeft } from "lucide-react";
+import { Check, Copy, Globe, LayoutTemplate, Linkedin, Mail, Twitter, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export function LaunchShareKit({ product, onBack }: { product: any, onBack: () => void }) {
+interface ShareKitProduct {
+  id: string;
+  title: string;
+  tagline?: string | null;
+  customSlug?: string | null;
+  slug: string;
+}
+
+export function LaunchShareKit({ product, onBack }: { product: ShareKitProduct, onBack: () => void }) {
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedEmbed, setCopiedEmbed] = useState(false);
 
-  const productUrl = `https://digitalo.app/p/${product.customSlug || product.slug}`;
+  const productUrl = `https://TESKEL.app/p/${product.customSlug || product.slug}`;
   
-  const embedCode = `<script src="https://digitalo.app/embed.js" async></script>
-<a href="${productUrl}" class="digitalo-checkout-button" data-digitalo-product="${product.id}">
+  const embedCode = `<script src="https://TESKEL.app/embed.js" async></script>
+<a href="${productUrl}" class="TESKEL-checkout-button" data-TESKEL-product="${product.id}">
   Buy ${product.title}
 </a>`;
 
@@ -21,7 +29,7 @@ export function LaunchShareKit({ product, onBack }: { product: any, onBack: () =
     setTimeout(() => setter(false), 2000);
   };
 
-  const shareText = `I just launched ${product.title}! 🚀\n\n${product.tagline || ""}\n\nGet it here: ${productUrl}`;
+  const shareText = `I just launched ${product.title}! ðŸš€\n\n${product.tagline || ""}\n\nGet it here: ${productUrl}`;
 
   return (
     <div className="min-h-screen bg-paper pt-24 pb-40 flex flex-col items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
@@ -35,9 +43,9 @@ export function LaunchShareKit({ product, onBack }: { product: any, onBack: () =
           <div className="h-20 w-20 bg-emerald-50 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-soft">
             <Check className="h-10 w-10" />
           </div>
-          <h1 className="text-[42px] font-bold tracking-tight text-ink">It's Live!</h1>
+          <h1 className="text-[42px] font-bold tracking-tight text-ink">It&apos;s Live!</h1>
           <p className="text-[16px] text-ink-muted max-w-lg mx-auto">
-            "{product.title}" is now published and ready to accept payments globally.
+            &ldquo;{product.title}&rdquo; is now published and ready to accept payments globally.
           </p>
         </div>
 

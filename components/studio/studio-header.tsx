@@ -184,24 +184,68 @@ export function StudioHeader({
           Share
         </Button>
 
-        <Button
-          onClick={onPublish}
-          className={cn(
-            "h-9 rounded-xl px-4 text-[12.5px] font-bold shadow-soft transition-all group inline-flex items-center",
-            product.status === "PUBLISHED"
-              ? "bg-emerald-600 text-white hover:bg-emerald-700"
-              : "bg-ink text-paper hover:opacity-90"
-          )}
-        >
-          <Rocket
-            className={cn(
-              "h-3.5 w-3.5 mr-2 transition-transform",
-              product.status !== "PUBLISHED" &&
-                "group-hover:-rotate-12 group-hover:-translate-y-0.5"
-            )}
-          />
-          {product.status === "PUBLISHED" ? "Published" : "Publish"}
-        </Button>
+        {/* Smart Publish / Readiness Button */}
+        {(() => {
+          const isDraft = product.status === "DRAFT";
+          const checks = [
+            !!product.title && !!product.tagline,
+            !!product.description && product.description.length > 50,
+            !!(product.licenses && product.licenses.length > 0),
+            !!product.coverImage,
+            !!product.metaTitle && !!product.metaDescription,
+          ];
+          const score = Math.round((checks.filter(Boolean).length / checks.length) * 100);
+          const isReady = score >= 80 || !isDraft;
+
+          // Case 1: In Launch mode (Header button is secondary status)
+          if (activeMode === "launch") {
+            return (
+              <Button
+                onClick={onPublish}
+                variant="outline"
+                className="h-9 rounded-xl px-4 text-[12.5px] font-bold border-line bg-transparent text-ink-muted hover:text-ink hover:bg-paper-soft shadow-none group"
+              >
+                <Rocket className="h-3.5 w-3.5 mr-2" />
+                {product.status === "PUBLISHED" ? "Live" : "Publish"}
+              </Button>
+            );
+          }
+
+          // Case 2: Not ready (Draft & < 80% score) -> Force check readiness
+          if (!isReady) {
+            return (
+              <Button
+                onClick={() => onModeChange("launch")}
+                variant="outline"
+                className="h-9 rounded-xl px-4 text-[12.5px] font-bold border-line bg-paper text-ink-muted hover:text-ink hover:border-ink/30 shadow-none group"
+              >
+                <CheckCircle2 className="h-3.5 w-3.5 mr-2 text-amber-500" />
+                Check Readiness
+              </Button>
+            );
+          }
+
+          // Case 3: Ready or Live -> Fast track publish
+          return (
+            <Button
+              onClick={onPublish}
+              className={cn(
+                "h-9 rounded-xl px-4 text-[12.5px] font-bold transition-all group inline-flex items-center shadow-soft",
+                product.status === "PUBLISHED"
+                  ? "bg-emerald-600 text-white hover:bg-emerald-700"
+                  : "bg-ink text-paper hover:opacity-90"
+              )}
+            >
+              <Rocket
+                className={cn(
+                  "h-3.5 w-3.5 mr-2 transition-transform",
+                  product.status !== "PUBLISHED" && "group-hover:-rotate-12 group-hover:-translate-y-0.5"
+                )}
+              />
+              {product.status === "PUBLISHED" ? "Publish Updates" : "Publish Product"}
+            </Button>
+          );
+        })()}
 
         <Button
           variant="ghost"

@@ -1,9 +1,9 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { RegisterForm } from "@/components/auth/register-form";
 
 export const metadata = {
   title: "Create account",
-  description: "Create your Digitalo account.",
+  description: "Create your TESKEL account.",
 };
 
 export default function RegisterPage() {
@@ -11,10 +11,10 @@ export default function RegisterPage() {
     <div className="space-y-8">
       <div className="space-y-2 text-center">
         <h1 className="text-[28px] font-semibold tracking-tight text-ink">
-          Join Digitalo
+          Join TESKEL
         </h1>
         <p className="text-[14px] text-ink-muted">
-          Start as a buyer or creator — you can switch later.
+          Start as a buyer or creator â€” you can switch later.
         </p>
       </div>
 

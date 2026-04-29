@@ -19,7 +19,7 @@ import { formatCompactNumber } from "@/lib/utils";
 export const metadata = {
   title: "Marketplace — Discover digital products built by top creators",
   description:
-    "Browse premium digital products: templates, SaaS boilerplates, UI kits, plugins and more — all crafted by world-class creators.",
+    "The engine for digital product. Browse premium templates, SaaS boilerplates, UI kits, and more — all built for performance.",
 };
 
 export const revalidate = 60;
@@ -72,7 +72,7 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
         <Container size="wide">
           <SectionHeading
             eyebrow="Staff picks"
-            title="Hand-curated by the Digitalo team"
+            title="Hand-curated by the TESKEL team"
             description="Premium-quality products that consistently delight creators."
           />
           <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -121,7 +121,7 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
         <Container size="wide">
           <SectionHeading
             eyebrow="New arrivals"
-            title="Fresh on Digitalo this week"
+            title="Fresh on TESKEL this week"
             description="The newest products from creators on the platform."
             action={
               <Link
@@ -146,7 +146,7 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
           <SectionHeading
             eyebrow="Top creators"
             title="The creators leading the platform"
-            description="Verified creators with the highest sales on Digitalo."
+            description="Verified creators with the highest sales on TESKEL."
             action={
               <Link
                 href="/creators"
@@ -204,7 +204,7 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
               <div className="max-w-xl">
                 <span className="inline-flex items-center gap-2 rounded-full border border-paper/20 bg-paper/5 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-paper/70">
                   <Sparkles className="h-3.5 w-3.5" />
-                  Sell on Digitalo
+                  Sell on TESKEL
                 </span>
                 <h2 className="mt-5 text-balance text-[30px] font-semibold leading-tight tracking-tight md:text-[40px]">
                   Launch your own digital product.
@@ -243,14 +243,14 @@ function MarketplaceHero({
         <div className="mx-auto max-w-3xl text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-line bg-paper px-3 py-1.5 text-[12px] font-medium text-ink-muted">
             <Flame className="h-3.5 w-3.5" />
-            The Digitalo Marketplace
+            The TESKEL Marketplace
           </span>
           <h1 className="mt-6 text-balance text-[40px] font-semibold leading-[1.05] tracking-[-0.02em] text-ink md:text-[56px]">
             Discover digital products
             <br /> built by top creators.
           </h1>
           <p className="mt-5 text-pretty text-[15px] leading-relaxed text-ink-muted md:text-[16.5px]">
-            Browse premium templates, SaaS boilerplates, UI kits, ebooks, plugins, and creator
+            The engine for digital product. Browse premium templates, SaaS boilerplates, UI kits, ebooks, plugins, and creator
             assets — beautifully curated.
           </p>
         </div>
@@ -266,7 +266,7 @@ function MarketplaceHero({
             <Input
               name="q"
               defaultValue={activeQuery}
-              placeholder="Search templates, kits, plugins…"
+              placeholder="Search templates, kits, plugins..."
               className="h-10 border-0 bg-transparent px-0 text-[14px] shadow-none focus-visible:ring-0"
             />
           </div>

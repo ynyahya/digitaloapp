@@ -11,7 +11,7 @@ import {
 
 const FAQS = [
   {
-    q: "What can I sell on Digitalo?",
+    q: "What can I sell on TESKEL?",
     a: "Templates, SaaS boilerplates, UI kits, design systems, ebooks, plugins, code snippets, courses, and any digital asset you can deliver as a file or link. Anything that fits a premium creator catalog is welcome.",
   },
   {
@@ -45,7 +45,7 @@ export function FAQ() {
             <SectionHeading
               eyebrow="Frequently asked"
               title="Answers, not surprises"
-              description="Everything creators ask before launching their first product on Digitalo."
+              description="Everything creators ask before launching their first product on TESKEL."
             />
             <p className="mt-6 text-[14px] leading-relaxed text-ink-muted">
               Still have questions? Talk to a real human — we typically respond

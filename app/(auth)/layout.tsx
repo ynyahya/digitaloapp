@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { Logo } from "@/components/shared/logo";
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </main>
       <footer className="p-10 text-center">
         <p className="text-[13px] text-ink-subtle">
-          &copy; {new Date().getFullYear()} Digitalo. Built for creators.
+          &copy; {new Date().getFullYear()} TESKEL. Built for creators.
         </p>
       </footer>
     </div>

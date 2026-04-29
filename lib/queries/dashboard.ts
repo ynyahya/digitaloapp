@@ -22,11 +22,11 @@ export async function getDashboardStats(creatorId: string) {
     revenue: `$${(metrics.totalSalesCents / 100).toLocaleString()}`,
     productsSold: metrics.productsSold,
     activeCustomers: metrics.customers,
-    conversionRate: "3.2%", // Mock for now until we have views/conversion tracking
-    revenueDelta: "+12.5%",
-    salesDelta: "+18.2%",
-    customersDelta: "+4.3%",
-    conversionDelta: "+0.8%",
+    conversionRate: "0%",
+    revenueDelta: "+0%",
+    salesDelta: "+0%",
+    customersDelta: "+0%",
+    conversionDelta: "+0%",
   };
 }
 
@@ -341,4 +341,179 @@ function formatTimeAgo(date: Date) {
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours}h ago`;
   return date.toLocaleDateString();
+}
+
+// ────────────────────────────────────────────────────────────
+// Courses
+// ────────────────────────────────────────────────────────────
+
+export async function getCourses(creatorId: string) {
+  const courses = await db.course.findMany({
+    where: { creatorId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return courses.map((c) => ({
+    id: c.id,
+    title: c.title,
+    slug: c.slug,
+    status: c.status,
+    price: `${c.currency} ${(c.priceCents / 100).toLocaleString()}`,
+    students: c.totalStudents,
+    lessons: c.totalLessons,
+    hours: c.totalHours,
+    level: c.level,
+    createdAt: formatTimeAgo(c.createdAt),
+  }));
+}
+
+export async function getCourseStats(creatorId: string) {
+  const stats = await db.course.aggregate({
+    where: { creatorId, status: "PUBLISHED" },
+    _sum: { totalStudents: true, totalHours: true },
+    _count: { _all: true },
+  });
+
+  return {
+    totalCourses: stats._count._all,
+    totalStudents: stats._sum.totalStudents || 0,
+    totalHours: stats._sum.totalHours || 0,
+  };
+}
+
+// ────────────────────────────────────────────────────────────
+// Services
+// ────────────────────────────────────────────────────────────
+
+export async function getServices(creatorId: string) {
+  const services = await db.service.findMany({
+    where: { creatorId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return services.map((s) => ({
+    id: s.id,
+    title: s.title,
+    slug: s.slug,
+    status: s.status,
+    category: s.category,
+    price: `${s.currency} ${(s.priceCents / 100).toLocaleString()}`,
+    sales: s.salesCount,
+    rating: s.ratingAvg,
+    ratingCount: s.ratingCount,
+    deliveryDays: s.deliveryDays,
+    createdAt: formatTimeAgo(s.createdAt),
+  }));
+}
+
+export async function getServiceStats(creatorId: string) {
+  const stats = await db.service.aggregate({
+    where: { creatorId, status: "PUBLISHED" },
+    _sum: { salesCount: true },
+    _count: { _all: true },
+  });
+
+  const avgRating = await db.service.aggregate({
+    where: { creatorId, status: "PUBLISHED", ratingCount: { gt: 0 } },
+    _avg: { ratingAvg: true },
+  });
+
+  return {
+    totalServices: stats._count._all,
+    totalSales: stats._sum.salesCount || 0,
+    avgRating: avgRating._avg.ratingAvg?.toFixed(1) || "-",
+  };
+}
+
+// ────────────────────────────────────────────────────────────
+// Events
+// ────────────────────────────────────────────────────────────
+
+export async function getEvents(creatorId: string) {
+  const events = await db.event.findMany({
+    where: { creatorId },
+    orderBy: { startDate: "desc" },
+  });
+
+  return events.map((e) => ({
+    id: e.id,
+    title: e.title,
+    slug: e.slug,
+    status: e.status,
+    startDate: e.startDate ? formatTimeAgo(e.startDate) : "TBD",
+    location: e.locationType === "ONLINE" ? "Online" : e.venueAddress || "Venue",
+    registered: e.registeredCount,
+    maxAttendees: e.maxAttendees,
+    price: e.priceCents === 0 ? "Free" : `${e.currency} ${(e.priceCents / 100).toLocaleString()}`,
+    createdAt: formatTimeAgo(e.createdAt),
+  }));
+}
+
+export async function getEventStats(creatorId: string) {
+  const now = new Date();
+
+  const upcoming = await db.event.count({
+    where: { creatorId, status: "PUBLISHED", startDate: { gt: now } },
+  });
+
+  const past = await db.event.count({
+    where: { creatorId, status: "PUBLISHED", startDate: { lt: now } },
+  });
+
+  const attendees = await db.event.aggregate({
+    where: { creatorId, status: "PUBLISHED" },
+    _sum: { registeredCount: true },
+  });
+
+  return { upcoming, past, totalAttendees: attendees._sum.registeredCount || 0 };
+}
+
+// ────────────────────────────────────────────────────────────
+// Memberships
+// ────────────────────────────────────────────────────────────
+
+export async function getMemberships(creatorId: string) {
+  const memberships = await db.membership.findMany({
+    where: { creatorId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return memberships.map((m) => ({
+    id: m.id,
+    title: m.title,
+    slug: m.slug,
+    status: m.status,
+    price: `${m.currency} ${(m.priceCents / 100).toLocaleString()}`,
+    billingCycle: m.billingCycle,
+    members: m.memberCount,
+    createdAt: formatTimeAgo(m.createdAt),
+  }));
+}
+
+export async function getMembershipStats(creatorId: string) {
+  const stats = await db.membership.aggregate({
+    where: { creatorId, status: "PUBLISHED" },
+    _sum: { memberCount: true },
+    _count: { _all: true },
+  });
+
+  const tiers = await db.membership.groupBy({
+    by: ["billingCycle"],
+    where: { creatorId, status: "PUBLISHED" },
+    _sum: { priceCents: true, memberCount: true },
+  });
+
+  let mrr = 0;
+  for (const t of tiers) {
+    const monthly = t.billingCycle === "MONTHLY"
+      ? (t._sum.priceCents || 0) * (t._sum.memberCount || 0)
+      : ((t._sum.priceCents || 0) * (t._sum.memberCount || 0)) / 12;
+    mrr += monthly;
+  }
+
+  return {
+    totalTiers: stats._count._all,
+    totalMembers: stats._sum.memberCount || 0,
+    mrr: `IDR ${(mrr / 100).toLocaleString()}`,
+  };
 }

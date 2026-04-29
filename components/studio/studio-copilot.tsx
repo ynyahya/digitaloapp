@@ -1,21 +1,20 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { 
-  Bot, X, Sparkles, Send, Command, Lightbulb, 
-  ChevronRight, ArrowRight, Zap, Target, Layout, 
-  CheckCircle2, AlertCircle, RefreshCcw
+import {
+  Bot, X, Sparkles, Send, Command,
+  Zap, Target, Layout,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useStudio } from "@/hooks/use-studio-state";
 
 export function StudioCopilot() {
-  const { isCopilotOpen, setCopilotOpen, product, setField } = useStudio();
+  const { isCopilotOpen, setCopilotOpen } = useStudio();
   const [messages, setMessages] = useState<Array<{role: 'user' | 'ai', content: string}>>([
     { 
       role: 'ai', 
-      content: "Hello! I'm your Digitalo Copilot. I can help you optimize your product for maximum conversion. What would you like to do today?" 
+      content: "Hello! I'm your TESKEL Copilot. I can help you optimize your product for maximum conversion. What would you like to do today?" 
     }
   ]);
   const [input, setInput] = useState("");
@@ -62,7 +61,7 @@ export function StudioCopilot() {
             <Bot className="h-4 w-4" />
           </div>
           <div>
-            <h3 className="text-[14px] font-bold text-ink">Digitalo Copilot</h3>
+            <h3 className="text-[14px] font-bold text-ink">TESKEL Copilot</h3>
             <div className="flex items-center gap-1.5">
                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                <span className="text-[10px] font-bold text-ink-subtle uppercase tracking-widest">AI Online</span>
