@@ -109,7 +109,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               e.stopPropagation();
               prev();
             }}
-            className="absolute left-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20"
+            className="absolute left-6 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20"
             aria-label="Previous"
           >
             <ChevronLeft className="h-5 w-5" />
