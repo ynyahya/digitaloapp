@@ -40,13 +40,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" suppressHydrationWarning>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-paper font-sans text-ink antialiased`}
       >
         <CartProvider>
           {children}
-          <Toaster position="top-right" richColors closeButton />
+          <Toaster
+            position="top-right"
+            richColors
+            closeButton
+            theme="dark"
+            toastOptions={{
+              style: {
+                background: "#0F0F12",
+                border: "1px solid rgba(255,255,255,0.08)",
+                color: "#FAFAFA",
+              },
+            }}
+          />
         </CartProvider>
       </body>
     </html>

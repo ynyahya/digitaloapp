@@ -4,28 +4,35 @@
 
 @layer base {
   :root {
-    color-scheme: light;
-    --background: 0 0% 100%;
-    --foreground: 0 0% 4%;
-    --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 40%;
-    --border: 0 0% 90%;
-    --border-strong: 0 0% 83%;
-    --ring: 0 0% 10%;
+    color-scheme: dark;
+    --background: 240 7% 4%;
+    --foreground: 0 0% 98%;
+    --muted: 240 5% 10%;
+    --muted-foreground: 240 5% 65%;
+    --border: 240 4% 16%;
+    --border-strong: 240 5% 26%;
+    --ring: 75 100% 48%;
   }
 
   html,
   body {
-    background: #ffffff;
-    color: #0a0a0a;
-    font-feature-settings: "ss01", "cv11";
+    background: #08080A;
+    color: #FAFAFA;
+    font-feature-settings: "ss01", "ss02", "cv11";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background: #0a0a0a;
-    color: #ffffff;
+    background: #B4F300;
+    color: #08080A;
+  }
+
+  /* Subtle grain on whole app — gives the dark theme depth */
+  body {
+    background-image:
+      radial-gradient(at 50% 0%, rgba(180, 243, 0, 0.025), transparent 50%),
+      radial-gradient(at 100% 100%, rgba(124, 92, 255, 0.02), transparent 60%);
   }
 }
 
@@ -44,12 +51,12 @@
   }
   .grid-lines {
     background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
     background-size: 48px 48px;
   }
   .dotted-bg {
-    background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
     background-size: 16px 16px;
   }
   .glow-mesh {
@@ -65,55 +72,51 @@
     perspective: 2000px;
   }
   .surface-card {
-    border: 1px solid rgb(229 229 229);
-    background: linear-gradient(180deg, #fff 0%, #fcfcfc 100%);
-    box-shadow: 0 1px 1px rgb(0 0 0 / 0.02), 0 10px 40px -24px rgb(15 23 42 / 0.2);
+    border: 1px solid rgb(255 255 255 / 0.06);
+    background: linear-gradient(180deg, #121215 0%, #0E0E11 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 1px 0 rgba(0, 0, 0, 0.4),
+      0 24px 60px -32px rgba(0, 0, 0, 0.8);
   }
   .surface-glass {
-    border: 1px solid rgb(212 212 212 / 0.7);
-    background: rgb(255 255 255 / 0.76);
-    backdrop-filter: blur(14px);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: rgb(8 8 10 / 0.6);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
   }
   .focus-ring {
     outline: none;
-    box-shadow: 0 0 0 2px rgb(37 99 235 / 0.18), 0 0 0 5px rgb(37 99 235 / 0.08);
+    box-shadow: 0 0 0 2px rgb(180 243 0 / 0.35), 0 0 0 5px rgb(180 243 0 / 0.12);
   }
   .hero-grid {
     background-image:
-      linear-gradient(to right, rgba(15, 23, 42, 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
     background-size: 54px 54px;
   }
 }
 
 /* =========================================================
-   LANDING v2 — scoped dark theme (only affects .landing-theme)
+   LANDING v2 utilities — landing-theme class is now a no-op
+   (dark is default app-wide), kept as a hook for landing-only utils.
    ========================================================= */
-.landing-theme {
-  color-scheme: dark;
-  background: #08080A;
-  color: #FAFAFA;
-  font-feature-settings: "ss01", "ss02", "cv11";
-}
-.landing-theme ::selection {
-  background: #B4F300;
-  color: #08080A;
-}
 
 @layer utilities {
-  .landing-theme .grid-dark {
+  .landing-theme .grid-dark,
+  .grid-dark {
     background-image:
       linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
     background-size: 56px 56px;
   }
-  .landing-theme .grid-dark-fine {
+  .grid-dark-fine {
     background-image:
       linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
     background-size: 28px 28px;
   }
-  .landing-theme .dots-dark {
+  .dots-dark {
     background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
     background-size: 18px 18px;
   }
@@ -211,11 +214,61 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .landing-theme *,
-  .landing-theme *::before,
-  .landing-theme *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+}
+
+@layer utilities {
+  .landing-theme .bg-indigo-50,
+  .landing-theme .bg-indigo-100,
+  .landing-theme .bg-emerald-50,
+  .landing-theme .bg-amber-50,
+  .landing-theme .bg-rose-50 {
+    background-color: rgba(180, 243, 0, 0.1);
+  }
+
+  .landing-theme .bg-indigo-50\/50,
+  .landing-theme .bg-paper-soft\/40 {
+    background-color: rgba(255, 255, 255, 0.035);
+  }
+
+  .landing-theme .bg-indigo-600,
+  .landing-theme .bg-indigo-500,
+  .landing-theme .bg-emerald-500 {
+    background-color: #B4F300;
+    color: #08080A;
+  }
+
+  .landing-theme .text-indigo-600,
+  .landing-theme .text-indigo-500,
+  .landing-theme .text-emerald-600,
+  .landing-theme .text-emerald-700,
+  .landing-theme .text-amber-700 {
+    color: #B4F300;
+  }
+
+  .landing-theme .border-indigo-100,
+  .landing-theme .border-indigo-200,
+  .landing-theme .border-emerald-200,
+  .landing-theme .border-amber-200,
+  .landing-theme .hover\:border-indigo-200:hover,
+  .landing-theme .hover\:border-indigo-300:hover {
+    border-color: rgba(180, 243, 0, 0.35);
+  }
+
+  .landing-theme .hover\:bg-indigo-50:hover,
+  .landing-theme .hover\:bg-indigo-700:hover {
+    background-color: #C8FF1A;
+    color: #08080A;
+  }
+
+  .landing-theme .hover\:text-indigo-600:hover,
+  .landing-theme .group:hover .group-hover\:text-indigo-600 {
+    color: #B4F300;
   }
 }

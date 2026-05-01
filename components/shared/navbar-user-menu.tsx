@@ -36,7 +36,7 @@ export function NavbarUserMenu({
         <button
           type="button"
           aria-label="Account menu"
-          className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-line bg-paper text-[12px] font-semibold text-ink transition-colors hover:border-ink/30"
+          className="inline-flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-line bg-paper text-[12px] font-semibold text-ink transition-colors hover:border-lime/30/30"
         >
           {image ? (
             // eslint-disable-next-line @next/next/no-img-element

@@ -18,19 +18,20 @@ export default async function LoginPage({
   return (
     <div className="space-y-8">
       <div className="space-y-2 text-center">
-        <h1 className="text-[28px] font-semibold tracking-tight text-ink">
+        <p className="text-eyebrow uppercase text-lime">Welcome back</p>
+        <h1 className="text-[34px] font-black tracking-[-0.04em] text-chalk">
           Welcome back
         </h1>
-        <p className="text-[14px] text-ink-muted">
+        <p className="text-[14px] text-chalk-muted">
           Sign in to keep building, shipping, and selling.
         </p>
       </div>
 
       <LoginForm redirectTo={redirectTo} initialError={error} />
 
-      <p className="text-center text-[14px] text-ink-muted">
+      <p className="text-center text-[14px] text-chalk-muted">
         Don&apos;t have an account?{" "}
-        <Link href="/register" className="font-semibold text-ink hover:underline">
+        <Link href="/register" className="font-semibold text-lime hover:text-lime-bright">
           Create one
         </Link>
       </p>

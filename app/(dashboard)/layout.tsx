@@ -11,14 +11,16 @@ export default async function DashboardLayout({
   const user = await getCurrentUser();
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="landing-theme grain-overlay min-h-screen bg-night text-chalk">
+      <div className="pointer-events-none fixed inset-0 bg-accent-glow opacity-50" />
+      <div className="pointer-events-none fixed inset-0 grid-dark opacity-20 mask-radial-fade" />
       <Sidebar
         userName={user?.name ?? null}
         userEmail={user?.email ?? null}
         userImage={user?.image ?? null}
         planName="Creator"
       />
-      <div className="pl-64">
+      <div className="relative z-10 pl-64">
         <Topbar />
         <main className="p-8">{children}</main>
       </div>

@@ -146,7 +146,7 @@ export function RichTextEditor({
   });
 
   return (
-    <div className="border border-line rounded-xl overflow-hidden focus-within:border-ink/30 transition-colors bg-paper">
+    <div className="border border-line rounded-xl overflow-hidden focus-within:border-lime/30/30 transition-colors bg-paper">
       <MenuBar editor={editor} />
       <EditorContent editor={editor} />
     </div>

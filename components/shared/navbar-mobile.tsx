@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Menu, X, ArrowRight } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { Logo } from "@/components/shared/logo";
 import { Button } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics/track";
 import { cn } from "@/lib/utils";
 
 type NavItem = { label: string; href: string };
@@ -17,6 +19,17 @@ export function NavbarMobile({
   authed: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  const handleNavClick = (label: string, href: string, zone: string) => {
+    trackEvent("cta_click", {
+      surface: "navbar_mobile",
+      label,
+      href,
+      zone,
+    });
+    setOpen(false);
+  };
 
   // Lock scroll when open
   useEffect(() => {
@@ -42,8 +55,11 @@ export function NavbarMobile({
         type="button"
         aria-label="Open menu"
         aria-expanded={open}
-        onClick={() => setOpen(true)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper text-ink transition-colors hover:border-ink/30 lg:hidden"
+        onClick={() => {
+          trackEvent("menu_open", { surface: "navbar_mobile" });
+          setOpen(true);
+        }}
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper text-ink transition-colors hover:border-lime/30/30 lg:hidden"
       >
         <Menu className="h-4 w-4" />
       </button>
@@ -76,7 +92,7 @@ export function NavbarMobile({
               type="button"
               aria-label="Close menu"
               onClick={() => setOpen(false)}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper text-ink transition-colors hover:border-ink/30"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper text-ink transition-colors hover:border-lime/30/30"
             >
               <X className="h-4 w-4" />
             </button>
@@ -87,11 +103,21 @@ export function NavbarMobile({
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="group flex items-center justify-between rounded-2xl border border-line bg-paper-soft px-4 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-paper-muted"
+                  onClick={() => handleNavClick(item.label, item.href, "primary_links")}
+                  className={cn(
+                    "group flex items-center justify-between rounded-2xl border px-4 py-3.5 text-[15px] font-semibold transition-colors",
+                    pathname === item.href
+                      ? "border-lime/30 bg-ink text-paper"
+                      : "border-line bg-paper-soft text-ink hover:bg-paper-muted",
+                  )}
                 >
                   {item.label}
-                  <ArrowRight className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight
+                    className={cn(
+                      "h-4 w-4 transition-transform group-hover:translate-x-0.5",
+                      pathname === item.href ? "text-paper/70" : "text-ink-muted",
+                    )}
+                  />
                 </Link>
               </li>
             ))}
@@ -99,25 +125,58 @@ export function NavbarMobile({
               <li>
                 <Link
                   href="/dashboard"
-                  onClick={() => setOpen(false)}
-                  className="group flex items-center justify-between rounded-2xl border border-line bg-paper-soft px-4 py-3.5 text-[15px] font-semibold text-ink transition-colors hover:bg-paper-muted"
+                  onClick={() => handleNavClick("Dashboard", "/dashboard", "primary_links")}
+                  className={cn(
+                    "group flex items-center justify-between rounded-2xl border px-4 py-3.5 text-[15px] font-semibold transition-colors",
+                    pathname === "/dashboard"
+                      ? "border-lime/30 bg-ink text-paper"
+                      : "border-line bg-paper-soft text-ink hover:bg-paper-muted",
+                  )}
                 >
                   Dashboard
-                  <ArrowRight className="h-4 w-4 text-ink-muted transition-transform group-hover:translate-x-0.5" />
+                  <ArrowRight
+                    className={cn(
+                      "h-4 w-4 transition-transform group-hover:translate-x-0.5",
+                      pathname === "/dashboard" ? "text-paper/70" : "text-ink-muted",
+                    )}
+                  />
                 </Link>
               </li>
             )}
           </ul>
 
+          <div className="mt-5 grid grid-cols-2 gap-2">
+            <Link
+              href="/products"
+              onClick={() => handleNavClick("Explore Products", "/products", "quick_links")}
+              className="rounded-2xl border border-line bg-paper-soft px-4 py-3 text-center text-[12px] font-semibold text-ink-muted transition-colors hover:bg-paper-muted"
+            >
+              Explore Products
+            </Link>
+            <Link
+              href="/courses"
+              onClick={() => handleNavClick("Explore Courses", "/courses", "quick_links")}
+              className="rounded-2xl border border-line bg-paper-soft px-4 py-3 text-center text-[12px] font-semibold text-ink-muted transition-colors hover:bg-paper-muted"
+            >
+              Explore Courses
+            </Link>
+          </div>
+
           {!authed && (
             <div className="mt-6 grid grid-cols-2 gap-2">
               <Button asChild variant="secondary" className="rounded-full">
-                <Link href="/login" onClick={() => setOpen(false)}>
+                <Link
+                  href="/login?ref=navbar_mobile_signin"
+                  onClick={() => handleNavClick("Sign in", "/login", "auth")}
+                >
                   Sign in
                 </Link>
               </Button>
               <Button asChild className="rounded-full">
-                <Link href="/register" onClick={() => setOpen(false)}>
+                <Link
+                  href="/register?ref=navbar_mobile_primary"
+                  onClick={() => handleNavClick("Start selling", "/register", "auth")}
+                >
                   Start selling
                 </Link>
               </Button>

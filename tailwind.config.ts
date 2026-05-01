@@ -20,28 +20,35 @@ const config: Config = {
     },
     extend: {
       colors: {
+        // ─── Semantic tokens (dark theme, app-wide) ─────────────────
+        // Naming kept (paper/ink/line/accent) so existing classes
+        // across the codebase auto-convert — only the values flip.
+        // paper = "page background"  (was white, now near-black)
+        // ink   = "foreground text"  (was black, now near-white)
+        // line  = "border"           (was light gray, now dark gray)
+        // accent = "primary cta"     (was blue, now electric lime)
         ink: {
-          DEFAULT: "#0a0a0a",
-          soft: "#171717",
-          muted: "#525252",
-          subtle: "#737373",
+          DEFAULT: "#FAFAFA",
+          soft: "#E5E5E5",
+          muted: "#A1A1AA",
+          subtle: "#71717A",
         },
         accent: {
-          DEFAULT: "#2563eb",
-          strong: "#1d4ed8",
-          soft: "#eff6ff",
-          subtle: "#dbeafe",
+          DEFAULT: "#B4F300",
+          strong: "#C8FF1A",
+          soft: "#1A1F0B",
+          subtle: "#222B0F",
         },
         paper: {
-          DEFAULT: "#ffffff",
-          soft: "#fafafa",
-          muted: "#f5f5f5",
-          sunken: "#f1f1f1",
+          DEFAULT: "#08080A",
+          soft: "#0F0F12",
+          muted: "#18181C",
+          sunken: "#0B0B0E",
         },
         line: {
-          DEFAULT: "#e5e5e5",
-          soft: "#ededed",
-          strong: "#d4d4d4",
+          DEFAULT: "#27272A",
+          soft: "#1F1F23",
+          strong: "#3F3F46",
         },
         // Landing v2 — dark + electric lime palette
         night: {
@@ -89,11 +96,11 @@ const config: Config = {
       },
       backgroundImage: {
         "mono-fade":
-          "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(0,0,0,0.02) 100%)",
+          "linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.025) 100%)",
         "mono-radial":
-          "radial-gradient(circle at 50% 0%, rgba(0,0,0,0.04), transparent 60%)",
+          "radial-gradient(circle at 50% 0%, rgba(255,255,255,0.04), transparent 60%)",
         "accent-glow":
-          "radial-gradient(circle at 20% 20%, rgba(37,99,235,0.14), transparent 60%), radial-gradient(circle at 80% 0%, rgba(59,130,246,0.12), transparent 45%)",
+          "radial-gradient(circle at 20% 20%, rgba(180,243,0,0.14), transparent 60%), radial-gradient(circle at 80% 0%, rgba(124,92,255,0.12), transparent 45%)",
         "lime-glow":
           "radial-gradient(60% 50% at 50% 100%, rgba(180,243,0,0.22), transparent 70%), radial-gradient(40% 40% at 20% 0%, rgba(124,92,255,0.18), transparent 70%)",
         "lime-fade":

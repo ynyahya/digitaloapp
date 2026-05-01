@@ -60,7 +60,7 @@ export function Footer() {
                   href={s.h}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper text-[10px] font-semibold transition-colors hover:border-ink/30 hover:text-ink"
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-paper text-[10px] font-semibold transition-colors hover:border-lime/30/30 hover:text-ink"
                 >
                   {s.l}
                 </a>
