@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, Play } from "lucide-react";
 import { HeroWindow } from "@/components/landing/hero-window";
+import { Tilt } from "@/components/landing/tilt";
 
 export function Hero() {
   return (
@@ -85,7 +86,9 @@ export function Hero() {
         <div className="relative mx-auto mt-20 w-full max-w-[1180px] animate-fade-blur-up [animation-delay:380ms] md:mt-24">
           {/* under-glow */}
           <div className="pointer-events-none absolute -inset-x-20 -bottom-20 -top-20 -z-10 bg-lime-glow blur-2xl" />
-          <HeroWindow />
+          <Tilt max={4} scale={1.005} glow={false} className="group">
+            <HeroWindow />
+          </Tilt>
         </div>
       </div>
     </section>

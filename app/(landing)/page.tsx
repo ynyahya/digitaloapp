@@ -6,6 +6,7 @@ import { CreatorShowcase } from "@/components/landing/creator-showcase";
 import { Pricing } from "@/components/landing/pricing";
 import { TestimonialsFaq } from "@/components/landing/testimonials-faq";
 import { FinalCta } from "@/components/landing/final-cta";
+import { Reveal } from "@/components/landing/reveal";
 import { getFeaturedCreators } from "@/lib/queries/creators";
 
 export const dynamic = "force-dynamic";
@@ -17,13 +18,15 @@ export default async function LandingPage() {
   return (
     <>
       <Hero />
-      <SocialProof />
+      <Reveal><SocialProof /></Reveal>
+      {/* ProductTour + TestimonialsFaq use position:sticky,
+          which breaks when wrapped in a transformed ancestor. */}
       <ProductTour />
-      <FeatureBento />
-      <CreatorShowcase creators={creators as any} />
-      <Pricing />
+      <Reveal><FeatureBento /></Reveal>
+      <Reveal><CreatorShowcase creators={creators as any} /></Reveal>
+      <Reveal><Pricing /></Reveal>
       <TestimonialsFaq />
-      <FinalCta />
+      <Reveal><FinalCta /></Reveal>
     </>
   );
 }
