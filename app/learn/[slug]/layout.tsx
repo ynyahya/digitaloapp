@@ -15,5 +15,5 @@ export default async function StudentCourseLayout({
   const course = await getEnrolledCourseBySlug(user.id, params.slug);
   if (!course) notFound();
 
-  return <>{children}</>;
+  return <div className="landing-theme min-h-screen bg-night text-chalk">{children}</div>;
 }

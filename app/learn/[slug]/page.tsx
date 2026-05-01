@@ -21,9 +21,9 @@ export default async function StudentCourseRedirectPage({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#0a0a0f] flex flex-col items-center justify-center text-center p-8">
-      <h2 className="text-xl font-bold text-white/80 mb-2">No lessons available</h2>
-      <p className="text-white/40 text-sm">This course doesn&apos;t have any published lessons yet.</p>
+    <div className="landing-theme fixed inset-0 z-[100] bg-night flex flex-col items-center justify-center text-center p-8">
+      <h2 className="text-xl font-bold text-chalk mb-2">No lessons available</h2>
+      <p className="text-chalk-muted text-sm">This course doesn&apos;t have any published lessons yet.</p>
     </div>
   );
 }
