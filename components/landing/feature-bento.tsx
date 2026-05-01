@@ -7,6 +7,7 @@ import {
   BarChart3,
   Users,
 } from "lucide-react";
+import { Tilt } from "@/components/landing/tilt";
 
 export function FeatureBento() {
   return (
@@ -159,15 +160,17 @@ function BentoCard({
   className?: string;
 }) {
   return (
-    <div
-      className={[
-        "group relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-all duration-300 hover:border-lime/25 hover:bg-white/[0.035] md:p-6",
-        className,
-      ].join(" ")}
+    <Tilt
+      max={3.5}
+      scale={1.01}
+      glow
+      className={["group rounded-2xl", className].join(" ")}
     >
-      <div className="pointer-events-none absolute -inset-px -z-10 rounded-2xl bg-[radial-gradient(60%_60%_at_50%_0%,rgba(180,243,0,0.08),transparent_70%)] opacity-0 transition group-hover:opacity-100" />
-      {children}
-    </div>
+      <div className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5 transition-colors duration-300 group-hover:border-lime/30 md:p-6">
+        <div className="pointer-events-none absolute -inset-px -z-10 rounded-2xl bg-[radial-gradient(60%_60%_at_50%_0%,rgba(180,243,0,0.08),transparent_70%)] opacity-0 transition group-hover:opacity-100" />
+        {children}
+      </div>
+    </Tilt>
   );
 }
 
