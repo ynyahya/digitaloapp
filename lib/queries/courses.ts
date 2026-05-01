@@ -474,11 +474,18 @@ export async function getCourseReadiness(courseId: string): Promise<CourseReadin
 // Public Storefront / Landing Page
 // ────────────────────────────────────────────────────────────
 
-export async function getPublicCourseBySlug(handle: string, courseSlug: string) {
+export async function getPublicCourseBySlug(
+  handle: string,
+  courseSlug: string,
+  options?: { includeDraftPreview?: boolean },
+) {
   return db.course.findFirst({
     where: {
       slug: courseSlug,
-      status: "PUBLISHED",
+      status: options?.includeDraftPreview
+        ? { in: ["PUBLISHED", "DRAFT"] }
+        : "PUBLISHED",
+      visibility: "PUBLIC",
       creator: { handle: handle },
     },
     include: {

@@ -17,7 +17,7 @@ export function CourseStudioWrapper({
 }) {
   return (
     <CourseStudioProvider initialCourse={course} initialChapters={chapters}>
-      <div className="fixed inset-0 z-50 bg-paper flex flex-col font-sans">
+      <div className="fixed inset-0 z-50 bg-night text-chalk flex flex-col font-sans">
         <BuilderHeader />
         <div className="flex-1 overflow-hidden flex">{children}</div>
       </div>

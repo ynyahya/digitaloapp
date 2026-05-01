@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 import { auth } from "@/auth";
 
 export async function POST(request: NextRequest) {
@@ -17,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { title } = body;
+    const { title, description, tagline } = body;
     const creatorId = creator.id;
 
     if (!title || !creatorId) {
@@ -52,6 +54,8 @@ export async function POST(request: NextRequest) {
             creatorId,
             slug,
             title,
+            description: description || null,
+            tagline: tagline || null,
             priceCents: 0,
             status: "DRAFT",
           },

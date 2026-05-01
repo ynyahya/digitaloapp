@@ -47,6 +47,8 @@ function pickMeta(input: Record<string, unknown>) {
 export async function createCourseQuickstart(data: {
   title: string;
   audience?: string | null;
+  subtitle?: string | null;
+  outcomes?: string | null;
   level?: string;
   language?: string;
   format?: string;
@@ -72,6 +74,7 @@ export async function createCourseQuickstart(data: {
       creatorId: creator.id,
       slug,
       title: data.title.trim(),
+      subtitle: data.subtitle || null,
       level: data.level || "BEGINNER",
       language: data.language || "en",
       format: data.format || "SELF_PACED",
@@ -82,6 +85,8 @@ export async function createCourseQuickstart(data: {
       coverImage: data.coverImage || null,
       thumbnailColor: data.thumbnailColor || null,
       category: data.category || null,
+      audience: data.audience || null,
+      outcomes: data.outcomes || null,
       pipelineStage: "OUTLINING",
     },
   });

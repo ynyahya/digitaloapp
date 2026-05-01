@@ -1,158 +1,181 @@
-import {
-  Briefcase, Plus, Search, MoreHorizontal, Pencil, Star, CheckCircle2, Clock,
-  Package, Users, TrendingUp, DollarSign, Calendar, ArrowRight, Sparkles,
-  ChevronRight, Globe, Eye, Trash2, Copy, Layers,
-} from "lucide-react";
+import { ArrowRight, Briefcase, Calendar, CheckCircle2, Clock, FileText, Package, Search, Sparkles, Star, Users } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { requireCreator } from "@/lib/auth/session";
 import { getServices, getServiceStats } from "@/lib/queries/dashboard";
-import { formatCurrency } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { CommandHero, EmptyCommandState, MetricTile, PlaybookCard, StatusBadge, WorkflowRail } from "../_components/command-center";
 
-export const metadata = { title: "Services — Service Builder Studio", description: "Build, package, and sell your professional services." };
+export const metadata = { title: "Services — TESKEL ServiceOS", description: "Build, package, and sell premium professional services." };
+
+type ServiceItem = Awaited<ReturnType<typeof getServices>>[number];
 
 export default async function ServicesDashboard() {
   const creator = await requireCreator();
   if (!creator) return <div>No creator found.</div>;
   const [services, stats] = await Promise.all([getServices(creator.id), getServiceStats(creator.id)]);
 
-  const published = services.filter(s => s.status === "PUBLISHED").length;
-  const drafts = services.filter(s => s.status === "DRAFT").length;
+  const live = services.filter((service) => service.status === "PUBLISHED").length;
+  const drafts = services.filter((service) => service.status === "DRAFT").length;
+  const averageReadiness = services.length ? Math.round(services.reduce((sum, service) => sum + getServiceReadiness(service).score, 0) / services.length) : 0;
+  const focusService = services.map((service) => ({ service, readiness: getServiceReadiness(service) })).sort((a, b) => a.readiness.score - b.readiness.score)[0];
 
   return (
     <div className="space-y-8 pb-12">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h1 className="text-[28px] font-semibold tracking-tight text-ink">Service Studio</h1>
-          <p className="text-[14px] text-ink-muted mt-1">Build, package, and sell your professional services.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/dashboard/services/new">
-            <Button className="rounded-xl h-10 px-5 bg-ink text-paper shadow-float hover:bg-ink/90 font-medium text-[13px]">
-              <Plus className="mr-2 h-4 w-4" /> New Service
-            </Button>
-          </Link>
-        </div>
+      <CommandHero
+        eyebrow="ServiceOS Command Center"
+        title="Ubah expertise jadi service offer yang jelas, premium, dan siap dijual."
+        description="Kelola service seperti studio profesional: promise, package, delivery scope, proof, inquiry flow, dan launch readiness dalam satu cockpit."
+        primaryHref="/dashboard/services/new"
+        primaryLabel="Create premium service"
+        secondaryHref="/dashboard/services/inquiries"
+        secondaryLabel="View inquiries"
+        icon={Briefcase}
+        accent="from-indigo-400/20 via-lime/10 to-transparent"
+      >
+        <WorkflowRail
+          title="Service launch path"
+          items={[
+            { label: "Offer", description: "Define audience, category, and transformation", done: services.some((service) => Boolean(service.promise || service.description)) },
+            { label: "Package", description: "Create pricing, timeline, and service tiers", done: services.some((service) => service.priceCents > 0 || Boolean(service.packagesJson)) },
+            { label: "Delivery", description: "Clarify scope, revisions, and handoff", done: services.some((service) => Boolean(service.scopeJson || service.outcomesJson)) },
+            { label: "Proof", description: "Handle objections with FAQ and trust signals", done: services.some((service) => Boolean(service.proofJson || service.faqJson)) },
+            { label: "Launch", description: "Publish and route leads to inquiry pipeline", done: live > 0 },
+          ]}
+        />
+      </CommandHero>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <MetricTile icon={Briefcase} label="Live services" value={live} helper={`${drafts} draft offer sedang disiapkan`} tone="blue" />
+        <MetricTile icon={CheckCircle2} label="Completed sales" value={stats.totalSales} helper="Service orders delivered or sold" tone="emerald" />
+        <MetricTile icon={Star} label="Average rating" value={stats.avgRating} helper="Proof quality across services" tone="amber" />
+        <MetricTile icon={Sparkles} label="Readiness" value={`${averageReadiness}%`} helper="Average launch health" tone="lime" />
       </div>
 
-      {/* KPI Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <KpiCard icon={Briefcase} label="Active Services" value={published.toString()} color="bg-blue-50 text-blue-600" />
-        <KpiCard icon={Pencil} label="Drafts" value={drafts.toString()} color="bg-amber-50 text-amber-600" />
-        <KpiCard icon={CheckCircle2} label="Completed" value={String(stats.totalSales)} color="bg-emerald-50 text-emerald-600" />
-        <KpiCard icon={Star} label="Avg Rating" value={String(stats.avgRating)} color="bg-violet-50 text-violet-600" />
-      </div>
-
-      {/* Service Cards Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-[18px] font-bold text-ink">Your Services</h2>
-            <p className="text-[13px] text-ink-muted">{services.length} service{services.length !== 1 ? "s" : ""} total · {published} live</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="relative w-56">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-muted" />
-              <Input className="h-9 pl-9 rounded-lg border-line text-[12px]" placeholder="Search services..." />
+      <div className="grid gap-6 xl:grid-cols-[1fr_360px]">
+        <div className="space-y-4">
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-[20px] font-bold text-chalk">Service pipeline</h2>
+              <p className="text-[13px] text-chalk-muted">{services.length} service total · prioritized by launch readiness</p>
+            </div>
+            <div className="relative w-full md:w-72">
+              <Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-chalk-muted" />
+              <Input className="h-10 rounded-xl border-white/[0.08] pl-9 text-[13px]" placeholder="Search services..." />
             </div>
           </div>
+
+          {services.length === 0 ? (
+            <EmptyCommandState icon={Briefcase} title="Package your first high-trust service" description="Start with a concrete promise, clear delivery scope, premium package, and inquiry path so buyers understand exactly what they get." href="/dashboard/services/new" label="Create first service" />
+          ) : (
+            <div className="grid gap-5 lg:grid-cols-2">
+              {services.map((service) => <ServiceCard key={service.id} service={service} />)}
+            </div>
+          )}
         </div>
 
-        {services.length === 0 ? (
-          <Card className="rounded-3xl border-line bg-paper shadow-none">
-            <CardContent className="p-16 flex flex-col items-center text-center">
-              <div className="w-20 h-20 rounded-3xl bg-paper-soft border border-line flex items-center justify-center mb-6">
-                <Briefcase className="h-10 w-10 text-indigo-500" />
-              </div>
-              <h3 className="text-[20px] font-bold text-ink mb-2">Package your expertise</h3>
-              <p className="text-[14px] text-ink-muted max-w-[420px] leading-relaxed mb-6">
-                Monetize your skills by offering consulting, coaching, design, development, or any professional service. Set your packages, pricing, and delivery flow.
-              </p>
-              <Link href="/dashboard/services/new">
-                <Button className="rounded-xl h-11 px-6 bg-indigo-600 hover:bg-indigo-700 text-white font-medium shadow-md">
-                  <Plus className="mr-2 h-4 w-4" /> Create First Service
-                </Button>
-              </Link>
+        <div className="space-y-5">
+          <Card className="rounded-3xl border-white/[0.08] bg-night/70 shadow-soft">
+            <CardContent className="p-6">
+              <p className="text-[12px] font-bold uppercase tracking-[0.16em] text-chalk-dim">Next best action</p>
+              {focusService ? (
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <h3 className="text-[18px] font-bold text-chalk">{focusService.service.title}</h3>
+                    <p className="mt-1 text-[13px] leading-5 text-chalk-muted">{focusService.readiness.nextAction}</p>
+                  </div>
+                  <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                    <div className="h-full rounded-full bg-lime" style={{ width: `${focusService.readiness.score}%` }} />
+                  </div>
+                  <Button asChild className="h-10 w-full rounded-2xl bg-lime text-night">
+                    <Link href={`/dashboard/services/${focusService.service.slug}/builder`}>Open builder<ArrowRight className="ml-2 h-4 w-4" /></Link>
+                  </Button>
+                </div>
+              ) : (
+                <p className="mt-4 text-[13px] leading-5 text-chalk-muted">Create a service to unlock readiness guidance.</p>
+              )}
             </CardContent>
           </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-            {services.map((service) => (
-              <Link key={service.id} href={`/dashboard/services/${service.slug}`}>
-                <Card className="group rounded-2xl border-line bg-paper hover:border-indigo-200 hover:shadow-soft transition-all cursor-pointer h-full flex flex-col overflow-hidden">
-                  {/* Header bar */}
-                  <div className="h-2" style={{ backgroundColor: service.category === "Consulting" ? "#6366f1" : service.category === "Design" ? "#ec4899" : service.category === "Development" ? "#10b981" : service.category === "Coaching" ? "#f59e0b" : "#6b7280" }} />
-                  <CardContent className="p-5 flex-1 flex flex-col">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="w-11 h-11 rounded-xl bg-paper-soft border border-line flex items-center justify-center shrink-0 group-hover:border-indigo-200 group-hover:bg-indigo-50 transition-all">
-                        <Briefcase className="h-5 w-5 text-ink-muted group-hover:text-indigo-600" />
-                      </div>
-                      <Badge className={cn("rounded-full text-[10px] font-bold px-2.5 py-0.5", service.status === "PUBLISHED" ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700")}>
-                        {service.status === "PUBLISHED" ? "Live" : "Draft"}
-                      </Badge>
-                    </div>
 
-                    <h3 className="text-[15px] font-bold text-ink line-clamp-1 group-hover:text-indigo-600 transition-colors">{service.title}</h3>
-                    {service.category && <p className="text-[12px] text-ink-muted mt-1">{service.category}</p>}
-
-                    <div className="mt-auto pt-4 border-t border-line flex items-center justify-between">
-                      <span className="text-[16px] font-bold text-ink">{service.price}</span>
-                      <div className="flex items-center gap-3 text-[11px] text-ink-muted">
-                        <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {service.deliveryDays}d</span>
-                        <span className="flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> {service.sales}</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1 mt-3 text-[11px] font-medium text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                      Open Builder <ArrowRight className="h-3 w-3" />
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        )}
+          <PlaybookCard icon={Users} title="Premium service playbook" description="Format service seperti pro agency: mudah dipahami, low-friction, dan trust-heavy." steps={["Name the outcome, not the labor", "Package timeline and revision boundary", "Show proof before asking for payment", "Route complex work into inquiry flow"]} />
+        </div>
       </div>
 
-      {/* Quick Templates */}
-      <div className="space-y-4 pt-4">
-        <h2 className="text-[18px] font-bold text-ink">Quick-start Templates</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { icon: Briefcase, label: "Consulting", desc: "1-on-1 advisory", color: "bg-indigo-50 text-indigo-600 border-indigo-200" },
-            { icon: Users, label: "Coaching", desc: "Group or 1-on-1", color: "bg-amber-50 text-amber-600 border-amber-200" },
-            { icon: Package, label: "Done-for-you", desc: "Full delivery", color: "bg-emerald-50 text-emerald-600 border-emerald-200" },
-            { icon: Calendar, label: "Retainer", desc: "Monthly ongoing", color: "bg-violet-50 text-violet-600 border-violet-200" },
-          ].map((t) => (
-            <div key={t.label} className="p-4 rounded-2xl border border-line bg-paper hover:border-indigo-200 hover:shadow-soft transition-all cursor-pointer group/template">
-              <div className={`w-9 h-9 rounded-xl ${t.color} flex items-center justify-center mb-3`}>
-                <t.icon className="h-4 w-4" />
-              </div>
-              <p className="text-[13px] font-bold text-ink">{t.label}</p>
-              <p className="text-[11px] text-ink-muted mt-0.5">{t.desc}</p>
-              <div className="flex items-center gap-1 text-[10px] font-medium text-indigo-600 mt-2 opacity-0 group-hover/template:opacity-100 transition-opacity">
-                Use Template <ArrowRight className="h-2.5 w-2.5" />
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="grid gap-4 md:grid-cols-4">
+        {[
+          { icon: Briefcase, title: "Consulting", description: "Audit, advisory, and strategy sprint", steps: ["Promise", "Session", "Action plan"] },
+          { icon: Calendar, title: "Retainer", description: "Monthly support with recurring scope", steps: ["Capacity", "SLA", "Reporting"] },
+          { icon: Package, title: "Done-for-you", description: "Clear deliverable with premium handoff", steps: ["Assets", "Milestones", "Delivery"] },
+          { icon: FileText, title: "Review", description: "Fast expert review and recommendations", steps: ["Intake", "Score", "Fix list"] },
+        ].map((template) => <PlaybookCard key={template.title} icon={template.icon} title={template.title} description={template.description} steps={template.steps} />)}
       </div>
     </div>
   );
 }
 
-function KpiCard({ icon: Icon, label, value, color }: { icon: any; label: string; value: string; color: string }) {
+function ServiceCard({ service }: { service: ServiceItem }) {
+  const readiness = getServiceReadiness(service);
+
   return (
-    <Card className="rounded-2xl border-line shadow-none bg-paper">
-      <CardContent className="p-5 flex items-center gap-3">
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${color}`}><Icon className="h-5 w-5" /></div>
-        <div><p className="text-[24px] font-bold text-ink leading-none">{value}</p><p className="text-[11px] text-ink-muted font-medium">{label}</p></div>
-      </CardContent>
-    </Card>
+    <Link href={`/dashboard/services/${service.slug}/builder`}>
+      <Card className="group h-full overflow-hidden rounded-3xl border-white/[0.08] bg-night/70 shadow-soft transition-all hover:-translate-y-0.5 hover:border-lime/25 hover:shadow-card">
+        <CardContent className="p-0">
+          <div className="border-b border-white/[0.08] bg-gradient-to-br from-white/[0.045] to-white/[0.02] p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex min-w-0 items-start gap-3">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/[0.08] bg-night/70">
+                  <Briefcase className="h-5 w-5 text-chalk" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="truncate text-[16px] font-bold text-chalk group-hover:text-lime">{service.title}</h3>
+                  <p className="mt-1 text-[12px] text-chalk-muted">{service.category || "Premium service"} · {service.price}</p>
+                </div>
+              </div>
+              <StatusBadge status={service.status} />
+            </div>
+          </div>
+          <div className="space-y-4 p-5">
+            <p className="line-clamp-2 min-h-[40px] text-[13px] leading-5 text-chalk-muted">{service.promise || service.description || "Add a crisp promise so buyers know what outcome they are buying."}</p>
+            <div className="grid grid-cols-3 gap-2 text-center">
+              <MiniStat icon={Clock} value={`${service.deliveryDays}d`} label="Delivery" />
+              <MiniStat icon={Package} value={service.packagesJson ? "Set" : "Basic"} label="Package" />
+              <MiniStat icon={CheckCircle2} value={`${readiness.score}%`} label="Ready" />
+            </div>
+            <div>
+              <div className="mb-2 flex items-center justify-between text-[11px] font-bold uppercase tracking-[0.12em] text-chalk-dim"><span>Launch readiness</span><span>{readiness.score}%</span></div>
+              <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]"><div className={cn("h-full rounded-full", readiness.score >= 80 ? "bg-emerald-500" : readiness.score >= 50 ? "bg-amber-500" : "bg-lime")} style={{ width: `${readiness.score}%` }} /></div>
+            </div>
+            <div className="flex items-center justify-between border-t border-white/[0.08] pt-4">
+              <p className="text-[12px] text-chalk-muted">{readiness.nextAction}</p>
+              <ArrowRight className="h-4 w-4 text-chalk-dim transition-transform group-hover:translate-x-1 group-hover:text-chalk" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
+}
+
+function MiniStat({ icon: Icon, value, label }: { icon: typeof Clock; value: string; label: string }) {
+  return (
+    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-3">
+      <Icon className="mx-auto mb-1 h-3.5 w-3.5 text-chalk-dim" />
+      <p className="text-[12px] font-bold text-chalk">{value}</p>
+      <p className="text-[10px] font-bold uppercase tracking-[0.08em] text-chalk-dim">{label}</p>
+    </div>
+  );
+}
+
+function getServiceReadiness(service: ServiceItem) {
+  const checks = [
+    { done: Boolean(service.title && (service.promise || service.description)), next: "Tighten the promise and buyer outcome." },
+    { done: service.priceCents > 0 || Boolean(service.packagesJson), next: "Create a clear paid package." },
+    { done: Boolean(service.scopeJson || service.outcomesJson), next: "Define delivery scope and outcomes." },
+    { done: Boolean(service.proofJson || service.faqJson), next: "Add FAQ, proof, and objection handling." },
+    { done: service.status === "PUBLISHED", next: "Launch the service and collect inquiries." },
+  ];
+  const score = Math.round((checks.filter((check) => check.done).length / checks.length) * 100);
+  return { score, nextAction: checks.find((check) => !check.done)?.next ?? "Service is live. Improve proof and lead conversion next." };
 }

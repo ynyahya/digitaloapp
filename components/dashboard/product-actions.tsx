@@ -48,7 +48,7 @@ export function ProductActions({ product }: ProductActionsProps) {
         className="h-8 rounded-lg px-3 text-[12px] font-bold border-line bg-paper hover:bg-paper-soft transition-all"
         asChild
       >
-        <Link href={`/dashboard/studio?slug=${product.slug}`}>
+        <Link href={`/dashboard/products/${product.slug}/builder`}>
           <Settings2 className="mr-2 h-3.5 w-3.5" />
           Edit
         </Link>

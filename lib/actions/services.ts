@@ -14,7 +14,8 @@ function makeUniqueSlug(base: string) {
 const SERVICE_FIELDS = [
   "title", "description", "category", "priceCents", "currency",
   "deliveryDays", "revisions", "status", "coverImage",
-  "packageJson", "faqJson", "outcomesJson", "automationSettings",
+  "promise", "packagesJson", "scopeJson", "outcomesJson",
+  "faqJson", "proofJson", "metaTitle", "metaDescription",
 ] as const;
 
 // ── CRUD ────────────────────────────────────────────────────

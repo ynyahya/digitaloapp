@@ -10,7 +10,7 @@ const PATHS = [
     blurb: "Describe your course in one line — TESKEL drafts a 5-chapter outline you can edit.",
     cta: "Start with AI",
     href: "/dashboard/courses/new?mode=ai",
-    accent: "bg-ink text-paper border-ink",
+    accent: "bg-ink text-paper border-lime/30",
     chip: "Recommended · 60 sec",
   },
   {
@@ -73,7 +73,7 @@ export function CourseEmptyState() {
               p.accent,
               p.id === "ai"
                 ? "hover:shadow-float hover:-translate-y-1"
-                : "hover:border-ink/40 hover:shadow-soft",
+                : "hover:border-lime/30/40 hover:shadow-soft",
             )}
           >
             <div className="flex items-start justify-between">

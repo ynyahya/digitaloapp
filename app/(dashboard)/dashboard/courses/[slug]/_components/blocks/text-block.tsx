@@ -41,7 +41,7 @@ export function TextBlock({
     editorProps: {
       attributes: {
         class:
-          "prose prose-sm prose-p:leading-relaxed max-w-none focus:outline-none min-h-[80px] text-[14px] text-ink",
+          "prose prose-sm prose-p:leading-relaxed max-w-none focus:outline-none min-h-[80px] text-[14px] text-chalk",
       },
     },
     immediatelyRender: false,
@@ -49,7 +49,7 @@ export function TextBlock({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-1 pb-2 border-b border-line flex-wrap">
+      <div className="flex items-center gap-1 pb-2 border-b border-white/[0.08] flex-wrap">
         <ToolBtn editor={editor} action="bold" icon={Bold} />
         <ToolBtn editor={editor} action="italic" icon={Italic} />
         <ToolBtn editor={editor} action="strike" icon={Strikethrough} />
@@ -145,8 +145,8 @@ function ToolBtn({
       onClick={handleClick}
       className={`p-1.5 rounded-md transition-colors ${
         isActive
-          ? "bg-indigo-50 text-indigo-600"
-          : "text-ink-muted hover:bg-paper-soft hover:text-ink"
+          ? "bg-lime/10 text-lime"
+          : "text-chalk-muted hover:bg-white/[0.035] hover:text-chalk"
       }`}
     >
       <Icon className="h-3.5 w-3.5" />

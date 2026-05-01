@@ -137,7 +137,6 @@ export async function getMarketplaceProducts(options?: {
 
   const where: Prisma.ProductWhereInput = {
     status: "PUBLISHED",
-    type: { not: "BUNDLE" },
   };
   if (categorySlug) where.category = { slug: categorySlug };
   if (query) {
@@ -225,5 +224,6 @@ function toCardData(p: RawProduct): ProductCardData & { id: string } {
     salesCount: p.salesCount,
     bestSeller: p.bestSeller,
     instantDelivery: p.instantDelivery,
+    type: p.type,
   };
 }

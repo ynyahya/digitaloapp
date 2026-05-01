@@ -85,6 +85,7 @@ model Creator {
   products        Product[]
   courses         Course[]
   services        Service[]
+  serviceInquiries ServiceInquiry[]
   events          Event[]
   memberships     Membership[]
 }
@@ -509,6 +510,14 @@ model Service {
   deliveryDays Int       @default(1)
   revisions    Int       @default(0)
   coverImage   String?
+  promise      String?
+  packagesJson String?
+  scopeJson    String?
+  outcomesJson String?
+  faqJson      String?
+  proofJson    String?
+  metaTitle    String?
+  metaDescription String?
   ratingAvg    Float     @default(0)
   ratingCount  Int       @default(0)
   salesCount   Int       @default(0)
@@ -516,8 +525,30 @@ model Service {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   creator      Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  inquiries    ServiceInquiry[]
 
   @@index([creatorId, status])
+}
+
+model ServiceInquiry {
+  id           String   @id @default(cuid())
+  serviceId    String
+  creatorId    String
+  name         String
+  email        String
+  company      String?
+  message      String
+  budget       String?
+  timeline     String?
+  status       String   @default("NEW")
+  source       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  service      Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  creator      Creator  @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+
+  @@index([creatorId, status])
+  @@index([serviceId, createdAt])
 }
 
 model Event {
@@ -638,4 +669,22 @@ model Membership {
   creator      Creator   @relation(fields: [creatorId], references: [id], onDelete: Cascade)
 
   @@index([creatorId, status])
+}
+
+model FunnelEvent {
+  id         String   @id @default(cuid())
+  event      String
+  surface    String?
+  pathname   String?
+  referrer   String?
+  sessionId  String?
+  anonymousId String?
+  userAgent  String?
+  properties Json?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([event, createdAt])
+  @@index([surface, createdAt])
+  @@index([pathname, createdAt])
 }

@@ -74,7 +74,7 @@ export function AICopilot() {
 
              <div className="flex flex-wrap gap-2 pt-2">
                {["Suggest bundles", "Optimize copy", "Analyze audience"].map((s) => (
-                 <button key={s} className="px-3 py-1.5 rounded-full border border-line bg-paper text-[11.5px] font-medium text-ink-muted hover:border-ink/30 hover:text-ink transition-all">
+                 <button key={s} className="px-3 py-1.5 rounded-full border border-line bg-paper text-[11.5px] font-medium text-ink-muted hover:border-lime/30/30 hover:text-ink transition-all">
                    {s}
                  </button>
                ))}
@@ -88,7 +88,7 @@ export function AICopilot() {
             <input
               type="text"
               placeholder="Ask copilot..."
-              className="h-11 w-full rounded-2xl border border-line bg-paper-soft pl-4 pr-12 text-[13px] outline-none transition-all focus:border-ink/20 focus:ring-4 focus:ring-ink/5"
+              className="h-11 w-full rounded-2xl border border-line bg-paper-soft pl-4 pr-12 text-[13px] outline-none transition-all focus:border-lime/30/20 focus:ring-4 focus:ring-ink/5"
             />
             <button className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 flex items-center justify-center rounded-xl bg-ink text-paper opacity-80 hover:opacity-100 transition-opacity">
               <Send className="h-3.5 w-3.5" />

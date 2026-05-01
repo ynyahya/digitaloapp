@@ -123,20 +123,20 @@ export function CurriculumSidebar() {
   const publishedLessons = chapters.reduce((s, ch) => s + ch.lessons.filter((l) => l.isPublished).length, 0);
 
   return (
-    <div className="w-[280px] border-r border-line bg-paper flex flex-col shrink-0 h-full overflow-hidden">
+    <div className="w-[280px] border-r border-white/[0.08] bg-night flex flex-col shrink-0 h-full overflow-hidden">
       {/* Header */}
-      <div className="p-3 border-b border-line flex items-center justify-between">
+      <div className="p-3 border-b border-white/[0.08] flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Layers className="h-4 w-4 text-ink-muted" />
-          <h2 className="text-[13px] font-semibold text-ink">Curriculum</h2>
-          <span className="text-[10px] text-ink-muted bg-paper-soft px-1.5 py-0.5 rounded">
+          <Layers className="h-4 w-4 text-chalk-muted" />
+          <h2 className="text-[13px] font-semibold text-chalk">Curriculum</h2>
+          <span className="text-[10px] text-chalk-muted bg-white/[0.035] px-1.5 py-0.5 rounded">
             {publishedLessons}/{totalLessons}
           </span>
         </div>
         <Button
           variant="ghost"
           size="icon"
-          className="h-7 w-7 rounded-lg hover:bg-paper-soft"
+          className="h-7 w-7 rounded-lg hover:bg-white/[0.035]"
           onClick={handleAddModule}
           disabled={addingModule}
         >
@@ -149,11 +149,11 @@ export function CurriculumSidebar() {
       </div>
 
       {/* Quick actions */}
-      <div className="px-3 py-2 border-b border-line flex items-center gap-1">
+      <div className="px-3 py-2 border-b border-white/[0.08] flex items-center gap-1">
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 rounded-lg text-[10px] px-2 font-medium text-ink-muted hover:text-ink hover:bg-paper-soft flex-1"
+          className="h-7 rounded-lg text-[10px] px-2 font-medium text-chalk-muted hover:text-chalk hover:bg-white/[0.035] flex-1"
           onClick={handleAddModule}
           disabled={addingModule}
         >
@@ -162,7 +162,7 @@ export function CurriculumSidebar() {
         <Button
           variant="ghost"
           size="sm"
-          className="h-7 rounded-lg text-[10px] px-2 font-medium text-indigo-600 hover:bg-indigo-50"
+          className="h-7 rounded-lg text-[10px] px-2 font-medium text-lime hover:bg-lime/10"
         >
           <Sparkles className="h-3 w-3 mr-1" /> AI Outline
         </Button>
@@ -171,16 +171,16 @@ export function CurriculumSidebar() {
       {/* Modules Tree */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1">
         {chapters.length === 0 ? (
-          <div className="text-center py-16 text-ink-muted space-y-3">
-            <div className="w-12 h-12 mx-auto rounded-2xl bg-paper-soft border border-line flex items-center justify-center">
-              <FolderOpen className="h-5 w-5 text-ink-subtle" />
+          <div className="text-center py-16 text-chalk-muted space-y-3">
+            <div className="w-12 h-12 mx-auto rounded-2xl bg-white/[0.035] border border-white/[0.08] flex items-center justify-center">
+              <FolderOpen className="h-5 w-5 text-chalk-dim" />
             </div>
             <p className="text-[12px] font-medium">No modules yet</p>
             <p className="text-[10px]">Create your first module to start building</p>
             <Button
               variant="outline"
               size="sm"
-              className="h-7 rounded-lg border-dashed border-line text-[11px]"
+              className="h-7 rounded-lg border-dashed border-white/[0.08] text-[11px]"
               onClick={handleAddModule}
             >
               <Plus className="h-3 w-3 mr-1" /> New Module
@@ -196,7 +196,7 @@ export function CurriculumSidebar() {
                 {/* Module Row */}
                 <div
                   className={`flex items-center gap-1 px-1.5 py-1.5 rounded-lg cursor-pointer transition-colors ${
-                    dragOverChapter === ch.id ? "bg-indigo-50 border border-indigo-200" : "hover:bg-paper-soft"
+                    dragOverChapter === ch.id ? "bg-lime/10 border border-lime/25" : "hover:bg-white/[0.035]"
                   }`}
                   onDragOver={(e) => {
                     e.preventDefault();
@@ -211,10 +211,10 @@ export function CurriculumSidebar() {
                 >
                   <button
                     onClick={() => toggleChapterExpand(ch.id)}
-                    className="p-0.5 rounded hover:bg-paper-muted transition-colors"
+                    className="p-0.5 rounded hover:bg-white/[0.06] transition-colors"
                   >
                     <ChevronRight
-                      className={`h-3 w-3 text-ink-muted transition-transform ${isExpanded ? "rotate-90" : ""}`}
+                      className={`h-3 w-3 text-chalk-muted transition-transform ${isExpanded ? "rotate-90" : ""}`}
                     />
                   </button>
 
@@ -223,9 +223,9 @@ export function CurriculumSidebar() {
                     onClick={() => toggleChapterExpand(ch.id)}
                   >
                     {isExpanded ? (
-                      <FolderOpen className="h-3.5 w-3.5 shrink-0 text-indigo-500" />
+                      <FolderOpen className="h-3.5 w-3.5 shrink-0 text-lime" />
                     ) : (
-                      <Folder className="h-3.5 w-3.5 shrink-0 text-indigo-400" />
+                      <Folder className="h-3.5 w-3.5 shrink-0 text-lime/80" />
                     )}
 
                     {editingId === ch.id ? (
@@ -235,17 +235,17 @@ export function CurriculumSidebar() {
                         onChange={(e) => setEditTitle(e.target.value)}
                         onBlur={handleRename}
                         onKeyDown={(e) => e.key === "Enter" && handleRename()}
-                        className="w-full bg-paper border border-indigo-400 rounded px-1.5 py-0.5 text-[12px] font-medium outline-none"
+                        className="w-full bg-night border border-lime/60 rounded px-1.5 py-0.5 text-[12px] font-medium outline-none"
                         onClick={(e) => e.stopPropagation()}
                       />
                     ) : (
-                      <span className="text-[12px] font-medium text-ink truncate">{ch.title}</span>
+                      <span className="text-[12px] font-medium text-chalk truncate">{ch.title}</span>
                     )}
                   </div>
 
                   <div className="flex items-center gap-0.5 opacity-0 group-hover/chapter:opacity-100 transition-opacity shrink-0">
                     <button
-                      className="p-1 rounded hover:bg-paper-muted text-ink-muted"
+                      className="p-1 rounded hover:bg-white/[0.06] text-chalk-muted"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleAddLesson(ch.id, ch.lessons.length);
@@ -259,7 +259,7 @@ export function CurriculumSidebar() {
                       )}
                     </button>
                     <button
-                      className="p-1 rounded hover:bg-paper-muted text-ink-muted"
+                      className="p-1 rounded hover:bg-white/[0.06] text-chalk-muted"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDuplicateChapter(ch.id);
@@ -268,7 +268,7 @@ export function CurriculumSidebar() {
                       <Copy className="h-3 w-3" />
                     </button>
                     <button
-                      className="p-1 rounded hover:bg-rose-50 text-ink-muted hover:text-rose-500"
+                      className="p-1 rounded hover:bg-rose-500/10 text-chalk-muted hover:text-rose-500"
                       onClick={(e) => {
                         e.stopPropagation();
                         if (confirm(`Delete module "${ch.title}" and all its lessons?`))
@@ -282,9 +282,9 @@ export function CurriculumSidebar() {
 
                 {/* Lessons */}
                 {isExpanded && (
-                  <div className="ml-4 pl-3 border-l border-line/50 space-y-0.5 mt-0.5">
+                  <div className="ml-4 pl-3 border-l border-white/[0.08] space-y-0.5 mt-0.5">
                     {ch.lessons.length === 0 && (
-                      <div className="text-[10px] text-ink-muted py-2 text-center">
+                      <div className="text-[10px] text-chalk-muted py-2 text-center">
                         No lessons yet
                       </div>
                     )}
@@ -321,10 +321,10 @@ export function CurriculumSidebar() {
       </div>
 
       {/* Bottom actions */}
-      <div className="p-2 border-t border-line">
+      <div className="p-2 border-t border-white/[0.08]">
         <Button
           variant="ghost"
-          className="w-full justify-start h-8 rounded-lg text-[11px] font-medium text-ink-muted hover:text-ink"
+          className="w-full justify-start h-8 rounded-lg text-[11px] font-medium text-chalk-muted hover:text-chalk"
         >
           <Upload className="h-3.5 w-3.5 mr-2" />
           Import Content
@@ -362,13 +362,13 @@ function LessonRow({
       onClick={onClick}
       className={`group/lesson flex items-center justify-between px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${
         isActive
-          ? "bg-indigo-50 border border-indigo-100"
-          : "hover:bg-paper-soft border border-transparent"
+          ? "bg-lime/10 border border-lime/25"
+          : "hover:bg-white/[0.035] border border-transparent"
       }`}
     >
       <div className="flex items-center gap-2 flex-1 min-w-0">
         <Icon
-          className={`h-3 w-3 shrink-0 ${isActive ? "text-indigo-600" : "text-ink-muted"}`}
+          className={`h-3 w-3 shrink-0 ${isActive ? "text-lime" : "text-chalk-muted"}`}
         />
         {isEditing ? (
           <input
@@ -377,13 +377,13 @@ function LessonRow({
             onChange={(e) => onEditTitleChange(e.target.value)}
             onBlur={onRename}
             onKeyDown={(e) => e.key === "Enter" && onRename()}
-            className="w-full bg-paper border border-indigo-400 rounded px-1 py-0.5 text-[11px] outline-none"
+            className="w-full bg-night border border-lime/60 rounded px-1 py-0.5 text-[11px] outline-none"
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
           <span
             className={`text-[11px] truncate ${
-              isActive ? "font-semibold text-indigo-700" : "text-ink"
+              isActive ? "font-semibold text-lime" : "text-chalk"
             }`}
           >
             {lesson.title}
@@ -394,10 +394,10 @@ function LessonRow({
         {lesson.isPublished ? (
           <Eye className="h-2.5 w-2.5 text-emerald-500" />
         ) : (
-          <EyeOff className="h-2.5 w-2.5 text-ink-subtle" />
+          <EyeOff className="h-2.5 w-2.5 text-chalk-dim" />
         )}
         <button
-          className="p-0.5 rounded hover:bg-paper-muted text-ink-muted"
+          className="p-0.5 rounded hover:bg-white/[0.06] text-chalk-muted"
           onClick={(e) => {
             e.stopPropagation();
             onDuplicate();
@@ -406,7 +406,7 @@ function LessonRow({
           <Copy className="h-2.5 w-2.5" />
         </button>
         <button
-          className="p-0.5 rounded hover:bg-rose-50 text-ink-muted hover:text-rose-500"
+          className="p-0.5 rounded hover:bg-rose-500/10 text-chalk-muted hover:text-rose-500"
           onClick={(e) => {
             e.stopPropagation();
             onDelete();

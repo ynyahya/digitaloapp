@@ -42,7 +42,7 @@ export function CodeBlock({
         <select
           value={data.language}
           onChange={(e) => persist({ language: e.target.value })}
-          className="h-7 px-2 rounded-lg border border-line bg-paper text-[11px] font-medium text-ink-muted focus:border-indigo-400 outline-none"
+          className="h-7 px-2 rounded-lg border border-white/[0.08] bg-night text-[11px] font-medium text-chalk-muted focus:border-lime/60 outline-none"
         >
           {LANGUAGES.map((l) => (
             <option key={l} value={l}>
@@ -52,7 +52,7 @@ export function CodeBlock({
         </select>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-ink-muted hover:bg-paper-soft transition-colors"
+          className="flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-medium text-chalk-muted hover:bg-white/[0.035] transition-colors"
         >
           {copied ? (
             <>
@@ -67,7 +67,7 @@ export function CodeBlock({
       </div>
 
       {/* Code Editor */}
-      <div className="relative rounded-xl border border-line bg-[#0d1117] overflow-hidden">
+      <div className="relative rounded-xl border border-white/[0.08] bg-[#0d1117] overflow-hidden">
         <div className="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
           <div className="w-2.5 h-2.5 rounded-full bg-rose-400" />
           <div className="w-2.5 h-2.5 rounded-full bg-amber-400" />
@@ -89,7 +89,7 @@ export function CodeBlock({
         placeholder="Code caption (optional)"
         value={data.caption}
         onChange={(e) => persist({ caption: e.target.value })}
-        className="w-full h-8 px-3 rounded-lg border border-line bg-paper text-[12px] text-ink-muted placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+        className="w-full h-8 px-3 rounded-lg border border-white/[0.08] bg-night text-[12px] text-chalk-muted placeholder:text-chalk-muted focus:border-lime/60 outline-none"
       />
     </div>
   );

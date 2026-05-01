@@ -67,7 +67,7 @@ export function OnboardingForm({
 
       <div className="space-y-1.5">
         <Label htmlFor="handle">Storefront handle</Label>
-        <div className="flex items-center overflow-hidden rounded-xl border border-line bg-paper-soft focus-within:border-ink/20 focus-within:ring-4 focus-within:ring-ink/5">
+        <div className="flex items-center overflow-hidden rounded-xl border border-line bg-paper-soft focus-within:border-lime/30/20 focus-within:ring-4 focus-within:ring-ink/5">
           <span className="px-3 text-[13px] text-ink-subtle">
             TESKEL.app/
           </span>

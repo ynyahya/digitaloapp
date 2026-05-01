@@ -40,8 +40,8 @@ export function EmbedBlock({
             onClick={() => persist({ type: et.key })}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
               data.type === et.key
-                ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                : "text-ink-muted border border-transparent hover:border-line"
+                ? "bg-lime/10 text-lime border border-lime/25"
+                : "text-chalk-muted border border-transparent hover:border-white/[0.08]"
             }`}
           >
             <et.icon className="h-3 w-3" /> {et.label}
@@ -51,24 +51,24 @@ export function EmbedBlock({
 
       {/* URL Input */}
       <div className="relative">
-        <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-muted" />
+        <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-chalk-muted" />
         <input
           type="text"
           placeholder={EMBED_TYPES.find((et) => et.key === data.type)?.placeholder || "Paste URL…"}
           value={data.url || ""}
           onChange={(e) => persist({ url: e.target.value })}
-          className="w-full h-10 pl-9 pr-3 rounded-xl border border-line bg-paper text-[13px] text-ink placeholder:text-ink-muted focus:border-indigo-400 focus:ring-1 focus:ring-indigo-100 outline-none transition-all"
+          className="w-full h-10 pl-9 pr-3 rounded-xl border border-white/[0.08] bg-night text-[13px] text-chalk placeholder:text-chalk-muted focus:border-lime/60 focus:ring-1 focus:ring-lime/20 outline-none transition-all"
         />
       </div>
 
       {/* Preview */}
       {data.url && (
-        <div className="aspect-video bg-paper-soft rounded-xl border border-line flex items-center justify-center">
+        <div className="aspect-video bg-white/[0.035] rounded-xl border border-white/[0.08] flex items-center justify-center">
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl bg-paper border border-line flex items-center justify-center mx-auto">
-              <LayoutGrid className="h-5 w-5 text-ink-muted" />
+            <div className="w-12 h-12 rounded-xl bg-night border border-white/[0.08] flex items-center justify-center mx-auto">
+              <LayoutGrid className="h-5 w-5 text-chalk-muted" />
             </div>
-            <p className="text-[12px] text-ink-muted font-medium">Embed preview will appear here</p>
+            <p className="text-[12px] text-chalk-muted font-medium">Embed preview will appear here</p>
           </div>
         </div>
       )}

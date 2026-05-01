@@ -42,7 +42,7 @@ function PipelineCard({ course }: { course: CourseListItem }) {
       {...attributes}
       className={cn(
         "group rounded-xl border border-line bg-paper p-3 cursor-grab active:cursor-grabbing transition-all",
-        "hover:border-ink/30 hover:shadow-soft",
+        "hover:border-lime/30/30 hover:shadow-soft",
         isDragging && "opacity-40 shadow-float",
       )}
     >
@@ -72,7 +72,7 @@ function Column({
       ref={setNodeRef}
       className={cn(
         "flex flex-col w-[200px] shrink-0 rounded-2xl border border-line bg-paper-soft p-3 gap-2 transition-colors",
-        isOver && "border-ink/40 bg-paper-muted/60",
+        isOver && "border-lime/30/40 bg-paper-muted/60",
       )}
     >
       <div className="flex items-center justify-between px-1">

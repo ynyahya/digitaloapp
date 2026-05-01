@@ -88,11 +88,15 @@ export async function getOrders(creatorId: string) {
   });
 
   return orders.map((o) => ({
-    id: o.id.substring(0, 8).toUpperCase(),
+    id: o.id,
+    displayId: o.id.substring(0, 8).toUpperCase(),
     customer: o.user.name ?? o.email,
     product: o.items[0]?.product.title ?? "Unknown Product",
+    itemCount: o.items.reduce((sum, item) => sum + item.qty, 0),
     date: formatTimeAgo(o.createdAt),
     amount: `$${(o.totalCents / 100).toLocaleString()}`,
+    amountCents: o.totalCents,
+    country: o.country,
     status: o.status,
   }));
 }
@@ -100,19 +104,48 @@ export async function getOrders(creatorId: string) {
 export async function getProducts(creatorId: string) {
   const products = await db.product.findMany({
     where: { creatorId },
-    include: { category: true },
-    orderBy: { createdAt: "desc" },
+    include: {
+      category: true,
+      _count: {
+        select: {
+          files: true,
+          licenses: true,
+          tags: true,
+          reviews: true,
+          orderItems: true,
+        },
+      },
+    },
+    orderBy: { updatedAt: "desc" },
   });
 
   return products.map((p) => ({
     id: p.id,
     title: p.title,
     slug: p.slug,
+    tagline: p.tagline,
+    description: p.description,
+    coverImage: p.coverImage,
+    type: p.type,
     status: p.status,
+    priceCents: p.priceCents,
+    compareAtCents: p.compareAtCents,
+    currency: p.currency,
+    pricingModel: p.pricingModel,
     price: `$${(p.priceCents / 100).toLocaleString()}`,
     sales: p.salesCount,
+    salesCount: p.salesCount,
+    viewsCount: p.viewsCount,
+    ratingAvg: p.ratingAvg,
+    ratingCount: p.ratingCount,
     category: p.category?.name ?? "Uncategorized",
     createdAt: formatTimeAgo(p.createdAt),
+    updatedAt: formatTimeAgo(p.updatedAt),
+    fileCount: p._count.files,
+    licenseCount: p._count.licenses,
+    tagCount: p._count.tags,
+    reviewCount: p._count.reviews,
+    orderCount: p._count.orderItems,
   }));
 }
 
@@ -160,6 +193,7 @@ export async function getCustomers(creatorId: string) {
       avatar: c.image,
       totalOrders: c.orders.length,
       totalSpent: `$${(totalSpentCents / 100).toLocaleString()}`,
+      totalSpentCents,
       lastOrder: lastOrder ? formatTimeAgo(lastOrder.createdAt) : "Never",
       status: "ACTIVE", // Can be dynamic based on frequency
     };
@@ -396,12 +430,21 @@ export async function getServices(creatorId: string) {
     title: s.title,
     slug: s.slug,
     status: s.status,
+    description: s.description,
+    promise: s.promise,
     category: s.category,
     price: `${s.currency} ${(s.priceCents / 100).toLocaleString()}`,
+    priceCents: s.priceCents,
     sales: s.salesCount,
     rating: s.ratingAvg,
     ratingCount: s.ratingCount,
     deliveryDays: s.deliveryDays,
+    packagesJson: s.packagesJson,
+    scopeJson: s.scopeJson,
+    outcomesJson: s.outcomesJson,
+    faqJson: s.faqJson,
+    proofJson: s.proofJson,
+    coverImage: s.coverImage,
     createdAt: formatTimeAgo(s.createdAt),
   }));
 }
@@ -432,6 +475,16 @@ export async function getServiceStats(creatorId: string) {
 export async function getEvents(creatorId: string) {
   const events = await db.event.findMany({
     where: { creatorId },
+    include: {
+      _count: {
+        select: {
+          tickets: true,
+          questions: true,
+          speakers: true,
+          registrations: true,
+        },
+      },
+    },
     orderBy: { startDate: "desc" },
   });
 
@@ -440,11 +493,20 @@ export async function getEvents(creatorId: string) {
     title: e.title,
     slug: e.slug,
     status: e.status,
+    description: e.description,
     startDate: e.startDate ? formatTimeAgo(e.startDate) : "TBD",
+    hasSchedule: Boolean(e.startDate && e.endDate),
     location: e.locationType === "ONLINE" ? "Online" : e.venueAddress || "Venue",
+    locationType: e.locationType,
     registered: e.registeredCount,
     maxAttendees: e.maxAttendees,
     price: e.priceCents === 0 ? "Free" : `${e.currency} ${(e.priceCents / 100).toLocaleString()}`,
+    ticketCount: e._count.tickets,
+    questionCount: e._count.questions,
+    speakerCount: e._count.speakers,
+    registrationCount: e._count.registrations,
+    hasAgenda: Boolean(e.agenda),
+    hasCover: Boolean(e.coverImage),
     createdAt: formatTimeAgo(e.createdAt),
   }));
 }
@@ -483,8 +545,12 @@ export async function getMemberships(creatorId: string) {
     title: m.title,
     slug: m.slug,
     status: m.status,
+    description: m.description,
     price: `${m.currency} ${(m.priceCents / 100).toLocaleString()}`,
+    priceCents: m.priceCents,
     billingCycle: m.billingCycle,
+    benefits: m.benefits,
+    coverImage: m.coverImage,
     members: m.memberCount,
     createdAt: formatTimeAgo(m.createdAt),
   }));

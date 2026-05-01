@@ -98,36 +98,36 @@ export function QuizBlock({
       {/* Quiz Settings */}
       <div className="flex items-center gap-4 text-[11px]">
         <div className="flex items-center gap-2">
-          <ListChecks className="h-3.5 w-3.5 text-ink-muted" />
-          <span className="text-ink-muted">{quiz.questions.length} questions</span>
+          <ListChecks className="h-3.5 w-3.5 text-chalk-muted" />
+          <span className="text-chalk-muted">{quiz.questions.length} questions</span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-ink-muted">Pass:</span>
+          <span className="text-chalk-muted">Pass:</span>
           <input
             type="number"
             value={quiz.passingScore}
             onChange={(e) => persist({ passingScore: parseInt(e.target.value) || 70 })}
-            className="w-14 h-7 text-center rounded-lg border border-line bg-paper text-[11px] font-medium text-ink"
+            className="w-14 h-7 text-center rounded-lg border border-white/[0.08] bg-night text-[11px] font-medium text-chalk"
           />
-          <span className="text-ink-muted">%</span>
+          <span className="text-chalk-muted">%</span>
         </div>
-        <label className="flex items-center gap-1.5 text-ink-muted cursor-pointer">
+        <label className="flex items-center gap-1.5 text-chalk-muted cursor-pointer">
           <input
             type="checkbox"
             checked={quiz.randomize}
             onChange={(e) => persist({ randomize: e.target.checked })}
-            className="rounded border-line"
+            className="rounded border-white/[0.08]"
           />
           <Shuffle className="h-3 w-3" /> Randomize
         </label>
-        <label className="flex items-center gap-1.5 text-ink-muted">
+        <label className="flex items-center gap-1.5 text-chalk-muted">
           <Clock className="h-3 w-3" />
           <input
             type="number"
             placeholder="min"
             value={quiz.timeLimitMin || ""}
             onChange={(e) => persist({ timeLimitMin: e.target.value ? parseInt(e.target.value) : null })}
-            className="w-12 h-7 text-center rounded-lg border border-line bg-paper text-[11px] font-medium text-ink"
+            className="w-12 h-7 text-center rounded-lg border border-white/[0.08] bg-night text-[11px] font-medium text-chalk"
           />
         </label>
       </div>
@@ -137,12 +137,12 @@ export function QuizBlock({
         {quiz.questions.map((q: QuizQuestion, qi: number) => (
           <div
             key={q.id}
-            className="bg-paper-soft border border-line rounded-xl p-4 space-y-3"
+            className="bg-white/[0.035] border border-white/[0.08] rounded-xl p-4 space-y-3"
           >
             <div className="flex items-start gap-3">
               <div className="flex items-center gap-2 pt-1">
-                <GripVertical className="h-3.5 w-3.5 text-ink-muted cursor-grab" />
-                <span className="text-[11px] font-semibold text-ink-muted">Q{qi + 1}</span>
+                <GripVertical className="h-3.5 w-3.5 text-chalk-muted cursor-grab" />
+                <span className="text-[11px] font-semibold text-chalk-muted">Q{qi + 1}</span>
               </div>
               <div className="flex-1 space-y-3">
                 <input
@@ -150,7 +150,7 @@ export function QuizBlock({
                   placeholder="Question prompt…"
                   value={q.prompt}
                   onChange={(e) => updateQuestion(q.id, { prompt: e.target.value })}
-                  className="w-full h-9 px-3 rounded-lg border border-line bg-paper text-[13px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+                  className="w-full h-9 px-3 rounded-lg border border-white/[0.08] bg-night text-[13px] text-chalk placeholder:text-chalk-muted focus:border-lime/60 outline-none"
                 />
 
                 {/* Options */}
@@ -162,7 +162,7 @@ export function QuizBlock({
                         className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all ${
                           q.correct.includes(oi)
                             ? "bg-emerald-500 border-emerald-500"
-                            : "border-line hover:border-indigo-300"
+                            : "border-white/[0.08] hover:border-lime/50"
                         }`}
                       >
                         {q.correct.includes(oi) && <Check className="h-2.5 w-2.5 text-white" />}
@@ -172,7 +172,7 @@ export function QuizBlock({
                         placeholder={`Option ${oi + 1}`}
                         value={opt}
                         onChange={(e) => updateOption(q.id, oi, e.target.value)}
-                        className="flex-1 h-8 px-2 rounded-lg border border-line bg-paper text-[12px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+                        className="flex-1 h-8 px-2 rounded-lg border border-white/[0.08] bg-night text-[12px] text-chalk placeholder:text-chalk-muted focus:border-lime/60 outline-none"
                       />
                       {q.options.length > 2 && (
                         <button
@@ -180,7 +180,7 @@ export function QuizBlock({
                             const opts = q.options.filter((_: string, i: number) => i !== oi);
                             updateQuestion(q.id, { options: opts });
                           }}
-                          className="p-1 rounded text-ink-muted hover:text-rose-500"
+                          className="p-1 rounded text-chalk-muted hover:text-rose-500"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -189,7 +189,7 @@ export function QuizBlock({
                   ))}
                   <button
                     onClick={() => addOption(q.id)}
-                    className="text-[11px] font-medium text-indigo-600 hover:text-indigo-700"
+                    className="text-[11px] font-medium text-lime hover:text-lime"
                   >
                     + Add option
                   </button>
@@ -197,7 +197,7 @@ export function QuizBlock({
               </div>
               <button
                 onClick={() => removeQuestion(q.id)}
-                className="p-1.5 rounded-lg hover:bg-rose-50 text-ink-muted hover:text-rose-500 shrink-0"
+                className="p-1.5 rounded-lg hover:bg-rose-500/10 text-chalk-muted hover:text-rose-500 shrink-0"
               >
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
@@ -208,7 +208,7 @@ export function QuizBlock({
 
       <button
         onClick={addQuestion}
-        className="w-full border-2 border-dashed border-line rounded-xl py-3 flex items-center justify-center gap-2 text-[12px] font-medium text-ink-muted hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50/30 transition-all"
+        className="w-full border-2 border-dashed border-white/[0.08] rounded-xl py-3 flex items-center justify-center gap-2 text-[12px] font-medium text-chalk-muted hover:border-lime/50 hover:text-lime hover:bg-lime/10/30 transition-all"
       >
         <Plus className="h-3.5 w-3.5" /> Add Question
       </button>

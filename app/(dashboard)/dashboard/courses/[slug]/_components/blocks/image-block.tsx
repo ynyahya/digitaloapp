@@ -43,11 +43,11 @@ export function ImageBlock({
   return (
     <div className="space-y-4">
       {/* Mode Tabs */}
-      <div className="flex items-center gap-1 p-0.5 bg-paper-soft border border-line rounded-lg w-fit">
+      <div className="flex items-center gap-1 p-0.5 bg-white/[0.035] border border-white/[0.08] rounded-lg w-fit">
         <button
           onClick={() => setMode("upload")}
           className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-medium rounded-md transition-all ${
-            mode === "upload" ? "bg-paper text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+            mode === "upload" ? "bg-night text-chalk shadow-sm" : "text-chalk-muted hover:text-chalk"
           }`}
         >
           <Upload className="h-3 w-3" /> Upload
@@ -55,7 +55,7 @@ export function ImageBlock({
         <button
           onClick={() => setMode("url")}
           className={`flex items-center gap-1.5 px-3 py-1 text-[11px] font-medium rounded-md transition-all ${
-            mode === "url" ? "bg-paper text-ink shadow-sm" : "text-ink-muted hover:text-ink"
+            mode === "url" ? "bg-night text-chalk shadow-sm" : "text-chalk-muted hover:text-chalk"
           }`}
         >
           <Link2 className="h-3 w-3" /> URL
@@ -64,7 +64,7 @@ export function ImageBlock({
 
       {/* Layout Switcher */}
       <div className="flex items-center gap-1">
-        <span className="text-[10px] font-semibold text-ink-muted uppercase mr-1">Layout:</span>
+        <span className="text-[10px] font-semibold text-chalk-muted uppercase mr-1">Layout:</span>
         {[
           { key: "single", icon: Move, label: "Single" },
           { key: "grid", icon: Grid, label: "Grid" },
@@ -75,8 +75,8 @@ export function ImageBlock({
             onClick={() => setLayout(l.key as any)}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
               layout === l.key
-                ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                : "text-ink-muted border border-transparent hover:border-line"
+                ? "bg-lime/10 text-lime border border-lime/25"
+                : "text-chalk-muted border border-transparent hover:border-white/[0.08]"
             }`}
           >
             <l.icon className="h-3 w-3" /> {l.label}
@@ -87,17 +87,17 @@ export function ImageBlock({
       {mode === "upload" ? (
         /* Upload Zone */
         <div
-          className="aspect-video bg-paper-soft rounded-xl border-2 border-dashed border-line flex flex-col items-center justify-center gap-3 hover:border-indigo-300 transition-colors cursor-pointer group"
+          className="aspect-video bg-white/[0.035] rounded-xl border-2 border-dashed border-white/[0.08] flex flex-col items-center justify-center gap-3 hover:border-lime/50 transition-colors cursor-pointer group"
           onClick={() => setUploadZone(true)}
         >
-          <div className="w-14 h-14 rounded-2xl bg-paper border border-line flex items-center justify-center group-hover:border-indigo-200 group-hover:bg-indigo-50 transition-all">
-            <ImageIcon className="h-7 w-7 text-indigo-500" />
+          <div className="w-14 h-14 rounded-2xl bg-night border border-white/[0.08] flex items-center justify-center group-hover:border-lime/30 group-hover:bg-lime/10 transition-all">
+            <ImageIcon className="h-7 w-7 text-lime" />
           </div>
           <div className="text-center">
-            <p className="text-[14px] font-semibold text-ink">Drop images or click to browse</p>
-            <p className="text-[11px] text-ink-muted mt-1">PNG, JPG, GIF, WebP • Up to 10MB each</p>
+            <p className="text-[14px] font-semibold text-chalk">Drop images or click to browse</p>
+            <p className="text-[11px] text-chalk-muted mt-1">PNG, JPG, GIF, WebP • Up to 10MB each</p>
           </div>
-          <Button size="sm" className="h-8 rounded-lg text-[11px] bg-indigo-600 hover:bg-indigo-700 text-white">
+          <Button size="sm" className="h-8 rounded-lg text-[11px] bg-lime hover:bg-lime/90 text-white">
             <Upload className="h-3.5 w-3.5 mr-1.5" /> Select Images
           </Button>
         </div>
@@ -106,14 +106,14 @@ export function ImageBlock({
         <div className="space-y-3">
           <div className="flex gap-2">
             <div className="flex-1 relative">
-              <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-muted" />
+              <Link2 className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-chalk-muted" />
               <input
                 type="text"
                 placeholder="Paste image URL…"
                 value={urlInput}
                 onChange={(e) => setUrlInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addUrl()}
-                className="w-full h-9 pl-9 pr-3 rounded-lg border border-line bg-paper text-[13px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+                className="w-full h-9 pl-9 pr-3 rounded-lg border border-white/[0.08] bg-night text-[13px] text-chalk placeholder:text-chalk-muted focus:border-lime/60 outline-none"
               />
             </div>
             <Button
@@ -134,7 +134,7 @@ export function ImageBlock({
                 setAlt(e.target.value);
                 onChange(JSON.stringify({ images, layout, alt: e.target.value }));
               }}
-              className="w-full h-9 px-3 rounded-lg border border-line bg-paper text-[13px] text-ink placeholder:text-ink-muted focus:border-indigo-400 outline-none"
+              className="w-full h-9 px-3 rounded-lg border border-white/[0.08] bg-night text-[13px] text-chalk placeholder:text-chalk-muted focus:border-lime/60 outline-none"
             />
           </div>
         </div>
@@ -154,7 +154,7 @@ export function ImageBlock({
           {images.map((img, idx) => (
             <div
               key={idx}
-              className={`relative group/img rounded-xl overflow-hidden border border-line bg-paper-soft ${
+              className={`relative group/img rounded-xl overflow-hidden border border-white/[0.08] bg-white/[0.035] ${
                 layout === "single" ? "aspect-video" : "aspect-square"
               }`}
             >
@@ -167,11 +167,11 @@ export function ImageBlock({
                 }}
               />
               <div className="absolute inset-0 bg-ink/30 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-1.5">
-                <button className="p-1.5 rounded-lg bg-paper/90 text-ink hover:bg-paper transition-colors">
+                <button className="p-1.5 rounded-lg bg-night/90 text-chalk hover:bg-night transition-colors">
                   <ZoomIn className="h-4 w-4" />
                 </button>
                 <button
-                  className="p-1.5 rounded-lg bg-paper/90 text-rose-500 hover:bg-rose-50 transition-colors"
+                  className="p-1.5 rounded-lg bg-night/90 text-rose-500 hover:bg-rose-500/10 transition-colors"
                   onClick={() => removeImage(idx)}
                 >
                   <Trash2 className="h-4 w-4" />

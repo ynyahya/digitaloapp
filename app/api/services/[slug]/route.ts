@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
 import { requireCreator } from "@/lib/auth/session";
 
 export async function GET(_req: Request, { params }: { params: { slug: string } }) {

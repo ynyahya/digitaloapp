@@ -4,10 +4,10 @@ import { Info, AlertTriangle, Lightbulb, Quote, Star } from "lucide-react";
 
 const CALLOUT_TYPES = [
   { key: "info", icon: Info, label: "Info", color: "bg-blue-50 border-blue-200 text-blue-700" },
-  { key: "warning", icon: AlertTriangle, label: "Warning", color: "bg-amber-50 border-amber-200 text-amber-700" },
-  { key: "tip", icon: Lightbulb, label: "Tip", color: "bg-emerald-50 border-emerald-200 text-emerald-700" },
+  { key: "warning", icon: AlertTriangle, label: "Warning", color: "bg-amber-500/10 border-amber-400/25 text-amber-200" },
+  { key: "tip", icon: Lightbulb, label: "Tip", color: "bg-emerald-500/10 border-emerald-400/25 text-emerald-200" },
   { key: "quote", icon: Quote, label: "Quote", color: "bg-violet-50 border-violet-200 text-violet-700" },
-  { key: "important", icon: Star, label: "Important", color: "bg-rose-50 border-rose-200 text-rose-700" },
+  { key: "important", icon: Star, label: "Important", color: "bg-rose-500/10 border-rose-400/25 text-rose-200" },
 ];
 
 export function CalloutBlock({
@@ -42,8 +42,8 @@ export function CalloutBlock({
             onClick={() => persist({ type: ct.key })}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
               data.type === ct.key
-                ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-                : "text-ink-muted border border-transparent hover:border-line"
+                ? "bg-lime/10 text-lime border border-lime/25"
+                : "text-chalk-muted border border-transparent hover:border-white/[0.08]"
             }`}
           >
             <ct.icon className="h-3 w-3" /> {ct.label}
