@@ -217,7 +217,7 @@ export function StudioHeader({
               <Button
                 onClick={() => onModeChange("launch")}
                 variant="outline"
-                className="h-9 rounded-xl px-4 text-[12.5px] font-bold border-line bg-paper text-ink-muted hover:text-ink hover:border-ink/30 shadow-none group"
+                className="h-9 rounded-xl px-4 text-[12.5px] font-bold border-line bg-paper text-ink-muted hover:text-ink hover:border-lime/30/30 shadow-none group"
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-2 text-amber-500" />
                 Check Readiness

@@ -18,13 +18,13 @@ export function ProductDemoEmbed({
 
   return (
     <section id="demo" className="scroll-mt-24">
-      <div className="border-b border-line pb-4">
+      <div className="border-b border-white/[0.08] pb-4">
         <div className="flex items-end justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-chalk-dim">
               Live preview
             </p>
-            <h2 className="mt-2 text-[22px] font-semibold leading-tight tracking-tight text-ink md:text-[26px]">
+            <h2 className="mt-2 text-[22px] font-semibold leading-tight tracking-tight text-chalk md:text-[26px]">
               {embedVideo && demoSafe
                 ? "Watch the walkthrough or try the live demo"
                 : embedVideo
@@ -37,7 +37,7 @@ export function ProductDemoEmbed({
               href={demoUrl!}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-line bg-paper px-4 text-[12.5px] font-semibold text-ink transition-colors hover:border-ink/30"
+              className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-white/[0.08] bg-night px-4 text-[12.5px] font-semibold text-chalk transition-colors hover:border-lime/40"
             >
               Open demo <ExternalLink className="h-3.5 w-3.5" />
             </a>
@@ -45,7 +45,7 @@ export function ProductDemoEmbed({
         </div>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-line bg-ink">
+      <div className="mt-6 overflow-hidden rounded-2xl border border-white/[0.08] bg-lime">
         {embedVideo ? (
           <div className="relative aspect-video">
             <iframe
@@ -61,7 +61,7 @@ export function ProductDemoEmbed({
             <iframe
               src={demoUrl!}
               title={`${title} demo`}
-              className="absolute inset-0 h-full w-full bg-paper"
+              className="absolute inset-0 h-full w-full bg-night"
               sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
               loading="lazy"
             />

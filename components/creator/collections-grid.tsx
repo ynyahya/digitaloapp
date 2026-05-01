@@ -20,7 +20,7 @@ export function CollectionsGrid({
   return (
     <section className="py-16 md:py-24">
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-chalk-dim">
           Collections
         </p>
         <h2 className="mt-2 text-balance text-[28px] font-semibold leading-tight tracking-tight md:text-[34px]">
@@ -31,17 +31,17 @@ export function CollectionsGrid({
             <Link
               key={c.id}
               href={`/c/${creatorHandle}/collections/${c.slug}`}
-              className="group flex flex-col gap-4 rounded-2xl border border-line bg-paper p-5 transition-all hover:-translate-y-0.5 hover:shadow-card"
+              className="group flex flex-col gap-4 rounded-2xl border border-white/[0.08] bg-night p-5 transition-all hover:-translate-y-0.5 hover:shadow-card"
             >
               <MonoMockup label={c.name} ratio="aspect-[4/3]" className="rounded-xl" />
               <div>
-                <p className="text-[14.5px] font-semibold text-ink">{c.name}</p>
+                <p className="text-[14.5px] font-semibold text-chalk">{c.name}</p>
                 {c.description && (
-                  <p className="mt-1 line-clamp-2 text-[12.5px] text-ink-muted">
+                  <p className="mt-1 line-clamp-2 text-[12.5px] text-chalk-muted">
                     {c.description}
                   </p>
                 )}
-                <p className="mt-3 text-[11.5px] text-ink-subtle">
+                <p className="mt-3 text-[11.5px] text-chalk-dim">
                   {c.products.length} products
                 </p>
               </div>

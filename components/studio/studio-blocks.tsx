@@ -45,7 +45,7 @@ import { DiscountBlock } from "./discount-block";
 import { StudioSection } from "./studio-canvas";
 
 const INPUT_BASE =
-  "w-full bg-paper border border-line rounded-xl px-4 py-3 text-[13px] text-ink placeholder:text-ink-subtle outline-none focus:border-ink/30 focus:ring-4 focus:ring-ink/5 transition-all";
+  "w-full bg-paper border border-line rounded-xl px-4 py-3 text-[13px] text-ink placeholder:text-ink-subtle outline-none focus:border-lime/30/30 focus:ring-4 focus:ring-ink/5 transition-all";
 const LABEL_BASE =
   "text-[11px] font-bold text-ink-subtle uppercase tracking-wider";
 const COUNTER_BASE = "text-[10px] text-ink-muted tabular-nums";
@@ -100,7 +100,7 @@ export function HeroBlock() {
             type="text"
             value={product.title}
             onChange={(e) => setField("title", e.target.value)}
-            className="w-full bg-paper border border-line rounded-xl px-4 py-3 text-[16px] font-bold text-ink placeholder:text-ink-subtle outline-none focus:border-ink/30 focus:ring-4 focus:ring-ink/5 transition-all"
+            className="w-full bg-paper border border-line rounded-xl px-4 py-3 text-[16px] font-bold text-ink placeholder:text-ink-subtle outline-none focus:border-lime/30/30 focus:ring-4 focus:ring-ink/5 transition-all"
             placeholder="e.g. Masterclass Course"
           />
         </div>
@@ -200,7 +200,7 @@ export function ProductCoverBlock() {
         <div
           className={cn(
             "aspect-[21/9] rounded-2xl bg-paper-muted border border-line overflow-hidden relative group/cover cursor-pointer transition-all",
-            dragOver && "border-ink/40 ring-4 ring-ink/10"
+            dragOver && "border-lime/30/40 ring-4 ring-ink/10"
           )}
           onClick={() => inputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -379,7 +379,7 @@ export function MediaGalleryBlock() {
           <div
             className={cn(
               "flex flex-col items-center justify-center text-center py-10 rounded-2xl border border-dashed border-line bg-paper-soft transition-all cursor-pointer",
-              dragOver && "border-ink/40 ring-4 ring-ink/10"
+              dragOver && "border-lime/30/40 ring-4 ring-ink/10"
             )}
             onClick={() => inputRef.current?.click()}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
@@ -417,7 +417,7 @@ export function MediaGalleryBlock() {
           variant="ghost"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-ink/20 transition-all font-bold text-[12px] gap-2"
+          className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-lime/30/20 transition-all font-bold text-[12px] gap-2"
         >
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <PlusCircle className="h-4 w-4" />}
           {uploading ? "Uploading..." : "Add Gallery Images"}
@@ -477,7 +477,7 @@ export function HighlightsBlock() {
                     type="text"
                     value={item}
                     onChange={(e) => editHighlight(idx, e.target.value)}
-                    className="flex-1 bg-transparent text-[13px] text-ink outline-none border-b border-transparent focus:border-ink/20 transition-colors"
+                    className="flex-1 bg-transparent text-[13px] text-ink outline-none border-b border-transparent focus:border-lime/30/20 transition-colors"
                   />
                 </div>
                 <Button
@@ -506,7 +506,7 @@ export function HighlightsBlock() {
             onChange={(e) => setNewItem(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addHighlight()}
             placeholder="e.g. 25 Fully Customizable Slides"
-            className="flex-1 bg-paper border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink outline-none focus:border-ink/30 focus:ring-4 focus:ring-ink/5 transition-all"
+            className="flex-1 bg-paper border border-line rounded-xl px-4 py-2.5 text-[13px] text-ink outline-none focus:border-lime/30/30 focus:ring-4 focus:ring-ink/5 transition-all"
           />
           <Button
             onClick={addHighlight}
@@ -584,7 +584,7 @@ export function AssetBlock() {
                 className="flex items-center justify-between p-3 rounded-xl border border-line bg-paper-soft hover:bg-paper-muted transition-colors group/asset"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="h-9 w-9 rounded-lg bg-paper border border-line flex items-center justify-center group-hover/asset:bg-ink group-hover/asset:text-paper group-hover/asset:border-ink transition-colors shrink-0">
+                  <div className="h-9 w-9 rounded-lg bg-paper border border-line flex items-center justify-center group-hover/asset:bg-ink group-hover/asset:text-paper group-hover/asset:border-lime/30 transition-colors shrink-0">
                     <Box className="h-4 w-4" />
                   </div>
                   <div className="space-y-0.5 min-w-0">
@@ -635,7 +635,7 @@ export function AssetBlock() {
           variant="ghost"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-ink/20 transition-all font-bold text-[12px] gap-2"
+          className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-lime/30/20 transition-all font-bold text-[12px] gap-2"
         >
           {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <PlusCircle className="h-4 w-4" />}
           {uploading ? "Uploading..." : "Upload Digital Asset"}
@@ -758,7 +758,7 @@ export function PricingBlock() {
             if (editingId === tier.id) {
               // Inline edit form
               return (
-                <div key={tier.id} className="col-span-1 md:col-span-2 p-5 rounded-2xl border-2 border-ink/30 bg-paper-soft space-y-4">
+                <div key={tier.id} className="col-span-1 md:col-span-2 p-5 rounded-2xl border-2 border-lime/30/30 bg-paper-soft space-y-4">
                   <p className="text-[11px] font-bold text-ink-subtle uppercase tracking-wider">Edit Tier</p>
                   <LicenseForm
                     formData={formData}
@@ -789,7 +789,7 @@ export function PricingBlock() {
             return (
               <div
                 key={tier.id}
-                className="p-5 rounded-2xl border border-line bg-paper hover:border-ink/20 hover:shadow-card transition-all cursor-pointer group/tier relative"
+                className="p-5 rounded-2xl border border-line bg-paper hover:border-lime/30/20 hover:shadow-card transition-all cursor-pointer group/tier relative"
               >
                 <div className="flex justify-between items-start mb-5">
                   <div className="space-y-1">
@@ -859,7 +859,7 @@ export function PricingBlock() {
 
         {/* Add new tier form */}
         {showAdd && (
-          <div className="p-5 rounded-2xl border-2 border-ink/30 bg-paper-soft space-y-4">
+          <div className="p-5 rounded-2xl border-2 border-lime/30/30 bg-paper-soft space-y-4">
             <p className="text-[11px] font-bold text-ink-subtle uppercase tracking-wider">New Pricing Tier</p>
             <LicenseForm
               formData={formData}
@@ -885,7 +885,7 @@ export function PricingBlock() {
           <Button
             variant="ghost"
             onClick={startAdd}
-            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-ink/20 transition-all font-bold text-[12px] gap-2"
+            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-lime/30/20 transition-all font-bold text-[12px] gap-2"
           >
             <PlusCircle className="h-4 w-4" />
             Add Another Tier
@@ -922,7 +922,7 @@ function LicenseForm({
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             placeholder="e.g. Commercial"
-            className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+            className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
           />
         </div>
         <div className="space-y-1.5">
@@ -932,7 +932,7 @@ function LicenseForm({
             value={formData.priceCents}
             onChange={(e) => setFormData({ ...formData, priceCents: parseInt(e.target.value) || 0 })}
             placeholder="9900"
-            className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+            className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
           />
         </div>
       </div>
@@ -943,7 +943,7 @@ function LicenseForm({
           value={formData.description}
           onChange={(e) => setFormData({ ...formData, description: e.target.value })}
           placeholder="For freelancers and agencies"
-          className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+          className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
         />
       </div>
       <div className="space-y-2">
@@ -963,7 +963,7 @@ function LicenseForm({
             onChange={(e) => setNewPerk(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addPerk()}
             placeholder="e.g. Unlimited Projects"
-            className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+            className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
           />
           <Button variant="outline" size="sm" onClick={addPerk} disabled={!newPerk.trim()} className="h-8 px-3 text-[11px] font-bold">
             Add
@@ -1083,7 +1083,7 @@ export function TagBlock() {
                 }
               }}
               placeholder="Search or create a tag..."
-              className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+              className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
             />
             <Button
               onClick={() => addTag(newTag)}
@@ -1168,13 +1168,13 @@ export function FAQBlock() {
                       type="text"
                       value={item.q}
                       onChange={(e) => updateFAQ(i, "q", e.target.value)}
-                      className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[13px] font-bold text-ink outline-none focus:border-ink/30"
+                      className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[13px] font-bold text-ink outline-none focus:border-lime/30/30"
                       placeholder="Question"
                     />
                     <textarea
                       value={item.a}
                       onChange={(e) => updateFAQ(i, "a", e.target.value)}
-                      className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] text-ink outline-none focus:border-ink/30 resize-none"
+                      className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] text-ink outline-none focus:border-lime/30/30 resize-none"
                       rows={2}
                       placeholder="Answer"
                     />
@@ -1227,19 +1227,19 @@ export function FAQBlock() {
         )}
 
         {showAdd ? (
-          <div className="p-4 rounded-xl border-2 border-ink/30 bg-paper-soft space-y-3">
+          <div className="p-4 rounded-xl border-2 border-lime/30/30 bg-paper-soft space-y-3">
             <p className="text-[11px] font-bold text-ink-subtle uppercase tracking-wider">New Question</p>
             <input
               type="text"
               value={newQ}
               onChange={(e) => setNewQ(e.target.value)}
-              className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[13px] font-bold text-ink outline-none focus:border-ink/30"
+              className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[13px] font-bold text-ink outline-none focus:border-lime/30/30"
               placeholder="e.g. Can I use this for commercial projects?"
             />
             <textarea
               value={newA}
               onChange={(e) => setNewA(e.target.value)}
-              className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] text-ink outline-none focus:border-ink/30 resize-none"
+              className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] text-ink outline-none focus:border-lime/30/30 resize-none"
               rows={3}
               placeholder="Write a helpful answer..."
             />
@@ -1264,7 +1264,7 @@ export function FAQBlock() {
           <Button
             variant="ghost"
             onClick={() => setShowAdd(true)}
-            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-ink/20 transition-all font-bold text-[12px] gap-2"
+            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-lime/30/20 transition-all font-bold text-[12px] gap-2"
           >
             <PlusCircle className="h-4 w-4" />
             Add Question
@@ -1537,14 +1537,14 @@ export function AutomationBlock() {
         })}
 
         {showAdd ? (
-          <div className="p-4 rounded-2xl border-2 border-ink/30 bg-paper-soft space-y-3">
+          <div className="p-4 rounded-2xl border-2 border-lime/30/30 bg-paper-soft space-y-3">
             <p className="text-[11px] font-bold text-ink-subtle uppercase tracking-wider">New Automation</p>
             <input
               type="text"
               value={newAuto.name || ""}
               onChange={(e) => setNewAuto({ ...newAuto, name: e.target.value })}
               placeholder="e.g. Slack Notification"
-              className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+              className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
             />
             <div className="flex gap-2">
               <select
@@ -1561,7 +1561,7 @@ export function AutomationBlock() {
                 value={newAuto.description || ""}
                 onChange={(e) => setNewAuto({ ...newAuto, description: e.target.value })}
                 placeholder="Description"
-                className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-ink/30"
+                className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] outline-none focus:border-lime/30/30"
               />
             </div>
             <div className="flex gap-2">
@@ -1577,7 +1577,7 @@ export function AutomationBlock() {
           <Button
             variant="ghost"
             onClick={() => setShowAdd(true)}
-            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-ink/20 transition-all font-bold text-[12px] gap-2"
+            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-lime/30/20 transition-all font-bold text-[12px] gap-2"
           >
             <PlusCircle className="h-4 w-4" />
             Add Automation
@@ -1748,7 +1748,7 @@ export function BundleBuilderBlock() {
           <Button
             variant="ghost"
             onClick={() => setShowSearch(true)}
-            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-ink/20 transition-all font-bold text-[12px] gap-2"
+            className="w-full h-11 rounded-xl border border-dashed border-line text-ink-muted hover:text-ink hover:border-lime/30/20 transition-all font-bold text-[12px] gap-2"
           >
             <PlusCircle className="h-4 w-4" />
             Add Product to Bundle
@@ -1861,7 +1861,7 @@ export function TechStackBlock() {
                 <button
                   type="button"
                   onClick={() => updateChips(chips.filter((_, j) => j !== i))}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
                   aria-label="Remove"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -1872,7 +1872,7 @@ export function TechStackBlock() {
           <button
             type="button"
             onClick={() => updateChips([...chips, { label: "", href: null }])}
-            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
           >
             <Plus className="h-3.5 w-3.5" />
             Add chip
@@ -1908,7 +1908,7 @@ export function TechStackBlock() {
                   className={cn(
                     "inline-flex h-11 shrink-0 items-center rounded-xl border px-4 text-[12px] font-semibold transition-colors",
                     row.supported
-                      ? "border-ink bg-ink text-paper"
+                      ? "border-lime/30 bg-ink text-paper"
                       : "border-line bg-paper text-ink-muted",
                   )}
                 >
@@ -1917,7 +1917,7 @@ export function TechStackBlock() {
                 <button
                   type="button"
                   onClick={() => updateCompat(compat.filter((_, j) => j !== i))}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
                   aria-label="Remove"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -1930,7 +1930,7 @@ export function TechStackBlock() {
             onClick={() =>
               updateCompat([...compat, { label: "", supported: true }])
             }
-            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
           >
             <Plus className="h-3.5 w-3.5" />
             Add compatibility row
@@ -1997,7 +1997,7 @@ export function ChangelogBlock() {
               <button
                 type="button"
                 onClick={() => update(entries.filter((_, j) => j !== i))}
-                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
                 aria-label="Remove"
               >
                 <Trash2 className="h-4 w-4" />
@@ -2024,7 +2024,7 @@ export function ChangelogBlock() {
               ...entries,
             ])
           }
-          className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+          className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
         >
           <Plus className="h-3.5 w-3.5" />
           Add release
@@ -2128,7 +2128,7 @@ export function TrustBlock() {
                 <button
                   type="button"
                   onClick={() => update(badges.filter((_, j) => j !== i))}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
                   aria-label="Remove"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -2139,7 +2139,7 @@ export function TrustBlock() {
           <button
             type="button"
             onClick={() => update([...badges, { label: "", icon: null }])}
-            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-dashed border-line px-4 text-[12.5px] font-semibold text-ink-muted transition-colors hover:border-lime/30/30 hover:text-ink"
           >
             <Plus className="h-3.5 w-3.5" />
             Add trust badge

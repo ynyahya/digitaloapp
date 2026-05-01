@@ -47,13 +47,13 @@ export function FAQ() {
               title="Answers, not surprises"
               description="Everything creators ask before launching their first product on TESKEL."
             />
-            <p className="mt-6 text-[14px] leading-relaxed text-ink-muted">
+            <p className="mt-6 text-[14px] leading-relaxed text-chalk-muted">
               Still have questions? Talk to a real human — we typically respond
               within the same business day.
             </p>
             <Link
               href="/contact"
-              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-ink hover:gap-2.5 transition-all"
+              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-chalk hover:gap-2.5 transition-all"
             >
               Contact our team
               <ArrowRight className="h-3.5 w-3.5" />
@@ -63,19 +63,19 @@ export function FAQ() {
           <Accordion
             type="single"
             collapsible
-            className="rounded-2xl border border-line bg-paper px-6"
+            className="rounded-2xl border border-white/[0.08] bg-night px-6"
             defaultValue="item-0"
           >
             {FAQS.map((item, i) => (
               <AccordionItem
                 key={item.q}
                 value={`item-${i}`}
-                className="border-line"
+                className="border-white/[0.08]"
               >
-                <AccordionTrigger className="text-left text-[15px] font-semibold text-ink hover:no-underline">
+                <AccordionTrigger className="text-left text-[15px] font-semibold text-chalk hover:no-underline">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-[13.5px] leading-relaxed text-ink-muted">
+                <AccordionContent className="text-[13.5px] leading-relaxed text-chalk-muted">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>

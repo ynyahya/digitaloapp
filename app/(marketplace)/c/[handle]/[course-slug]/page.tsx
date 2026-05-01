@@ -22,7 +22,10 @@ export async function generateMetadata({
 }: {
   params: { handle: string; "course-slug": string };
 }): Promise<Metadata> {
-  const course = await getPublicCourseBySlug(params.handle, params["course-slug"]);
+  const includeDraftPreview = true;
+  const course = await getPublicCourseBySlug(params.handle, params["course-slug"], {
+    includeDraftPreview,
+  });
   if (!course) return {};
   return {
     title: course.metaTitle || course.title,
@@ -31,6 +34,7 @@ export async function generateMetadata({
       course.subtitle ||
       course.description?.slice(0, 160) ||
       undefined,
+    robots: course.status === "PUBLISHED" ? undefined : { index: false, follow: false },
     openGraph:
       course.coverImage || course.thumbnailUrl
         ? { images: [course.coverImage || course.thumbnailUrl!] }
@@ -43,7 +47,10 @@ export default async function CourseStorefrontPage({
 }: {
   params: { handle: string; "course-slug": string };
 }) {
-  const course = await getPublicCourseBySlug(params.handle, params["course-slug"]);
+  const includeDraftPreview = true;
+  const course = await getPublicCourseBySlug(params.handle, params["course-slug"], {
+    includeDraftPreview,
+  });
   if (!course) notFound();
 
   // Derived stats
@@ -81,7 +88,12 @@ export default async function CourseStorefrontPage({
   ];
 
   return (
-    <div className="min-h-screen bg-paper">
+    <div className="min-h-screen bg-night">
+      {course.status !== "PUBLISHED" ? (
+        <div className="border-b border-lime/20 bg-lime/10 px-5 py-3 text-center text-[12px] font-bold uppercase tracking-[0.14em] text-lime">
+          Draft preview · this course is visible for creator review and is not indexed
+        </div>
+      ) : null}
       <CourseSubnav
         courseId={course.id}
         title={course.title}

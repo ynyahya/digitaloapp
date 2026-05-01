@@ -33,7 +33,7 @@ export function StorefrontHero({ creator }: Props) {
     .join("")
     .slice(0, 2);
   return (
-    <section className="relative overflow-hidden border-b border-line bg-paper">
+    <section className="relative overflow-hidden border-b border-white/[0.08] bg-night">
       <div className="absolute inset-x-0 top-0 h-[320px] bg-mono-radial" />
       <div className="relative mx-auto flex w-full max-w-[1200px] flex-col gap-10 px-5 py-14 md:flex-row md:items-end md:justify-between md:px-8 md:py-20">
         <div className="flex flex-col gap-5">
@@ -47,19 +47,19 @@ export function StorefrontHero({ creator }: Props) {
                   {creator.displayName}
                 </h1>
                 {creator.verified && (
-                  <span className="inline-flex h-6 items-center gap-1 rounded-full bg-ink px-2.5 text-[11px] font-medium text-paper">
+                  <span className="inline-flex h-6 items-center gap-1 rounded-full bg-lime px-2.5 text-[11px] font-medium text-night">
                     <Check className="h-3 w-3" /> Verified
                   </span>
                 )}
               </div>
-              <p className="mt-1 text-[13.5px] text-ink-muted">
+              <p className="mt-1 text-[13.5px] text-chalk-muted">
                 @{creator.handle} · Joined in 2024
               </p>
             </div>
           </div>
 
           {creator.tagline && (
-            <p className="max-w-xl text-pretty text-[15.5px] leading-relaxed text-ink-muted md:text-[16.5px]">
+            <p className="max-w-xl text-pretty text-[15.5px] leading-relaxed text-chalk-muted md:text-[16.5px]">
               {creator.tagline}
             </p>
           )}
@@ -78,7 +78,7 @@ export function StorefrontHero({ creator }: Props) {
                     href={`https://${v}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-muted transition-colors hover:border-ink/30 hover:text-ink"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/[0.08] text-chalk-muted transition-colors hover:border-lime/40 hover:text-chalk"
                   >
                     <Icon className="h-4 w-4" />
                   </a>
@@ -107,8 +107,8 @@ export function StorefrontHero({ creator }: Props) {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-line bg-paper px-5 py-4">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-ink-subtle">
+    <div className="rounded-2xl border border-white/[0.08] bg-night px-5 py-4">
+      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-chalk-dim">
         {label}
       </p>
       <p className="mt-1 text-[20px] font-semibold tracking-tight">{value}</p>

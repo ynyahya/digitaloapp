@@ -1,18 +1,18 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, Calendar, Clock, Globe, MapPin, Mic, Sparkles, Ticket, Users } from "lucide-react";
 import { db } from "@/lib/db";
 import { formatCurrency } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Globe, Users, Ticket, Star, ArrowLeft } from "lucide-react";
-import Image from "next/image";
+import { PublicGlassCard, PublicMetricPill, PublicOfferingShell, PublicSection, PublicStickyCTA } from "@/components/public-offering/public-offering";
+import { creatorHref } from "@/lib/routes/public";
 
 export const revalidate = 120;
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const event = await db.event.findFirst({ where: { slug: params.slug, status: "PUBLISHED" }, select: { title: true, description: true } });
+  const event = await db.event.findFirst({ where: { slug: params.slug, status: "PUBLISHED" }, select: { title: true, description: true, coverImage: true } });
   if (!event) return {};
-  return { title: event.title, description: event.description ?? undefined };
+  return { title: event.title, description: event.description ?? undefined, openGraph: event.coverImage ? { images: [event.coverImage] } : undefined };
 }
 
 export default async function PublicEventPage({ params }: { params: { slug: string } }) {
@@ -22,158 +22,104 @@ export default async function PublicEventPage({ params }: { params: { slug: stri
       creator: { select: { handle: true, displayName: true, avatarUrl: true, verified: true } },
       tickets: { where: { hidden: false }, orderBy: { position: "asc" } },
       speakers: { orderBy: { position: "asc" } },
+      questions: { orderBy: { position: "asc" } },
     },
   });
   if (!event) notFound();
 
-  const EVENTS_THEMES: Record<string, { bg: string; accent: string }> = {
-    minimal: { bg: "bg-gradient-to-br from-gray-50 to-gray-100", accent: "#374151" },
-    ocean: { bg: "bg-gradient-to-br from-blue-400 to-cyan-600", accent: "#0ea5e9" },
-    sunset: { bg: "bg-gradient-to-br from-orange-400 to-rose-600", accent: "#f43f5e" },
-    forest: { bg: "bg-gradient-to-br from-emerald-400 to-teal-700", accent: "#10b981" },
-    midnight: { bg: "bg-gradient-to-br from-slate-800 to-indigo-950", accent: "#6366f1" },
-    sunrise: { bg: "bg-gradient-to-br from-amber-300 to-orange-500", accent: "#f59e0b" },
-    lavender: { bg: "bg-gradient-to-br from-purple-400 to-pink-500", accent: "#a855f7" },
-    mint: { bg: "bg-gradient-to-br from-teal-300 to-emerald-500", accent: "#14b8a6" },
-    coral: { bg: "bg-gradient-to-br from-rose-400 to-pink-600", accent: "#e11d48" },
-    slate: { bg: "bg-gradient-to-br from-slate-500 to-slate-800", accent: "#64748b" },
-  };
-
-  const theme = EVENTS_THEMES[event.themeId || "minimal"] || EVENTS_THEMES.minimal;
   const startDate = event.startDate ? new Date(event.startDate).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }) : "Date TBD";
-  const startTime = event.startDate ? new Date(event.startDate).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "";
+  const startTime = event.startDate ? new Date(event.startDate).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" }) : "Time TBD";
+  const lowestTicket = event.tickets.length ? event.tickets.reduce((min, ticket) => ticket.priceCents < min.priceCents ? ticket : min, event.tickets[0]) : null;
+  const priceLabel = lowestTicket ? (lowestTicket.priceCents === 0 ? "Free" : `From ${formatCurrency(lowestTicket.priceCents, event.currency)}`) : event.priceCents === 0 ? "Free" : formatCurrency(event.priceCents, event.currency);
+  const locationLabel = event.locationType === "ONLINE" ? "Online event" : event.locationType === "HYBRID" ? "Hybrid event" : event.venueAddress || "Venue TBD";
+  const registered = event.registeredCount;
+  const capacity = event.maxAttendees || null;
+  const ticketHref = "#tickets";
 
   return (
-    <div className="min-h-screen bg-paper">
-      {/* Navbar spacer + simple back nav */}
-      <header className="sticky top-0 z-50 h-16 border-b border-line bg-paper/80 backdrop-blur-xl flex items-center">
-        <div className="max-w-[1200px] mx-auto w-full px-6 flex items-center justify-between">
-          <Link href="/" className="text-[13px] font-medium text-ink-muted hover:text-ink flex items-center gap-1.5">
-            <ArrowLeft className="h-4 w-4" /> TESKEL
-          </Link>
-          <div className="flex items-center gap-3">
-            <span className="text-[14px] font-bold text-ink">
-              {event.tickets.length > 0 ? (event.tickets[0].priceCents === 0 ? "Free" : `From ${formatCurrency(Math.min(...event.tickets.map(t => t.priceCents)), event.currency)}`) : "Free"}
-            </span>
-            <Button className="rounded-xl h-10 px-6 bg-indigo-600 hover:bg-indigo-700 text-white text-[13px] font-semibold">
-              Register Now
-            </Button>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero */}
-      <section className="relative border-b border-line">
-        <div className={theme.bg + " h-64 md:h-80 flex items-end p-8 md:p-12 relative"}>
-          <div className="absolute inset-0 bg-black/10" />
-          <div className="relative z-10 max-w-[1200px] mx-auto w-full">
-            <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-white text-[11px] font-bold uppercase tracking-wider border border-white/20">
-              {event.locationType === "ONLINE" ? "Online Event" : "In-Person Event"}
-            </span>
-            <h1 className="text-[36px] md:text-[56px] font-extrabold text-white mt-4 leading-[1.05] tracking-tight max-w-3xl">
-              {event.title}
-            </h1>
-          </div>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="max-w-[1200px] mx-auto px-6 py-16">
-        <div className="grid lg:grid-cols-[1fr_380px] gap-16">
-          {/* Left */}
-          <div className="space-y-12">
-            {/* Date/Time/Location */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-5 rounded-2xl border border-line bg-paper space-y-2">
-                <Calendar className="h-5 w-5 text-indigo-500" />
-                <p className="text-[11px] font-bold text-ink-muted uppercase">Date</p>
-                <p className="text-[15px] font-bold text-ink">{startDate}</p>
-              </div>
-              <div className="p-5 rounded-2xl border border-line bg-paper space-y-2">
-                <Clock className="h-5 w-5 text-indigo-500" />
-                <p className="text-[11px] font-bold text-ink-muted uppercase">Time</p>
-                <p className="text-[15px] font-bold text-ink">{startTime || "TBD"} {event.timezone}</p>
-              </div>
-              <div className="p-5 rounded-2xl border border-line bg-paper space-y-2">
-                {event.locationType === "ONLINE" ? <Globe className="h-5 w-5 text-indigo-500" /> : <MapPin className="h-5 w-5 text-indigo-500" />}
-                <p className="text-[11px] font-bold text-ink-muted uppercase">Location</p>
-                <p className="text-[15px] font-bold text-ink">{event.locationType === "ONLINE" ? "Online" : (event.venueAddress || "TBD")}</p>
-              </div>
+    <PublicOfferingShell>
+      <section className="relative overflow-hidden border-b border-white/[0.08]">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_14%_0%,rgba(180,243,0,0.2),transparent_34%),radial-gradient(circle_at_84%_12%,rgba(124,92,255,0.2),transparent_34%)]" />
+        <div className="relative mx-auto grid w-full max-w-[1240px] gap-10 px-6 py-16 md:px-8 md:py-24 lg:grid-cols-[minmax(0,1fr)_420px] lg:py-28">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-lime/20 bg-lime/10 px-3 py-1 text-eyebrow uppercase text-lime"><Sparkles className="h-3.5 w-3.5" /> {event.locationType === "ONLINE" ? "Online Event" : "Live Event"}</span>
+            <h1 className="mt-6 max-w-4xl text-[46px] font-black leading-[0.95] tracking-[-0.055em] text-chalk md:text-[76px]">{event.title}</h1>
+            {event.description ? <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-chalk-muted md:text-[20px]">{event.description}</p> : null}
+            <div className="mt-8 flex flex-wrap gap-3 text-[13px] text-chalk-muted">
+              <PublicMetricPill icon={Calendar}>{startDate}</PublicMetricPill>
+              <PublicMetricPill icon={Clock}>{startTime} {event.timezone}</PublicMetricPill>
+              <PublicMetricPill icon={event.locationType === "ONLINE" ? Globe : MapPin}>{locationLabel}</PublicMetricPill>
+              <PublicMetricPill icon={Users}>{capacity ? `${registered}/${capacity} seats` : `${registered} registered`}</PublicMetricPill>
             </div>
-
-            {/* Description */}
-            {event.description && (
-              <div className="prose prose-neutral max-w-none prose-p:text-[16px] prose-p:leading-relaxed prose-p:text-ink-muted">
-                {event.description.split("\n").map((p, i) => p.trim() ? <p key={i}>{p}</p> : null)}
-              </div>
-            )}
-
-            {/* Speakers */}
-            {event.speakers.length > 0 && (
-              <div className="space-y-6">
-                <h2 className="text-[24px] font-extrabold text-ink">Speakers</h2>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {event.speakers.map(speaker => (
-                    <div key={speaker.id} className="flex items-center gap-4 p-5 rounded-2xl border border-line bg-paper-soft">
-                      <div className="w-14 h-14 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-[16px] font-bold text-indigo-600">
-                        {speaker.name[0]}
-                      </div>
-                      <div>
-                        <p className="text-[15px] font-bold text-ink">{speaker.name}</p>
-                        {speaker.title && <p className="text-[12px] text-ink-muted">{speaker.title}</p>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right: Ticket Card */}
-          <div className="lg:sticky lg:top-24 space-y-6">
-            <div className="rounded-3xl border border-line bg-paper shadow-card overflow-hidden">
-              <div className="p-6 space-y-5">
-                <h3 className="text-[16px] font-extrabold text-ink">Select Ticket</h3>
-                {event.tickets.length === 0 ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-paper-soft border border-line">
-                      <span className="text-[14px] font-bold text-ink">General Admission</span>
-                      <span className="text-[14px] font-bold text-emerald-600">Free</span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    {event.tickets.map(ticket => (
-                      <div key={ticket.id} className="flex items-center justify-between p-4 rounded-xl bg-paper-soft border border-line hover:border-indigo-300 transition-colors cursor-pointer">
-                        <div>
-                          <p className="text-[14px] font-bold text-ink">{ticket.name}</p>
-                          {ticket.quantity && <p className="text-[11px] text-ink-muted">{ticket.remainingCount}/{ticket.quantity} remaining</p>}
-                        </div>
-                        <span className="text-[14px] font-extrabold text-ink">{ticket.priceCents === 0 ? "Free" : formatCurrency(ticket.priceCents, event.currency)}</span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                <Button className="w-full h-14 rounded-2xl text-[16px] font-bold bg-indigo-600 hover:bg-indigo-700 text-white">
-                  Register Now
-                </Button>
-                <p className="text-[11px] text-center text-ink-muted">Free cancellation up to 24h before</p>
-              </div>
-            </div>
-
-            {/* Creator Card */}
-            <div className="p-5 rounded-2xl border border-line bg-paper-soft flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-[12px] font-bold text-indigo-600">
-                {event.creator.displayName[0]}
-              </div>
-              <div>
-                <p className="text-[13px] font-bold text-ink">Hosted by {event.creator.displayName}</p>
-                <Link href={`/c/${event.creator.handle}`} className="text-[11px] text-indigo-600 font-medium">View profile →</Link>
-              </div>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <a href={ticketHref} className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-lime px-6 text-[14px] font-bold text-night lime-shadow">Register now <ArrowRight className="h-4 w-4" /></a>
+              <Link href={creatorHref(event.creator.handle)} className="inline-flex h-12 items-center justify-center rounded-2xl border border-white/[0.08] bg-white/[0.035] px-6 text-[14px] font-bold text-chalk hover:bg-white/[0.06]">Hosted by {event.creator.displayName}</Link>
             </div>
           </div>
+
+          <PublicGlassCard className="self-center">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-lime">Ticket desk</p>
+            <p className="mt-3 text-[42px] font-black tracking-[-0.05em] text-chalk">{priceLabel}</p>
+            <p className="mt-2 text-[13px] leading-relaxed text-chalk-muted">Reserve your place for this session. Ticket availability and access details are confirmed at registration.</p>
+            <div className="mt-5 grid gap-2 text-[13px] text-chalk-muted">
+              <span className="flex items-center gap-2"><Ticket className="h-4 w-4 text-lime" /> {event.tickets.length || 1} ticket option{event.tickets.length === 1 ? "" : "s"}</span>
+              <span className="flex items-center gap-2"><Mic className="h-4 w-4 text-lime" /> {event.speakers.length || 1} host/speaker</span>
+              <span className="flex items-center gap-2"><Users className="h-4 w-4 text-lime" /> {capacity ? `${Math.max(capacity - registered, 0)} seats left` : "Open capacity"}</span>
+            </div>
+            <a href={ticketHref} className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-lime text-[14px] font-bold text-night lime-shadow">Select ticket <ArrowRight className="h-4 w-4" /></a>
+          </PublicGlassCard>
         </div>
       </section>
-    </div>
+
+      <PublicSection eyebrow="Event details" title="Everything you need before joining" description="Schedule, access, ticket options, and host context are kept clear so registration feels confident.">
+        <div className="grid gap-4 md:grid-cols-3">
+          <InfoCard icon={Calendar} label="Date" value={startDate} />
+          <InfoCard icon={Clock} label="Time" value={`${startTime} ${event.timezone}`} />
+          <InfoCard icon={event.locationType === "ONLINE" ? Globe : MapPin} label="Location" value={locationLabel} />
+        </div>
+      </PublicSection>
+
+      {event.agenda ? (
+        <PublicSection eyebrow="Program" title="Agenda" description="A clear flow helps attendees understand the transformation before registering.">
+          <PublicGlassCard><pre className="whitespace-pre-wrap font-sans text-[14px] leading-7 text-chalk-muted">{event.agenda}</pre></PublicGlassCard>
+        </PublicSection>
+      ) : null}
+
+      {event.speakers.length > 0 ? (
+        <PublicSection eyebrow="Hosts" title="Speakers and facilitators">
+          <div className="grid gap-4 md:grid-cols-2">
+            {event.speakers.map((speaker) => (
+              <PublicGlassCard key={speaker.id} className="flex gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-lime/10 text-[18px] font-black text-lime">{speaker.name[0]}</div>
+                <div><p className="text-[16px] font-bold text-chalk">{speaker.name}</p>{speaker.title ? <p className="mt-1 text-[12px] text-chalk-muted">{speaker.title}</p> : null}{speaker.bio ? <p className="mt-3 text-[13px] leading-6 text-chalk-muted">{speaker.bio}</p> : null}</div>
+              </PublicGlassCard>
+            ))}
+          </div>
+        </PublicSection>
+      ) : null}
+
+      <PublicSection eyebrow="Registration" title="Choose your ticket" className="pb-28" >
+        <div id="tickets" className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="space-y-3">
+            {(event.tickets.length ? event.tickets : [{ id: "general", name: "General Admission", description: null, priceCents: event.priceCents, currency: event.currency, quantity: event.maxAttendees || null, remainingCount: event.maxAttendees || 0 }]).map((ticket) => (
+              <PublicGlassCard key={ticket.id} className="flex items-center justify-between gap-4">
+                <div><p className="text-[15px] font-bold text-chalk">{ticket.name}</p>{ticket.description ? <p className="mt-1 text-[12px] text-chalk-muted">{ticket.description}</p> : null}{ticket.quantity ? <p className="mt-2 text-[11px] text-chalk-dim">{ticket.remainingCount}/{ticket.quantity} remaining</p> : null}</div>
+                <p className="text-[18px] font-black text-lime">{ticket.priceCents === 0 ? "Free" : formatCurrency(ticket.priceCents, event.currency)}</p>
+              </PublicGlassCard>
+            ))}
+          </div>
+          <PublicGlassCard className="h-fit">
+            <p className="text-[13px] font-bold text-chalk">Registration note</p>
+            <p className="mt-2 text-[13px] leading-6 text-chalk-muted">Ticket checkout is being prepared for this event. Use the creator profile to contact the host if registration is not yet connected.</p>
+            <Link href={creatorHref(event.creator.handle)} className="mt-5 inline-flex h-11 w-full items-center justify-center rounded-2xl bg-lime text-[13px] font-bold text-night">View host profile</Link>
+          </PublicGlassCard>
+        </div>
+      </PublicSection>
+      <PublicStickyCTA label="Register" href="#tickets" detail={priceLabel} />
+    </PublicOfferingShell>
   );
+}
+
+function InfoCard({ icon: Icon, label, value }: { icon: typeof Calendar; label: string; value: string }) {
+  return <PublicGlassCard><Icon className="h-5 w-5 text-lime" /><p className="mt-4 text-[11px] font-bold uppercase tracking-[0.14em] text-chalk-dim">{label}</p><p className="mt-2 text-[15px] font-bold text-chalk">{value}</p></PublicGlassCard>;
 }

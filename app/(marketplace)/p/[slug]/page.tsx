@@ -21,16 +21,11 @@ import { RelatedProducts } from "@/components/product/related-products";
 import { getEmbedUrl, isSafeDemoUrl } from "@/components/product/product-helpers";
 import { getProductBySlug, getRelatedProducts } from "@/lib/queries/products";
 import { db } from "@/lib/db";
+import { PublicGlassCard, PublicSection } from "@/components/public-offering/public-offering";
+import { Layers3, PackageCheck } from "lucide-react";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 120;
-
-export async function generateStaticParams() {
-  const products = await db.product.findMany({
-    where: { status: "PUBLISHED" },
-    select: { slug: true },
-  });
-  return products.map((p) => ({ slug: p.slug }));
-}
 
 export async function generateMetadata({
   params,
@@ -136,9 +131,23 @@ export default async function ProductDetailPage({
         availableSectionIds={availableSectionIds}
       />
 
-      <section className="bg-paper">
+      <section className="bg-night">
         <div className="mx-auto grid w-full max-w-[1200px] gap-10 px-5 py-14 md:px-8 md:py-16 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
           <div className="space-y-14 min-w-0">
+            {product.type === "BUNDLE" && product.bundleItems.length > 0 ? (
+              <BundleValueStack
+                title={product.title}
+                priceCents={product.priceCents}
+                currency={product.currency}
+                items={product.bundleItems.map((item) => ({
+                  id: item.productId,
+                  title: item.product.title,
+                  tagline: item.product.tagline,
+                  priceCents: item.product.priceCents,
+                  slug: item.product.slug,
+                }))}
+              />
+            ) : null}
             <ProductOverview description={product.description} />
             <IncludedGrid items={product.included} />
             <ProductInventory
@@ -226,5 +235,60 @@ export default async function ProductDetailPage({
         checkoutHref={checkoutHref}
       />
     </>
+  );
+}
+
+function BundleValueStack({
+  title,
+  priceCents,
+  currency,
+  items,
+}: {
+  title: string;
+  priceCents: number;
+  currency: string;
+  items: { id: string; title: string; tagline: string | null; priceCents: number; slug: string }[];
+}) {
+  const total = items.reduce((sum, item) => sum + item.priceCents, 0);
+  const savings = total > priceCents ? Math.round((1 - priceCents / total) * 100) : 0;
+
+  return (
+    <PublicSection
+      eyebrow="Bundle value stack"
+      title={`Everything inside ${title}`}
+      description="Bundles on TESKEL are designed as a curated implementation stack, not a random discount pile."
+      className="px-0 py-0"
+    >
+      <PublicGlassCard>
+        <div className="mb-5 grid gap-3 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-chalk-dim">Included</p>
+            <p className="mt-2 text-2xl font-black text-chalk">{items.length}</p>
+          </div>
+          <div className="rounded-2xl border border-white/[0.08] bg-white/[0.035] p-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-chalk-dim">Total value</p>
+            <p className="mt-2 text-2xl font-black text-chalk">{currency} {(total / 100).toLocaleString()}</p>
+          </div>
+          <div className="rounded-2xl border border-lime/20 bg-lime/10 p-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-lime">Savings</p>
+            <p className="mt-2 text-2xl font-black text-lime">{savings ? `${savings}%` : "Curated"}</p>
+          </div>
+        </div>
+        <div className="grid gap-3">
+          {items.map((item, index) => (
+            <a key={item.id} href={`/p/${item.slug}`} className="group flex items-center gap-4 rounded-2xl border border-white/[0.08] bg-night/70 p-4 transition-all hover:border-lime/25">
+              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-lime/10 text-lime">
+                {index === 0 ? <PackageCheck className="h-5 w-5" /> : <Layers3 className="h-5 w-5" />}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[14px] font-bold text-chalk group-hover:text-lime">{item.title}</p>
+                <p className="line-clamp-1 text-[12px] text-chalk-muted">{item.tagline || "Included product"}</p>
+              </div>
+              <p className="text-[13px] font-bold text-chalk">{currency} {(item.priceCents / 100).toLocaleString()}</p>
+            </a>
+          ))}
+        </div>
+      </PublicGlassCard>
+    </PublicSection>
   );
 }

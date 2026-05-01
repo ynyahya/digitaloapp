@@ -57,8 +57,8 @@ export function CheckoutForm() {
                 className={cn(
                   "flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-[13px] font-medium transition-colors",
                   active
-                    ? "border-ink bg-ink text-paper"
-                    : "border-line bg-paper text-ink hover:border-ink/30",
+                    ? "border-lime/30 bg-ink text-paper"
+                    : "border-line bg-paper text-ink hover:border-lime/30/30",
                 )}
               >
                 <Icon className="h-4 w-4" />
@@ -115,7 +115,7 @@ function Input({
       </span>
       <input
         {...props}
-        className="h-11 rounded-xl border border-line bg-paper px-4 text-[14px] text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10"
+        className="h-11 rounded-xl border border-line bg-paper px-4 text-[14px] text-ink placeholder:text-ink-subtle focus:border-lime/30 focus:outline-none focus:ring-2 focus:ring-ink/10"
       />
     </label>
   );
@@ -133,7 +133,7 @@ function Select({
       </span>
       <select
         {...props}
-        className="h-11 rounded-xl border border-line bg-paper px-4 text-[14px] text-ink focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/10"
+        className="h-11 rounded-xl border border-line bg-paper px-4 text-[14px] text-ink focus:border-lime/30 focus:outline-none focus:ring-2 focus:ring-ink/10"
       >
         {children}
       </select>

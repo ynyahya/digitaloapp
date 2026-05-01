@@ -26,7 +26,7 @@ export function StorefrontTabs({
       <div className="mx-auto w-full max-w-[1200px] px-5 md:px-8">
         <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-chalk-dim">
               Products
             </p>
             <h2 className="mt-2 text-balance text-[28px] font-semibold leading-tight tracking-tight md:text-[34px]">
@@ -49,7 +49,7 @@ export function StorefrontTabs({
           {buckets[value].length > 0 ? (
             buckets[value].map((p) => <ProductCard key={p.slug} product={p} />)
           ) : (
-            <div className="col-span-full rounded-2xl border border-dashed border-line bg-paper-soft p-10 text-center text-[13px] text-ink-muted">
+            <div className="col-span-full rounded-2xl border border-dashed border-white/[0.08] bg-white/[0.035] p-10 text-center text-[13px] text-chalk-muted">
               No products in this section yet.
             </div>
           )}

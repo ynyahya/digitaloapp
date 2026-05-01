@@ -93,7 +93,7 @@ export function LaunchShareKit({ product, onBack }: { product: ShareKitProduct, 
                     <Linkedin className="h-4 w-4" />
                   </a>
                 </Button>
-                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full hover:bg-ink hover:text-white hover:border-ink transition-colors" asChild>
+                <Button variant="outline" size="icon" className="h-10 w-10 rounded-full hover:bg-ink hover:text-white hover:border-lime/30 transition-colors" asChild>
                   <a href={`mailto:?subject=${encodeURIComponent(`Check out ${product.title}`)}&body=${encodeURIComponent(shareText)}`}>
                     <Mail className="h-4 w-4" />
                   </a>

@@ -118,7 +118,7 @@ export function StudioCopilot() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
             placeholder="Ask anything about your product..."
-            className="w-full h-12 bg-paper border border-line rounded-xl pl-4 pr-24 text-[13px] text-ink outline-none focus:border-ink/20 transition-all shadow-soft"
+            className="w-full h-12 bg-paper border border-line rounded-xl pl-4 pr-24 text-[13px] text-ink outline-none focus:border-lime/30/20 transition-all shadow-soft"
           />
           <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
              <div className="flex items-center gap-1 opacity-20 mr-1">

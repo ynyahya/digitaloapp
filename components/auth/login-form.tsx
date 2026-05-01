@@ -13,7 +13,7 @@ function SubmitButton() {
   return (
     <Button
       type="submit"
-      className="h-11 w-full rounded-xl shadow-float"
+      className="h-11 w-full rounded-xl lime-shadow"
       disabled={pending}
     >
       {pending ? "Signing in…" : "Sign in"}
@@ -39,9 +39,9 @@ export function LoginForm({
       {state?.error ? (
         <div
           role="alert"
-          className="flex items-start gap-2 rounded-xl border border-line bg-paper-muted/60 p-3 text-[13px] text-ink"
+          className="flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-[13px] text-chalk"
         >
-          <AlertCircle className="mt-[1px] h-4 w-4 shrink-0 text-ink" />
+          <AlertCircle className="mt-[1px] h-4 w-4 shrink-0 text-red-300" />
           <span>{state.error}</span>
         </div>
       ) : null}

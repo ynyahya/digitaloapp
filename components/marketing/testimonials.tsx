@@ -40,17 +40,17 @@ export function Testimonials() {
             return (
               <blockquote
                 key={q.name}
-                className="flex flex-col gap-6 rounded-2xl border border-line bg-paper p-6"
+                className="flex flex-col gap-6 rounded-2xl border border-white/[0.08] bg-night p-6"
               >
                 <StarRating value={5} />
-                <p className="text-[14.5px] leading-relaxed text-ink">“{q.body}”</p>
+                <p className="text-[14.5px] leading-relaxed text-chalk">“{q.body}”</p>
                 <div className="mt-auto flex items-center gap-3">
                   <Avatar className="h-9 w-9">
                     <AvatarFallback>{initials}</AvatarFallback>
                   </Avatar>
                   <div>
                     <p className="text-[13px] font-semibold">{q.name}</p>
-                    <p className="text-[11.5px] text-ink-muted">{q.role}</p>
+                    <p className="text-[11.5px] text-chalk-muted">{q.role}</p>
                   </div>
                 </div>
               </blockquote>

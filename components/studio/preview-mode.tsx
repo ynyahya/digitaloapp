@@ -68,7 +68,7 @@ export function PreviewMode() {
   const licenses = product.licenses || [];
 
   return (
-    <div className="fixed inset-0 top-16 bg-paper-sunken z-40 flex overflow-hidden">
+    <div className="fixed inset-0 top-[132px] bg-paper-sunken z-40 flex overflow-hidden">
       {/* Device Sidebar / Control Panel */}
       <aside className="w-[320px] bg-paper border-r border-line overflow-y-auto custom-scrollbar hidden lg:flex flex-col">
         <div className="px-7 py-7 border-b border-line">
@@ -162,8 +162,8 @@ export function PreviewMode() {
         <div className={cn(
           "bg-paper shadow-2xl transition-all duration-700 border border-line overflow-hidden relative",
           device === "desktop" && "w-full max-w-[1200px] h-[85vh] rounded-2xl",
-          device === "tablet" && "w-[768px] h-[85vh] rounded-[40px] border-[12px] border-ink shadow-2xl",
-          device === "mobile" && "w-[375px] h-[750px] rounded-[60px] border-[12px] border-ink shadow-2xl"
+          device === "tablet" && "w-[768px] h-[85vh] rounded-[40px] border-[12px] border-lime/30 shadow-2xl",
+          device === "mobile" && "w-[375px] h-[750px] rounded-[60px] border-[12px] border-lime/30 shadow-2xl"
         )}>
           {/* Real Page Rendering */}
           <div className="w-full h-full bg-paper overflow-y-auto custom-scrollbar relative">

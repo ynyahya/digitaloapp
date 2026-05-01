@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { cn, formatCurrency } from "@/lib/utils";
+import { trackEvent } from "@/lib/analytics/track";
 
 type Section = { id: string; label: string };
 
@@ -39,7 +40,7 @@ export function ProductSubnav({
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > 520);
+    const onScroll = () => setShow(window.scrollY > 280);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -54,7 +55,7 @@ export function ProductSubnav({
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]) setActiveId(visible[0].target.id);
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.1, 0.3, 0.6] },
+      { rootMargin: "-22% 0px -62% 0px", threshold: [0, 0.15, 0.35, 0.55] },
     );
     sections.forEach((s) => {
       const el = document.getElementById(s.id);
@@ -73,16 +74,16 @@ export function ProductSubnav({
   return (
     <div
       className={cn(
-        "sticky top-16 z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-all duration-300",
-        show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none",
+        "sticky top-[71px] z-40 border-b border-white/[0.08] bg-night/92 backdrop-blur-xl transition-all duration-300",
+        show ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
       )}
     >
-      <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-6 px-5 md:px-8">
+      <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-4 px-4 md:px-8">
         <div className="flex min-w-0 items-center gap-6">
-          <p className="hidden max-w-[220px] truncate text-[13px] font-semibold text-ink md:block">
+          <p className="hidden max-w-[220px] truncate text-[13px] font-semibold text-chalk md:block">
             {title}
           </p>
-          <nav className="flex items-center gap-1 overflow-x-auto">
+          <nav className="flex max-w-[65vw] items-center gap-1 overflow-x-auto pr-1 md:max-w-none [&::-webkit-scrollbar]:hidden">
             {sections.map((s) => {
               const isActive = activeId === s.id;
               return (
@@ -93,8 +94,8 @@ export function ProductSubnav({
                   className={cn(
                     "whitespace-nowrap rounded-full px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
                     isActive
-                      ? "bg-ink text-paper"
-                      : "text-ink-muted hover:bg-paper-soft hover:text-ink",
+                      ? "bg-lime text-night shadow-soft"
+                      : "text-chalk-muted hover:bg-white/[0.035] hover:text-chalk",
                   )}
                 >
                   {s.label}
@@ -105,12 +106,19 @@ export function ProductSubnav({
         </div>
 
         <div className="flex shrink-0 items-center gap-3">
-          <span className="hidden text-[13px] font-bold tabular-nums text-ink sm:block">
+          <span className="hidden text-[13px] font-bold tabular-nums text-chalk sm:block">
             {priceCents === 0 ? "Free" : formatCurrency(priceCents, currency)}
           </span>
           <Link
             href={checkoutHref}
-            className="inline-flex h-9 items-center rounded-full bg-ink px-4 text-[12.5px] font-semibold text-paper hover:bg-ink-soft"
+            onClick={() =>
+              trackEvent("cta_click", {
+                surface: "product_subnav",
+                label: "Buy now",
+                href: checkoutHref,
+              })
+            }
+            className="inline-flex h-9 items-center rounded-full bg-lime px-4 text-[12.5px] font-semibold text-night hover:bg-lime/90"
           >
             Buy now
           </Link>

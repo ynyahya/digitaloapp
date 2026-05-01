@@ -180,7 +180,7 @@ export function DiscountBlock({ className }: { className?: string }) {
                     })
                   }
                   placeholder="SUMMER25"
-                  className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] font-mono focus:border-ink/30 outline-none uppercase"
+                  className="flex-1 bg-paper border border-line rounded-lg px-3 py-2 text-[12px] font-mono focus:border-lime/30/30 outline-none uppercase"
                 />
                 <Button
                   variant="outline"
@@ -200,7 +200,7 @@ export function DiscountBlock({ className }: { className?: string }) {
                 onChange={(e) =>
                   setNewCode({ ...newCode, type: e.target.value as "PERCENTAGE" | "FIXED" })
                 }
-                className="w-full bg-paper border border-line rounded-lg px-2 py-2 text-[12px] focus:border-ink/30 outline-none"
+                className="w-full bg-paper border border-line rounded-lg px-2 py-2 text-[12px] focus:border-lime/30/30 outline-none"
               >
                 <option value="PERCENTAGE">% Off</option>
                 <option value="FIXED">$ Off</option>
@@ -216,7 +216,7 @@ export function DiscountBlock({ className }: { className?: string }) {
                 onChange={(e) =>
                   setNewCode({ ...newCode, amount: parseInt(e.target.value) || 0 })
                 }
-                className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] focus:border-ink/30 outline-none"
+                className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] focus:border-lime/30/30 outline-none"
               />
             </div>
             <div className="space-y-1.5">
@@ -228,7 +228,7 @@ export function DiscountBlock({ className }: { className?: string }) {
                   setNewCode({ ...newCode, usageLimit: parseInt(e.target.value) || 0 })
                 }
                 placeholder="0 = unlimited"
-                className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] focus:border-ink/30 outline-none"
+                className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] focus:border-lime/30/30 outline-none"
               />
             </div>
             <div className="space-y-1.5">
@@ -237,7 +237,7 @@ export function DiscountBlock({ className }: { className?: string }) {
                 type="date"
                 value={newCode.expiresAt}
                 onChange={(e) => setNewCode({ ...newCode, expiresAt: e.target.value })}
-                className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] focus:border-ink/30 outline-none"
+                className="w-full bg-paper border border-line rounded-lg px-3 py-2 text-[12px] focus:border-lime/30/30 outline-none"
               />
             </div>
           </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { cn, formatCurrency } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { enrollInCourse } from "@/lib/actions/commerce";
+import { trackEvent } from "@/lib/analytics/track";
 
 type Section = { id: string; label: string };
 
@@ -38,7 +39,7 @@ export function CourseSubnav({
   useEffect(() => {
     // Show sub-nav only after scrolling past the hero
     const onScroll = () => {
-      setShow(window.scrollY > 480);
+      setShow(window.scrollY > 260);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -56,7 +57,7 @@ export function CourseSubnav({
           setActiveId(visible[0].target.id);
         }
       },
-      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.1, 0.3, 0.6] },
+      { rootMargin: "-22% 0px -62% 0px", threshold: [0, 0.15, 0.35, 0.55] },
     );
     sections.forEach((s) => {
       const el = document.getElementById(s.id);
@@ -68,6 +69,10 @@ export function CourseSubnav({
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
+    trackEvent("section_nav_click", {
+      surface: "course_subnav",
+      section: id,
+    });
     const y = el.getBoundingClientRect().top + window.scrollY - 120;
     window.scrollTo({ top: y, behavior: "smooth" });
   };
@@ -75,17 +80,17 @@ export function CourseSubnav({
   return (
     <div
       className={cn(
-        "sticky top-16 z-40 border-b border-line bg-paper/90 backdrop-blur-xl transition-all duration-300",
-        show ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2 pointer-events-none",
+        "sticky top-[71px] z-40 border-b border-white/[0.08] bg-night/92 backdrop-blur-xl transition-all duration-300",
+        show ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
       )}
     >
-      <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-6 px-6">
+      <div className="mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-4 px-4 md:px-6">
         {/* Title on the far left when visible */}
         <div className="flex min-w-0 items-center gap-6">
-          <p className="hidden truncate text-[13px] font-semibold text-ink md:block max-w-[240px]">
+          <p className="hidden truncate text-[13px] font-semibold text-chalk md:block max-w-[240px]">
             {title}
           </p>
-          <nav className="flex items-center gap-1">
+          <nav className="flex max-w-[65vw] items-center gap-1 overflow-x-auto pr-1 md:max-w-none [&::-webkit-scrollbar]:hidden">
             {sections.map((s) => {
               const isActive = activeId === s.id;
               return (
@@ -96,8 +101,8 @@ export function CourseSubnav({
                   className={cn(
                     "rounded-full px-3.5 py-1.5 text-[12.5px] font-semibold transition-colors",
                     isActive
-                      ? "bg-ink text-paper"
-                      : "text-ink-muted hover:bg-paper-soft hover:text-ink",
+                      ? "bg-lime text-night shadow-soft"
+                      : "text-chalk-muted hover:bg-white/[0.035] hover:text-chalk",
                   )}
                 >
                   {s.label}
@@ -107,14 +112,22 @@ export function CourseSubnav({
           </nav>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3">
-          <span className="hidden text-[13px] font-bold text-ink sm:block">
+        <div className="flex shrink-0 items-center gap-2.5">
+          <span className="hidden text-[12.5px] font-bold text-chalk sm:block">
             {priceCents === 0 ? "Free" : formatCurrency(priceCents, currency)}
           </span>
-          <form action={enrollInCourse.bind(null, courseId)}>
+          <form
+            action={enrollInCourse.bind(null, courseId)}
+            onSubmit={() =>
+              trackEvent("cta_click", {
+                surface: "course_subnav",
+                label: "Enroll now",
+              })
+            }
+          >
             <Button
               type="submit"
-              className="h-9 rounded-full bg-ink px-5 text-[12.5px] font-semibold text-paper hover:bg-ink-soft"
+              className="h-9 rounded-full bg-lime px-4 text-[12.5px] font-semibold text-night hover:bg-lime/90 md:px-5"
             >
               Enroll now
             </Button>

@@ -25,7 +25,7 @@ export function SEOBlock({ className }: { className?: string }) {
             value={product.metaTitle || ""}
             onChange={(e) => setField("metaTitle", e.target.value)}
             maxLength={60}
-            className="w-full bg-paper border border-line rounded-xl px-4 py-3 text-[13px] text-ink focus:border-ink/30 focus:ring-4 focus:ring-ink/5 transition-all outline-none"
+            className="w-full bg-paper border border-line rounded-xl px-4 py-3 text-[13px] text-ink focus:border-lime/30/30 focus:ring-4 focus:ring-ink/5 transition-all outline-none"
             placeholder={product.title || "Product Meta Title"}
           />
         </div>
@@ -39,14 +39,14 @@ export function SEOBlock({ className }: { className?: string }) {
             value={product.metaDescription || ""}
             onChange={(e) => setField("metaDescription", e.target.value)}
             maxLength={160}
-            className="w-full bg-paper border border-line rounded-xl px-4 py-3 text-[13px] text-ink focus:border-ink/30 focus:ring-4 focus:ring-ink/5 transition-all outline-none resize-none h-24"
+            className="w-full bg-paper border border-line rounded-xl px-4 py-3 text-[13px] text-ink focus:border-lime/30/30 focus:ring-4 focus:ring-ink/5 transition-all outline-none resize-none h-24"
             placeholder="Write a compelling description for search results..."
           />
         </div>
 
         <div className="space-y-1.5">
           <label className="text-[11px] font-bold text-ink-subtle uppercase tracking-wider">Custom Slug</label>
-          <div className="flex items-center border border-line rounded-xl bg-paper overflow-hidden focus-within:border-ink/30 focus-within:ring-4 focus-within:ring-ink/5 transition-all">
+          <div className="flex items-center border border-line rounded-xl bg-paper overflow-hidden focus-within:border-lime/30/30 focus-within:ring-4 focus-within:ring-ink/5 transition-all">
             <span className="pl-4 pr-2 text-[13px] text-ink-muted bg-paper-soft border-r border-line py-3 flex items-center gap-2">
               <LinkIcon className="h-3.5 w-3.5" />
               teskel.app/p/

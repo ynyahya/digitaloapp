@@ -24,18 +24,18 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
   return (
     <>
-      <section className="border-b border-line bg-paper">
+      <section className="border-b border-white/[0.08] bg-night">
         <div className="mx-auto w-full max-w-[1200px] px-5 py-12 md:px-8 md:py-16">
           <div className="mb-6 flex items-end justify-between gap-4">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-subtle">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-chalk-dim">
                 Gallery
               </p>
-              <h2 className="mt-2 text-balance text-[22px] font-semibold leading-tight tracking-tight text-ink md:text-[28px]">
+              <h2 className="mt-2 text-balance text-[22px] font-semibold leading-tight tracking-tight text-chalk md:text-[28px]">
                 Screenshots & previews
               </h2>
             </div>
-            <p className="hidden text-[12.5px] text-ink-muted md:block">
+            <p className="hidden text-[12.5px] text-chalk-muted md:block">
               {images.length} {images.length === 1 ? "image" : "images"}
             </p>
           </div>
@@ -47,7 +47,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                 key={src}
                 onClick={() => setLightboxIdx(idx)}
                 className={cn(
-                  "group relative overflow-hidden rounded-2xl border border-line bg-paper-muted",
+                  "group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06]",
                   idx === 0
                     ? "md:col-span-4 md:row-span-2 aspect-[16/10]"
                     : "md:col-span-2 aspect-[4/3]",
@@ -60,7 +60,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   sizes="(min-width: 768px) 50vw, 100vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                 />
-                <div className="absolute inset-0 bg-ink/0 transition-colors group-hover:bg-ink/10" />
+                <div className="absolute inset-0 bg-lime/0 transition-colors group-hover:bg-lime/10" />
               </button>
             ))}
           </div>
@@ -72,7 +72,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
                   type="button"
                   key={src}
                   onClick={() => setLightboxIdx(idx + 6)}
-                  className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl border border-line"
+                  className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl border border-white/[0.08]"
                 >
                   <Image
                     src={src}
@@ -89,7 +89,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
 
       {lightboxIdx !== null && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-ink/90 backdrop-blur-sm"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-lime/90 backdrop-blur-sm"
           onClick={() => setLightboxIdx(null)}
         >
           <button
@@ -98,7 +98,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               e.stopPropagation();
               setLightboxIdx(null);
             }}
-            className="absolute right-6 top-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20"
+            className="absolute right-6 top-6 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-night hover:bg-white/20"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -109,7 +109,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               e.stopPropagation();
               prev();
             }}
-            className="absolute left-6 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20"
+            className="absolute left-6 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-night hover:bg-white/20"
             aria-label="Previous"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -120,7 +120,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               e.stopPropagation();
               next();
             }}
-            className="absolute right-6 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-paper/10 text-paper hover:bg-paper/20"
+            className="absolute right-6 top-1/2 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-night hover:bg-white/20"
             aria-label="Next"
           >
             <ChevronRight className="h-5 w-5" />
@@ -136,7 +136,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
               className="object-contain"
             />
           </div>
-          <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[12px] font-medium text-paper/70">
+          <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[12px] font-medium text-chalk-muted">
             {lightboxIdx + 1} / {images.length}
           </p>
         </div>

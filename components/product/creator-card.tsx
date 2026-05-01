@@ -30,31 +30,31 @@ export function CreatorMiniCard({ creator }: Props) {
   const productsSold = creator.metrics?.productsSold ?? 0;
 
   return (
-    <section className="border-y border-line bg-paper-soft">
+    <section className="border-y border-white/[0.08] bg-white/[0.035]">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col gap-6 px-5 py-10 md:flex-row md:items-center md:justify-between md:gap-8 md:px-8">
         <Link
           href={`/c/${creator.handle}`}
           className="group flex items-center gap-4"
         >
-          <Avatar className="h-14 w-14 border border-line">
+          <Avatar className="h-14 w-14 border border-white/[0.08]">
             <AvatarFallback className="text-[15px] font-semibold">
               {initials}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <p className="text-[15px] font-semibold text-ink group-hover:underline">
+              <p className="text-[15px] font-semibold text-chalk group-hover:underline">
                 {creator.displayName}
               </p>
               {creator.verified && (
-                <BadgeCheck className="h-4 w-4 text-ink" />
+                <BadgeCheck className="h-4 w-4 text-chalk" />
               )}
             </div>
-            <p className="mt-0.5 truncate text-[12.5px] text-ink-muted">
+            <p className="mt-0.5 truncate text-[12.5px] text-chalk-muted">
               @{creator.handle}
               {creator.tagline && (
                 <>
-                  <span className="mx-1.5 text-line">·</span>
+                  <span className="mx-1.5 text-chalk-dim">·</span>
                   {creator.tagline}
                 </>
               )}
@@ -77,7 +77,7 @@ export function CreatorMiniCard({ creator }: Props) {
           )}
           <Link
             href={`/c/${creator.handle}`}
-            className="inline-flex h-9 items-center rounded-full border border-line bg-paper px-4 text-[12px] font-semibold text-ink hover:border-ink/30"
+            className="inline-flex h-9 items-center rounded-full border border-white/[0.08] bg-night px-4 text-[12px] font-semibold text-chalk hover:border-lime/40"
           >
             View storefront
           </Link>
@@ -90,10 +90,10 @@ export function CreatorMiniCard({ creator }: Props) {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-ink-subtle">
+      <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-chalk-dim">
         {label}
       </p>
-      <p className="mt-0.5 text-[15px] font-semibold tabular-nums text-ink">
+      <p className="mt-0.5 text-[15px] font-semibold tabular-nums text-chalk">
         {value}
       </p>
     </div>

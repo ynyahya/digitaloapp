@@ -7,16 +7,16 @@ export function BundleBanner() {
   return (
     <section className="py-10 md:py-14">
       <Container size="wide">
-        <div className="relative overflow-hidden rounded-3xl border border-line bg-paper-muted p-6 md:p-10">
+        <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-white/[0.06] p-6 md:p-10">
           <div className="grid items-center gap-6 md:grid-cols-[1.2fr_1fr]">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-ink-subtle">
+              <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-chalk-dim">
                 Bundle Deals
               </p>
               <h3 className="mt-2 text-balance text-[26px] font-semibold leading-tight tracking-tight md:text-[32px]">
                 More value, more savings.
               </h3>
-              <p className="mt-2 max-w-md text-[14px] text-ink-muted">
+              <p className="mt-2 max-w-md text-[14px] text-chalk-muted">
                 Save up to 60% on premium bundles from top creators.
               </p>
               <Button className="mt-6" asChild>
@@ -30,7 +30,7 @@ export function BundleBanner() {
                 {[0, 1, 2].map((i) => (
                   <div
                     key={i}
-                    className="absolute inset-y-0 rounded-2xl border border-line bg-paper shadow-card"
+                    className="absolute inset-y-0 rounded-2xl border border-white/[0.08] bg-night shadow-card"
                     style={{
                       left: `${i * 18}%`,
                       right: `${(2 - i) * 6}%`,
@@ -47,7 +47,7 @@ export function BundleBanner() {
                     </div>
                   </div>
                 ))}
-                <span className="absolute right-0 top-1/2 z-10 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-ink text-[11px] font-semibold text-paper shadow-float">
+                <span className="absolute right-0 top-1/2 z-10 inline-flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full bg-lime text-[11px] font-semibold text-night shadow-float">
                   SAVE
                   <br />
                   60%

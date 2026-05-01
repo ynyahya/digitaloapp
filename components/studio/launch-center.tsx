@@ -126,14 +126,14 @@ export function LaunchCenter() {
   }
 
   return (
-    <div className="min-h-screen bg-paper-soft pt-24 pb-40">
+    <div className="min-h-screen bg-paper-soft pt-40 pb-40">
       <div className="mx-auto w-full max-w-[1200px] px-6 md:px-10 space-y-8">
         {/* Readiness Banner */}
         <section className="relative overflow-hidden rounded-3xl bg-ink text-paper shadow-float">
           <div className="absolute inset-0 bg-mono-radial opacity-30 pointer-events-none" />
           <div className="relative z-10 grid md:grid-cols-[1fr_auto] items-center gap-10 p-10 md:p-12">
             <div className="space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-paper/10 border border-paper/15">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-paper/10 border border-white/[0.08]/15">
                 <Rocket className="h-3.5 w-3.5" />
                 <span className="text-[11px] font-bold uppercase tracking-[0.2em]">
                   {score === 100 ? "Ready for takeoff" : "Pre-flight check"}
@@ -380,7 +380,7 @@ function ValidationItem({ label, done, field }: { label: string; done: boolean; 
             "h-5 w-5 rounded-full flex items-center justify-center transition-all shrink-0",
             done
               ? "bg-emerald-500 text-paper"
-              : "border-2 border-line group-hover/check:border-ink/30"
+              : "border-2 border-line group-hover/check:border-lime/30/30"
           )}
         >
           {done ? (

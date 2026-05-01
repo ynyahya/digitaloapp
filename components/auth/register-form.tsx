@@ -16,7 +16,7 @@ function SubmitButton() {
   return (
     <Button
       type="submit"
-      className="h-11 w-full rounded-xl shadow-float"
+      className="h-11 w-full rounded-xl lime-shadow"
       disabled={pending}
     >
       {pending ? "Creating account…" : "Create account"}
@@ -55,9 +55,9 @@ export function RegisterForm() {
       {state?.error ? (
         <div
           role="alert"
-          className="flex items-start gap-2 rounded-xl border border-line bg-paper-muted/60 p-3 text-[13px] text-ink"
+          className="flex items-start gap-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-[13px] text-chalk"
         >
-          <AlertCircle className="mt-[1px] h-4 w-4 shrink-0 text-ink" />
+          <AlertCircle className="mt-[1px] h-4 w-4 shrink-0 text-red-300" />
           <span>{state.error}</span>
         </div>
       ) : null}
@@ -144,16 +144,16 @@ function RoleCard({
       type="button"
       onClick={onSelect}
       className={cn(
-        "group relative flex flex-col items-start rounded-2xl border bg-paper p-4 text-left transition-all",
+        "group relative flex flex-col items-start rounded-2xl border bg-white/[0.025] p-4 text-left transition-all",
         selected
-          ? "border-ink shadow-float"
-          : "border-line hover:border-ink/30 hover:shadow-soft",
+          ? "border-lime/60 lime-ring-glow"
+          : "border-white/[0.08] hover:border-lime/30",
       )}
     >
       <div
         className={cn(
           "flex h-10 w-10 items-center justify-center rounded-xl transition-colors",
-          selected ? "bg-ink text-paper" : "bg-paper-muted text-ink",
+          selected ? "bg-lime text-night" : "bg-white/[0.06] text-chalk",
         )}
       >
         {icon}
@@ -163,12 +163,12 @@ function RoleCard({
       <span
         className={cn(
           "absolute right-3 top-3 h-4 w-4 rounded-full border transition-colors",
-          selected ? "border-ink bg-ink" : "border-line",
+          selected ? "border-lime bg-lime" : "border-white/15",
         )}
         aria-hidden
       >
         {selected ? (
-          <span className="absolute inset-0 m-auto block h-1.5 w-1.5 rounded-full bg-paper" />
+          <span className="absolute inset-0 m-auto block h-1.5 w-1.5 rounded-full bg-night" />
         ) : null}
       </span>
     </button>

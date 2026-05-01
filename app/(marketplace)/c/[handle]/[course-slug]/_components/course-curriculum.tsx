@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { formatDuration, formatLessonDuration } from "./course-helpers";
 import { SectionHeading } from "./course-outcomes";
 import { LessonPreviewModal } from "./lesson-preview-modal";
+import { trackEvent } from "@/lib/analytics/track";
 
 type LessonLite = {
   id: string;
@@ -77,7 +78,7 @@ export function CourseCurriculum({
   );
 
   return (
-    <section id="curriculum" className="border-b border-line bg-paper">
+    <section id="curriculum" className="border-b border-white/[0.08] bg-night">
       <div className="mx-auto max-w-[1100px] px-6 py-20 lg:py-24">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <SectionHeading
@@ -95,14 +96,14 @@ export function CourseCurriculum({
               <button
                 type="button"
                 onClick={expandAll}
-                className="rounded-full border border-line bg-paper-soft px-3.5 py-1.5 text-[12px] font-semibold text-ink-muted transition-colors hover:border-line-strong hover:bg-paper hover:text-ink"
+                className="rounded-full border border-white/[0.08] bg-white/[0.035] px-3.5 py-1.5 text-[12px] font-semibold text-chalk-muted transition-colors hover:border-white/[0.16] hover:bg-night hover:text-chalk"
               >
                 Expand all
               </button>
               <button
                 type="button"
                 onClick={collapseAll}
-                className="rounded-full border border-line bg-paper-soft px-3.5 py-1.5 text-[12px] font-semibold text-ink-muted transition-colors hover:border-line-strong hover:bg-paper hover:text-ink"
+                className="rounded-full border border-white/[0.08] bg-white/[0.035] px-3.5 py-1.5 text-[12px] font-semibold text-chalk-muted transition-colors hover:border-white/[0.16] hover:bg-night hover:text-chalk"
               >
                 Collapse all
               </button>
@@ -125,24 +126,24 @@ export function CourseCurriculum({
                   <div
                     key={chapter.id}
                     className={cn(
-                      "overflow-hidden rounded-2xl border bg-paper transition-colors",
-                      isOpen ? "border-line-strong" : "border-line",
+                      "overflow-hidden rounded-2xl border bg-night transition-colors",
+                      isOpen ? "border-white/[0.16]" : "border-white/[0.08]",
                     )}
                   >
                     <button
                       type="button"
                       onClick={() => toggle(chapter.id)}
-                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition-colors hover:bg-paper-soft"
+                      className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left transition-colors hover:bg-white/[0.035]"
                     >
                       <div className="flex min-w-0 items-center gap-4">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-paper-muted text-[12px] font-extrabold tabular-nums text-ink">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/[0.06] text-[12px] font-extrabold tabular-nums text-chalk">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate text-[15.5px] font-bold text-ink">
+                          <p className="truncate text-[15.5px] font-bold text-chalk">
                             {chapter.title}
                           </p>
-                          <p className="mt-0.5 text-[12px] text-ink-muted">
+                          <p className="mt-0.5 text-[12px] text-chalk-muted">
                             {chapter.lessons.length}{" "}
                             {chapter.lessons.length === 1 ? "lesson" : "lessons"}
                             {chapterMinutes > 0 && ` · ${formatDuration(chapterMinutes)}`}
@@ -151,16 +152,16 @@ export function CourseCurriculum({
                       </div>
                       <ChevronDown
                         className={cn(
-                          "h-4 w-4 shrink-0 text-ink-muted transition-transform",
+                          "h-4 w-4 shrink-0 text-chalk-muted transition-transform",
                           isOpen && "rotate-180",
                         )}
                       />
                     </button>
 
                     {isOpen && (
-                      <div className="border-t border-line bg-paper-soft">
+                      <div className="border-t border-white/[0.08] bg-white/[0.035]">
                         {chapter.lessons.length === 0 ? (
-                          <p className="px-6 py-5 text-[13px] text-ink-muted">
+                          <p className="px-6 py-5 text-[13px] text-chalk-muted">
                             No lessons published yet.
                           </p>
                         ) : (
@@ -175,12 +176,19 @@ export function CourseCurriculum({
                                     {...(isClickable
                                       ? {
                                           type: "button" as const,
-                                          onClick: () => setPreviewId(lesson.id),
+                                          onClick: () => {
+                                            trackEvent("lesson_preview_open", {
+                                              surface: "course_curriculum",
+                                              lesson_id: lesson.id,
+                                              content_type: lesson.contentType,
+                                            });
+                                            setPreviewId(lesson.id);
+                                          },
                                         }
                                       : {})}
                                     className={cn(
                                       "group flex w-full items-center justify-between gap-3 px-6 py-3.5 text-left",
-                                      isClickable && "cursor-pointer hover:bg-paper",
+                                      isClickable && "cursor-pointer hover:bg-night",
                                     )}
                                   >
                                     <div className="flex min-w-0 items-center gap-3">
@@ -188,8 +196,8 @@ export function CourseCurriculum({
                                         className={cn(
                                           "flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors",
                                           isClickable
-                                            ? "bg-ink text-paper group-hover:bg-ink-soft"
-                                            : "bg-paper-muted text-ink-muted",
+                                            ? "bg-lime text-night group-hover:bg-lime/90"
+                                            : "bg-white/[0.06] text-chalk-muted",
                                         )}
                                       >
                                         {isClickable ? (
@@ -198,18 +206,18 @@ export function CourseCurriculum({
                                           <Icon className="h-3.5 w-3.5" />
                                         )}
                                       </span>
-                                      <span className="truncate text-[13.5px] font-medium text-ink">
+                                      <span className="truncate text-[13.5px] font-medium text-chalk">
                                         {lesson.title}
                                       </span>
                                     </div>
-                                    <div className="flex shrink-0 items-center gap-2.5 text-[11.5px] text-ink-muted">
+                                    <div className="flex shrink-0 items-center gap-2.5 text-[11.5px] text-chalk-muted">
                                       {lesson.isFree && (
-                                        <span className="rounded-full border border-line bg-paper px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink">
+                                        <span className="rounded-full border border-white/[0.08] bg-night px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-chalk">
                                           Preview
                                         </span>
                                       )}
                                       {!lesson.isFree && (
-                                        <Lock className="h-3.5 w-3.5 text-ink-subtle" />
+                                        <Lock className="h-3.5 w-3.5 text-chalk-dim" />
                                       )}
                                       {lesson.durationMin ? (
                                         <span className="tabular-nums">
@@ -247,12 +255,12 @@ export function CourseCurriculum({
 
 function CurriculumEmpty() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-line bg-paper-soft py-20 text-center">
-      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-line bg-paper">
-        <BookOpen className="h-6 w-6 text-ink-muted" />
+    <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-white/[0.08] bg-white/[0.035] py-20 text-center">
+      <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl border border-white/[0.08] bg-night">
+        <BookOpen className="h-6 w-6 text-chalk-muted" />
       </div>
-      <p className="text-[15px] font-semibold text-ink">Curriculum coming soon</p>
-      <p className="mt-1.5 max-w-sm text-[13px] text-ink-muted">
+      <p className="text-[15px] font-semibold text-chalk">Curriculum coming soon</p>
+      <p className="mt-1.5 max-w-sm text-[13px] text-chalk-muted">
         The instructor is still building this course. Enroll now to be notified when lessons
         are published.
       </p>
