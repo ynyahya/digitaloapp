@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Github, Twitter, Linkedin, Youtube } from "lucide-react";
+import { NewsletterForm } from "@/components/landing/newsletter-form";
 
 const COLS: { title: string; links: { label: string; href: string }[] }[] = [
   {
@@ -65,22 +66,7 @@ export function LandingFooter() {
               All systems normal
             </div>
 
-            <form
-              className="mt-6 flex max-w-sm items-center gap-2 rounded-xl border border-white/10 bg-white/[0.02] p-1 pl-3"
-              onSubmit={(e) => e.preventDefault()}
-            >
-              <input
-                type="email"
-                placeholder="Get product updates"
-                className="flex-1 bg-transparent py-2 text-[13px] text-chalk placeholder:text-chalk-dim focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="rounded-lg bg-lime px-3 py-2 text-[12px] font-bold text-night transition hover:bg-lime-bright"
-              >
-                Subscribe
-              </button>
-            </form>
+            <NewsletterForm />
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
