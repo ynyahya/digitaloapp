@@ -43,7 +43,7 @@ const COLS: { title: string; links: { label: string; href: string }[] }[] = [
 
 export function LandingFooter() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/[0.06] bg-night">
+    <footer className="relative overflow-hidden border-t border-line bg-paper">
       <div className="pointer-events-none absolute inset-x-0 -top-24 h-48 bg-lime-fade opacity-60 mask-fade-edges-x" />
       <div className="mx-auto w-full max-w-[1360px] px-5 py-16 md:px-8 lg:px-10">
         <div className="grid gap-12 lg:grid-cols-[1.4fr_2fr]">
@@ -52,16 +52,16 @@ export function LandingFooter() {
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-lime text-[13px] font-black text-night shadow-[0_0_28px_-6px_rgba(180,243,0,0.7)]">
                 T
               </span>
-              <span className="text-[16px] font-bold tracking-[-0.02em] text-chalk">
+              <span className="text-[16px] font-bold tracking-[-0.02em] text-ink">
                 TESKEL
               </span>
             </Link>
-            <p className="mt-4 max-w-sm text-[13.5px] leading-relaxed text-chalk-muted">
+            <p className="mt-4 max-w-sm text-[13.5px] leading-relaxed text-ink-muted">
               The operating system for digital creators. Sell products, run
               cohorts, grow your audience — all in one place.
             </p>
 
-            <div className="mt-6 flex items-center gap-2 text-[12px] font-medium text-chalk-muted">
+            <div className="mt-6 flex items-center gap-2 text-[12px] font-medium text-ink-muted">
               <span className="inline-flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)] animate-pulse-soft" />
               All systems normal
             </div>
@@ -72,7 +72,7 @@ export function LandingFooter() {
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4">
             {COLS.map((col) => (
               <div key={col.title}>
-                <h4 className="text-eyebrow uppercase text-chalk-dim">
+                <h4 className="text-eyebrow uppercase text-ink-subtle">
                   {col.title}
                 </h4>
                 <ul className="mt-4 space-y-2.5">
@@ -80,7 +80,7 @@ export function LandingFooter() {
                     <li key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-[13.5px] text-chalk-muted transition hover:text-chalk"
+                        className="text-[13.5px] text-ink-muted transition hover:text-ink"
                       >
                         {link.label}
                       </Link>
@@ -92,8 +92,8 @@ export function LandingFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-5 border-t border-white/[0.06] pt-6 md:flex-row md:items-center">
-          <p className="text-[12px] text-chalk-dim">
+        <div className="mt-14 flex flex-col items-start justify-between gap-5 border-t border-line pt-6 md:flex-row md:items-center">
+          <p className="text-[12px] text-ink-subtle">
             © {new Date().getFullYear()} TESKEL. Built for creators worldwide.
           </p>
           <div className="flex items-center gap-1">
@@ -106,7 +106,7 @@ export function LandingFooter() {
               <Link
                 key={href}
                 href={href}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-chalk-muted transition hover:bg-white/[0.04] hover:text-chalk"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition hover:bg-paper-muted hover:text-ink"
                 aria-label={href}
               >
                 <Icon className="h-4 w-4" />

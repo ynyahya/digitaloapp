@@ -3,18 +3,20 @@ import { Button } from "@/components/ui/button";
 import { NavbarUserMenu } from "@/components/shared/navbar-user-menu";
 import { getCurrentUser } from "@/lib/auth/session";
 import { BuilderCommandMenu } from "@/components/builder";
+import { ThemeToggle } from "@/components/theme-toggle";
 import Link from "next/link";
 
 export async function Topbar() {
   const user = await getCurrentUser();
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/[0.08] bg-night/75 px-8 backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-line bg-paper/75 px-8 backdrop-blur-xl">
       <div className="flex flex-1 items-center gap-4">
         <BuilderCommandMenu />
       </div>
 
       <div className="flex items-center gap-3">
+        <ThemeToggle className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition hover:text-ink" />
         <Button
           asChild
           variant="secondary"

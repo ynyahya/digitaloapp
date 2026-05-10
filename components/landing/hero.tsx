@@ -7,7 +7,7 @@ export function Hero() {
   return (
     <section className="relative isolate overflow-hidden">
       {/* background layers */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-night" />
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-paper" />
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1100px] grid-dark mask-radial-fade opacity-60" />
       <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[1200px] bg-lime-glow" />
       {/* drifting orbs */}
@@ -19,20 +19,20 @@ export function Hero() {
         <div className="flex justify-center animate-fade-blur-up">
           <Link
             href="/changelog"
-            className="group inline-flex items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.02] py-1 pl-1 pr-3 text-[12px] text-chalk-muted backdrop-blur-xl transition hover:border-white/[0.15] hover:text-chalk"
+            className="group inline-flex items-center gap-2 rounded-full border border-line bg-paper-soft/70 py-1 pl-1 pr-3 text-[12px] text-ink-muted shadow-soft backdrop-blur-xl transition hover:border-line-strong hover:text-ink"
           >
             <span className="inline-flex items-center gap-1.5 rounded-full bg-lime/15 px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wider text-lime">
               <span className="h-1.5 w-1.5 rounded-full bg-lime shadow-[0_0_8px_rgba(180,243,0,0.8)] animate-pulse-soft" />
               New
             </span>
             <span className="font-medium">v2.0 · Cohorts, certificates &amp; affiliates</span>
-            <ArrowUpRight className="h-3.5 w-3.5 text-chalk-dim transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            <ArrowUpRight className="h-3.5 w-3.5 text-ink-subtle transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
 
         {/* heading */}
         <h1
-          className="mx-auto mt-8 max-w-[1080px] text-center font-sans text-[44px] font-black leading-[1.02] tracking-[-0.045em] text-chalk md:text-[80px] lg:text-[96px] animate-fade-blur-up [animation-delay:80ms]"
+          className="mx-auto mt-8 max-w-[1080px] text-center font-sans text-[44px] font-black leading-[1.02] tracking-[-0.045em] text-ink md:text-[80px] lg:text-[96px] animate-fade-blur-up [animation-delay:80ms]"
         >
           The operating system
           <br className="hidden md:block" />{" "}
@@ -43,7 +43,7 @@ export function Hero() {
         </h1>
 
         {/* sub */}
-        <p className="mx-auto mt-6 max-w-[640px] text-center text-[16px] leading-relaxed text-chalk-muted md:text-[19px] animate-fade-blur-up [animation-delay:160ms]">
+        <p className="mx-auto mt-6 max-w-[640px] text-center text-[16px] leading-relaxed text-ink-muted md:text-[19px] animate-fade-blur-up [animation-delay:160ms]">
           Sell products, run cohorts, grow your audience — without duct-taping
           ten tools together. One platform, your entire creator business.
         </p>
@@ -59,17 +59,17 @@ export function Hero() {
           </Link>
           <Link
             href="#tour"
-            className="group inline-flex h-12 items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.02] px-5 text-[14px] font-semibold text-chalk backdrop-blur-xl transition hover:border-white/25 hover:bg-white/[0.05]"
+            className="group inline-flex h-12 items-center gap-2 rounded-2xl border border-line bg-paper-soft/80 px-5 text-[14px] font-semibold text-ink shadow-soft backdrop-blur-xl transition hover:border-line-strong hover:bg-paper-soft"
           >
-            <span className="grid h-6 w-6 place-items-center rounded-full bg-white/[0.08]">
-              <Play className="h-3 w-3 fill-chalk text-chalk" />
+            <span className="grid h-6 w-6 place-items-center rounded-full bg-paper-muted">
+              <Play className="h-3 w-3 fill-ink text-ink" />
             </span>
             Watch 2-min demo
           </Link>
         </div>
 
         {/* trust line */}
-        <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12.5px] text-chalk-muted animate-fade-blur-up [animation-delay:300ms]">
+        <ul className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[12.5px] text-ink-muted animate-fade-blur-up [animation-delay:300ms]">
           {[
             "No credit card",
             "Launch in 5 minutes",

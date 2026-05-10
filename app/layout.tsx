@@ -33,6 +33,7 @@ export const metadata: Metadata = {
 
 import { CartProvider } from "@/hooks/use-cart";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/theme-provider";
 
 export default function RootLayout({
   children,
@@ -40,26 +41,45 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (theme === 'light') {
+                    document.documentElement.classList.add('light');
+                  } else {
+                    document.documentElement.classList.add('dark');
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-paper font-sans text-ink antialiased`}
       >
-        <CartProvider>
-          {children}
-          <Toaster
-            position="top-right"
-            richColors
-            closeButton
-            theme="dark"
-            toastOptions={{
-              style: {
-                background: "#0F0F12",
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "#FAFAFA",
-              },
-            }}
-          />
-        </CartProvider>
+        <ThemeProvider>
+          <CartProvider>
+            {children}
+            <Toaster
+              position="top-right"
+              richColors
+              closeButton
+              toastOptions={{
+                style: {
+                  background: "var(--color-paper-soft)",
+                  border: "1px solid var(--color-line)",
+                  color: "var(--color-ink)",
+                },
+              }}
+            />
+          </CartProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

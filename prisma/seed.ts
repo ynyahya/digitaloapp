@@ -18,7 +18,34 @@ async function main() {
     },
   });
 
-  // 2. Create a User (Creator) — demo login: alex@teskel.app / teskel123
+  // 2. Create Demo User — demo login: demo@teskel.app / demo123456
+  const demoUser = await prisma.user.upsert({
+    where: { email: "demo@teskel.app" },
+    update: { passwordHash: demoPassword },
+    create: {
+      email: "demo@teskel.app",
+      name: "Demo User",
+      role: "CREATOR",
+      passwordHash: demoPassword,
+      image: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=200&auto=format&fit=crop",
+    },
+  });
+
+  await prisma.creator.upsert({
+    where: { userId: demoUser.id },
+    update: {},
+    create: {
+      userId: demoUser.id,
+      handle: "demo",
+      displayName: "Demo User",
+      tagline: "Explore the Teskel platform.",
+      bio: "This is a demo account for exploring Teskel features.",
+      avatarUrl: demoUser.image,
+      verified: true,
+    },
+  });
+
+  // 3. Create a User (Creator) — demo login: alex@teskel.app / teskel123
   const user = await prisma.user.upsert({
     where: { email: "alex@teskel.app" },
     update: { passwordHash: demoPassword },

@@ -5,7 +5,7 @@ import { DevEventViewer } from "@/components/analytics/dev-event-viewer";
 
 export default function MarketplaceLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="landing-theme grain-overlay flex min-h-screen flex-col bg-night text-chalk">
+    <div className="landing-theme grain-overlay flex min-h-screen flex-col bg-paper text-ink">
       <PublicFunnelTracker />
       <DevEventViewer />
       <LandingNav />

@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx,mdx}",
     "./components/**/*.{ts,tsx,mdx}",
@@ -28,55 +29,55 @@ const config: Config = {
         // line  = "border"           (was light gray, now dark gray)
         // accent = "primary cta"     (was blue, now electric lime)
         ink: {
-          DEFAULT: "#FAFAFA",
-          soft: "#E5E5E5",
-          muted: "#A1A1AA",
-          subtle: "#71717A",
+          DEFAULT: "var(--color-ink)",
+          soft: "var(--color-ink-soft)",
+          muted: "var(--color-ink-muted)",
+          subtle: "var(--color-ink-subtle)",
         },
         accent: {
-          DEFAULT: "#B4F300",
-          strong: "#C8FF1A",
-          soft: "#1A1F0B",
-          subtle: "#222B0F",
+          DEFAULT: "var(--color-accent)",
+          strong: "var(--color-accent-strong)",
+          soft: "var(--color-accent-soft)",
+          subtle: "var(--color-accent-subtle)",
         },
         paper: {
-          DEFAULT: "#08080A",
-          soft: "#0F0F12",
-          muted: "#18181C",
-          sunken: "#0B0B0E",
+          DEFAULT: "var(--color-paper)",
+          soft: "var(--color-paper-soft)",
+          muted: "var(--color-paper-muted)",
+          sunken: "var(--color-paper-sunken)",
         },
         line: {
-          DEFAULT: "#27272A",
-          soft: "#1F1F23",
-          strong: "#3F3F46",
+          DEFAULT: "var(--color-line)",
+          soft: "var(--color-line-soft)",
+          strong: "var(--color-line-strong)",
         },
         // Landing v2 — dark + electric lime palette
         night: {
-          DEFAULT: "#08080A",
-          surface: "#0F0F12",
-          raised: "#18181C",
-          well: "#0B0B0E",
+          DEFAULT: "var(--color-night)",
+          surface: "var(--color-night-surface)",
+          raised: "var(--color-night-raised)",
+          well: "var(--color-night-well)",
         },
         edge: {
-          DEFAULT: "#27272A",
-          soft: "#1F1F23",
-          strong: "#3F3F46",
+          DEFAULT: "var(--color-edge)",
+          soft: "var(--color-edge-soft)",
+          strong: "var(--color-edge-strong)",
         },
         chalk: {
-          DEFAULT: "#FAFAFA",
-          muted: "#A1A1AA",
-          subtle: "#71717A",
-          dim: "#52525B",
+          DEFAULT: "var(--color-chalk)",
+          muted: "var(--color-chalk-muted)",
+          subtle: "var(--color-chalk-subtle)",
+          dim: "var(--color-chalk-dim)",
         },
         lime: {
-          DEFAULT: "#B4F300",
-          bright: "#C8FF1A",
-          deep: "#7FB300",
-          glow: "rgba(180,243,0,0.18)",
+          DEFAULT: "var(--color-lime)",
+          bright: "var(--color-lime-bright)",
+          deep: "var(--color-lime-deep)",
+          glow: "var(--color-lime-glow)",
         },
         violet: {
-          DEFAULT: "#7C5CFF",
-          glow: "rgba(124,92,255,0.18)",
+          DEFAULT: "var(--color-violet)",
+          glow: "var(--color-violet-glow)",
         },
       },
       fontFamily: {

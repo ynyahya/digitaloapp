@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { ArrowRight, Menu, X } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV = [
   { label: "Products", href: "/products" },
@@ -28,7 +29,7 @@ export function LandingNav() {
       className={[
         "sticky top-0 z-50 transition-[backdrop-filter,background,border-color] duration-300",
         scrolled
-          ? "border-b border-white/[0.06] bg-night/70 backdrop-blur-xl"
+          ? "border-b border-line bg-paper/70 backdrop-blur-xl"
           : "border-b border-transparent bg-transparent",
       ].join(" ")}
     >
@@ -37,7 +38,7 @@ export function LandingNav() {
           <span className="relative inline-flex h-7 w-7 items-center justify-center rounded-lg bg-lime text-[12px] font-black text-night shadow-[0_0_24px_-4px_rgba(180,243,0,0.6)]">
             T
           </span>
-          <span className="text-[15px] font-bold tracking-[-0.02em] text-chalk">
+          <span className="text-[15px] font-bold tracking-[-0.02em] text-ink">
             TESKEL
           </span>
         </Link>
@@ -47,7 +48,7 @@ export function LandingNav() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-2 text-[13.5px] font-medium text-chalk-muted transition hover:text-chalk"
+              className="rounded-lg px-3 py-2 text-[13.5px] font-medium text-ink-muted transition hover:text-ink"
             >
               {item.label}
             </Link>
@@ -55,9 +56,10 @@ export function LandingNav() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-ink-muted transition hover:text-ink" />
           <Link
             href="/login"
-            className="rounded-lg px-3 py-2 text-[13.5px] font-medium text-chalk-muted transition hover:text-chalk"
+            className="rounded-lg px-3 py-2 text-[13.5px] font-medium text-ink-muted transition hover:text-ink"
           >
             Sign in
           </Link>
@@ -73,21 +75,21 @@ export function LandingNav() {
         <button
           aria-label={open ? "Close menu" : "Open menu"}
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-white/10 text-chalk md:hidden"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-line text-ink md:hidden"
         >
           {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
         </button>
       </div>
 
       {open && (
-        <div className="border-t border-white/[0.06] bg-night/95 backdrop-blur-xl md:hidden">
+        <div className="border-t border-line bg-paper/95 backdrop-blur-xl md:hidden">
           <div className="mx-auto flex max-w-[1360px] flex-col gap-1 px-5 py-4">
             {NAV.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-[14px] font-medium text-chalk-muted transition hover:bg-white/[0.04] hover:text-chalk"
+                className="rounded-lg px-3 py-2.5 text-[14px] font-medium text-ink-muted transition hover:bg-paper-muted hover:text-ink"
               >
                 {item.label}
               </Link>
@@ -95,7 +97,7 @@ export function LandingNav() {
             <div className="mt-2 grid grid-cols-2 gap-2">
               <Link
                 href="/login"
-                className="rounded-xl border border-white/10 px-3 py-2.5 text-center text-[13.5px] font-semibold text-chalk"
+                className="rounded-xl border border-line px-3 py-2.5 text-center text-[13.5px] font-semibold text-ink"
               >
                 Sign in
               </Link>

@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   const user = await getCurrentUser();
 
   return (
-    <div className="landing-theme grain-overlay min-h-screen bg-night text-chalk">
+    <div className="landing-theme grain-overlay min-h-screen bg-paper text-ink">
       <div className="pointer-events-none fixed inset-0 bg-accent-glow opacity-50" />
       <div className="pointer-events-none fixed inset-0 grid-dark opacity-20 mask-radial-fade" />
       <Sidebar
